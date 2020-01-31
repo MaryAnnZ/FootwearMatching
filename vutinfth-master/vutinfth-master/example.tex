@@ -55,8 +55,8 @@
 \setadvisor{Ao.Univ.Prof. Dipl.-Ing. Dr.techn.}{Robert  Sablatnig}{}{male}
 
 % For bachelor and master theses:
-\setfirstassistant{Projektass. Dipl.-Ing.}{Manuel  Keglevic}{}{male}
-%\setsecondassistant{Pretitle}{Forename Surname}{Posttitle}{male}
+\setfirstassistant{Associate Prof.}{Hideki Nakayama}{Ph.D.}{male}
+\setsecondassistant{Projektass. Dipl.-Ing.}{Manuel  Keglevic}{}{male}
 %\setthirdassistant{Pretitle}{Forename Surname}{Posttitle}{male}
 
 % For dissertations:
@@ -120,20 +120,21 @@
 
 \begin{abstract}
 \par
-Shoeprint images are one of the most commonly secured evidences on crime scenes.
+Shoeprint images are evidences secured on crime scenes.
 Even though automatic shoeprint processing is a highly researched topic, the final identification is usually done by human forensic experts.
 \par
-In this thesis possibilities for enhancement of shoeprint samples from a real-life dataset are investigated, and three prototypical approaches are presented and evaluated.
-The main challenge of this task is to correctly filter the pattern regardless of the versatile, possibly heavily structured and cluttered noise on the samples.
+This thesis investigates the possibilities for enhancement of shoeprint samples from a real-life dataset, for which three prototypical approaches are presented and evaluated.
+The main challenge of this task is to correctly filter the pattern of the shoeprint regardless of the versatile, possibly heavily structured and cluttered noise on the samples.
 Among fully automated methods, a semi-automated technique is also tested, where user input is required for noise separation.
 \par
-The motivation of this work is to give an overview about the potential of the published technologies and to define a universal approach which is able to filter and enhance the shoeprint data despite the presence of noise and the possible low image quality.
-Based on the experiences acquired while investigating a new semi-automated noise-suppression and enhancement pipeline for shoeprint images is introduced.
-The noisy pixels are identified based on the Fourier-Mellin features of a background pixel given by the user, and of its multi-sized neighborhood.
-At the same time a model is built about the appearance of noise, to eliminate that structure from the foreground as well.
-Additionally a gradient based line detector is applied and the edge structures of the shoeprint are clustered to distinguish between pattern and noise edges.
-The experimental results show that the processed images are clearer, the pattern is sharper whereas the noise is completely eliminated in the background and suppressed in the foreground.
-Furthermore,  according to the tests conducted with three basic image descriptor features,  the enhanced shoeprints have higher matching rate to Ground Truth samples than the original images.
+The aim of this work is to give an overview about the current state of the art and to define an universal approach which is able to filter and enhance the shoeprint data despite the presence of noise and varying image quality.
+Along two fully-automated algorithms a semi-automated noise-suppression and enhancement pipeline for shoeprint images is introduced. 
+The noisy pixels are identified based on the Fourier-Mellin features of a background pixel selected by the user.
+At the same time a noise model is calculated to eliminate that structure on the shoeprint pattern as well.
+Additionally, a line detector is applied and the edges of the shoeprint are clustered based on the differences of the gradients to distinguish between shoeprint impression and noise edges.
+The experimental results show that the processed images are clearer, the pattern is sharper, the noise is completely eliminated in the detected background area and suppressed in the foreground region.
+Furthermore besides qualitative evaluation also a quantitative evaluation is performed using three basic image descriptor features and the results show that the enhanced images achieve higher accuracy than the original images.
+
 
 \end{abstract}
 
@@ -149,120 +150,201 @@ Furthermore,  according to the tests conducted with three basic image descriptor
 \chapter{Introduction}
 
 \par
-Shoeprints found on crime scenes are important hints or evidence in a criminal investigation \cite{kong2014novel}.
-Even though on one third \cite{alexandre1996computerized} of crime scenes usable shoe patterns can be secured, there is no fully automatized algorithm available yet, which is able to identify and match those prints with the original shoe sole, thus human power is needed \cite{wang2014automatic} to recognize and analyze the found patterns.
-The work of forensic experts is not only time consuming and expensive, there is no guarantee about the objectivness of the final outcome\cite{gueham2008automatic}, furthermore the stages of the human matching process are unclear and not necessarily reproducible.
+Shoeprints found on crime scenes are important clues or evidences during criminal investigation \cite{kong2014novel}.
+Even though at one third of the crime scenes usable shoe patterns can be secured \cite{alexandre1996computerized}, human input is required to recognize and analyze the found patterns  \cite{wang2014automatic}.
+The work of forensic experts is not only time consuming and expensive, but there is no guarantee about the objectivness of the final outcome\cite{gueham2008automatic}.
+Furthermore, the stages of the human matching process are not necessarily reproducible considering the opinions of multiple experts.
 \par
-There is an excessive amount of research already done \cite{rida2019forensic} in order to help or replace the work of forensic experts.
-However, there is no algorithm published yet, which is reliably usable in varying conditions and sample quality.
-One reason for that are the already mentioned versatile conditions, the features and properties of the pattern on the shoe, like age, material, etc., the characteristics of the ground where the shoeprint is left and environmental conditions, like for example weather, highly influence the overall quality of the acquired sample.
-Those high amount of factors result in changing appearance of the prints of the same shoe causing high intra class variance while clustering.
-Additionally there is a lack of universal, wide ranged database \cite{rida2019forensic} which correctly depicts the common scenarios occurring on real-life crime scenes.
+There is an excessive amount of research already done in order to help or replace the work of forensic experts \cite{rida2019forensic}.
+However this task is challanging because of the versatility of conditions, the features and properties of the pattern on the shoe, like age, material, etc., the characteristics of the ground where the shoeprint is left and environmental conditions, for example weather, highly influence the overall quality of the acquired sample.
+Figure \ref{fig:int:varying} shows samples of the same shoe captured under different conditions from the FID-300 \cite{kortylewski2014unsupervised} dataset.
+Such high amount of factors results in changing appearance causing high intra class variance while searching for common features of the same sheprint pattern.
+In this thesis a universal and wide-rage dataset is defined as a database which is regularly used in the evaluation of the algorithms and depicts the common scenarios occurring at real-life crime scenes.
+Such dataset makes it possible to estimate the applicability of the given algorithm in real-life scenarios and enables comparison between the already published techniques.
+But, according to Rida et al. \cite{rida2019forensic} no such database is available yet.
 \par
-In 2014 a new dataset, called FID-300 \cite{kortylewski2014unsupervised}, was released which aims to solve the database problem described above.
+In 2014 a new dataset called FID-300 \cite{kortylewski2014unsupervised} was released that aims to solve the database problem described above.
 It contains over 1000 reference shoeprint patterns acquired in a laboratory.
-Moreover the database introduces 300 new shoeprint samples collected by the police providing an insight on images forensic experts are working with on the daily basis.
+Moreover, the database introduces 300 new shoeprint samples collected by the police providing an insight to images forensic experts work with on a daily basis.
+FID-300 is a wide-ranged database because it provides samples from varying sceanrios.
+But the evaluation of the majority of the already published methods is only available on different datasets, thus it is not universal.
+
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}[t]{0.13\columnwidth}
+    \centering
+    \includegraphics[width=\textwidth]{1/00003.jpg}
+	\caption{}
+	\label{fig:int:varying:3}
+  \end{subfigure}
+   \begin{subfigure}[t]{0.13\columnwidth}
+    \centering
+    \includegraphics[width=\textwidth]{1/00009.jpg}
+	\caption{}
+	\label{fig:int:varying:9}
+  \end{subfigure}
+ \begin{subfigure}[t]{0.13\columnwidth}
+    \centering
+    \includegraphics[width=\textwidth]{1/00017.jpg}
+	\caption{}
+	\label{fig:int:varying:17}
+  \end{subfigure}
+ \begin{subfigure}[t]{0.13\columnwidth}
+    \centering
+    \includegraphics[width=\textwidth]{1/00020.jpg}
+	\caption{}
+	\label{fig:int:varying:20}
+  \end{subfigure}
+ \begin{subfigure}[t]{0.13\columnwidth}
+    \centering
+    \includegraphics[width=\textwidth]{1/00021.jpg}
+	\caption{}
+	\label{fig:int:varying:21}
+  \end{subfigure}
+ \begin{subfigure}[t]{0.13\columnwidth}
+    \centering
+    \includegraphics[width=\textwidth]{1/00025.jpg}
+	\caption{}
+	\label{fig:int:varying:25}
+  \end{subfigure}
+ \begin{subfigure}[t]{0.13\columnwidth}
+    \centering
+    \includegraphics[width=\textwidth]{1/00066.jpg}
+	\caption{}
+	\label{fig:int:varying:66}
+  \end{subfigure}
+  \caption{Example images from the FID-300 \cite{kortylewski2014unsupervised} dataset, where the someprint is captures under different conditions.}
+  \label{fig:int:varying}
+\end{figure}
 
 \section{Problem Definition}
 \par
-There are two main stages of automatic shoeprint identification, filtering, where the shoeprint pattern is separated from background and enhanced as well, and matching where the corresponding shoe is determined.
-Instead of automatizing the entire shoeprint recognition pipeline this work focuses on the possible ways of increasing the sample quality.
-Because of the mentioned absence of general, appropriate database it is difficult to compare the already available methods.
-Furthermore it is also challenging to estimate which one is applicable in a real-life scenario.
-In this thesis three prototypical enhancing techniques are developed and tested in order to create an overview of the published technologies and their performance and to find a method which handles real crime scene samples universally.
+This work focuses on the ways of increasing the sample quality.
+Since the already available methods are evaluated on different datasets a comparison between them is a challenging task.
+In this thesis three prototypical enhancing techniques are developed and tested in order to create an overview of the published technologies and their performance, and to find a method which handles real crime scene samples universally.
 \par
 For evaluation and testing the FID-300 database is used.
-The dataset contains both in a laboratory acquired, synthetic, as well as on a crime secured, real, shoeprint patterns.
-Additionally the Ground Truth about every real sample and its synthetic pair is also available.
+The dataset contains both reference prints as well as on a crime secured, real shoeprint patterns.
+Additionally, the Ground Truth about every real sample and its belonging reference print is also available.
 The goal of this work is to define an image processing pipeline which correctly identifies and enhances the shoe patterns and eliminates or suppresses the noise on the pattern samples regardless of the quality of the image.
-A secondary objective is to gain an overview about the algorithms already published, and make an estimation which methods are applicable in real-life scenarios based on their performance on the FID-300 database.
+A secondary objective is to gain an overview about the algorithms already published, and make an estimation which methods are applicable in real-life scenarios based on their performance on the FID-300 database. 
 
 \section{Challenges}
 \par
-There are two main obstacles in the topic of shoeprint enhancement and in automatic shoeprint matching in general, the versatile image quality and appearance as well as the lack of universal and wide database.
-There are approaches available which build models for given structures of the shoeprint \cite{tang2010footwear}, \cite{alizadeh2017automatic}, but no detailed, uniform representation for the entire shoeprint is available yet to represent the varying shoe pattern appearance.
-Moreover there is a high inference of noise from multiple sources.
-The produced shoeprint and its background highly depends on the properties of the ground where it was found, the roughness and unevenness of a given type of surface distorts the original pattern and the clutter on the ground appears as noise on the final sample.
-Furthermore other objects on the surface, above or behind the left shoeprint additionally cover or distort the original pattern, or prevent to secure the complete area of the original shoe sole.
-Besides that the pattern on the original shoe can also be distorted or modified compared to the new version.
-Distortions caused by usage are valuable information about the owner, on the other hand they make it more difficult to match the pattern with their unused pairs.
-Additional objects between the structures of the shoeprint also alter the original appearance.
+An obstacles in the topic of shoeprint enhancement and in automatic shoeprint matching in general is the versatile image quality and appearance as well as the lack of universal and wide database.
+There are approaches available which build models for given structures of the shoeprint \cite{tang2010footwear}, \cite{alizadeh2017automatic}, but they are limited to given parts of the shoesole and are tested on a restricted database.
+Moreover, there is an inference from noise of multiple sources.
+Firstly, the produced shoeprint and its background highly depends on the properties of the ground where the impression was made, the roughness and unevenness of a given type of surface distorts the original shoe sole pattern and those features on the ground appear as noise on the final sample.
+The impressions of Figure \ref{fig:int:varying:1} and \ref{fig:int:varying:20} were made on an even surface whereas on Figure \ref{fig:int:varying:17} and \ref{fig:int:varying:25} cluttered background caused by the surface properties are seen.
+Furthermore, objects on the surface, above or behind the left shoeprint potentially cover or distort the original pattern, or prevent to secure the complete area of the original shoe sole.
+On Figures \ref{fig:int:varying:9} and \ref{fig:int:varying:66} only partial shoeprints were secured, on the left side of Figure \ref{fig:int:varying:66} the structures of the shoe sole pattern are hardly visible because of the additional noise.
+Besides, the pattern on the original shoe can also be distorted or modified.
+These alterations possibly contain valuable information about the owner, however, they make it more difficult to match the pattern with the reference prints captured on unused shoes.
 Lastly, there are multiple shoeprint securing methods producing different results for the same print \cite{katireddy2017novel}. 
-The shoeprint lifting technique used depends on the properties of the ground. 
-Those two factors, the securing method and the floor type, also determine if the positive or the negative, the pattern or the space between them, image is captured.
+The shoeprint securing technique used depends on the properties of the ground. 
+The securing method and the properties of the floor, for example if it was clean or dusty when making an impression, also determine if the positive \ref{fig:int:cap:pos} or the negative \ref{fig:int:cap:neg}, the pattern or the space between them, image is captured.
+
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}[t]{0.45\columnwidth}
+    \centering
+    \includegraphics[width=\textwidth]{1/00219.jpg}
+	\caption{}
+	\label{fig:int:cap:pos}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.45\columnwidth}
+    \centering
+    \includegraphics[width=\textwidth]{1/00217.jpg}
+	\caption{}
+	\label{fig:int:cap:neg}
+  \end{subfigure}
+  \caption{Example shoeprint impressions from FID-300 where the positive and the negative image of the same shoeprint is captured}
+  \label{fig:int:cap}
+\end{figure}
+
+
 \par
-The non-existing universal database causes that the published methods are difficult to compare based on their results since they are using different testing images.
-Moreover, the used dataset is not necessarily public \cite{katireddy2017novel}, \cite{dardi2009texture} making it impossible to reproduce the result in those cases.
-Additionally the handcrafted databases can be biased, and allow such restrictions and modifications which do not correlate with real-life scenarios \cite{rida2019forensic}.
-The used samples are either synthetically generated and computationally distorted \cite{de2005automated}, \cite{gueham2008automatic} or exclude low quality and noisy images \cite{dardi2009texture}, \cite{tang2010footwear}.
-Because of that it is difficult to compare their performance and to estimate which one of the approaches are applicable on the FID-300 database.
-Furthermore, it is challenging to plan a new algorithm based on the published results because their lack of a uniform baseline.
+As mentioned previously the already published methods were tested and evaluated on different datasets, thus a comparison between them is difficult.
+Moreover, the used dataset is not necessarily public \cite{katireddy2017novel}, \cite{dardi2009texture} making it impossible to reproduce the result in such cases.
+Additionally, the handcrafted databases can be biased, and allow such restrictions and modifications that do not correlate with real-life scenarios \cite{rida2019forensic}.
+The used samples are either synthetically generated, they are secured in a laboratory for the purpose of evaluating forensic image processing algorithms, and computationally distorted \cite{de2005automated}, \cite{gueham2008automatic} or exclude low quality and noisy images \cite{dardi2009texture}, \cite{tang2010footwear}.
+The time consuming approach of re-implementation of the available algorithms and testing them on the FID-300 is also impossible in the cases, where the original dataset of the publication is not accessible.
+Thus it is challenging to plan a new algorithm based on the published results because the lack of a uniform baseline.
 
 \section{Contribution}
 \par
-In this thesis the possible ways of enhancing a shoeprint images are discussed.
-Because of the known issues on database multiple approaches are implemented, discussed and evaluated.
-The two ways to increase the quality of a given shoeprint sample is to enhance the pattern regardless of the noise and to suppress or eliminate the noise without losing any of pattern information.
+In this thesis an overview about image enhancement methods is given.
+Multiple approaches are implemented, discussed and evaluated.
+Two ways to increase the quality of a given shoeprint sample are to enhance the pattern regardless of the noise and to suppress or eliminate the noise without losing any pattern information.
 Along fully-automated methods semi-automated algorithms are also considered.
-Three different approaches are introduced and examined for their performance on real-life image samples.
+Three different approaches are introduced and examined in respect to their performance on real-life image samples.
 \par
-Finally a new semi-automated framework is given which is evaluated on the FID-300 database.
-In the first step user input about the noise is required.
-The input is separated into tiles, and the subparts are compared based on the Fourier-Mellin features to the region of the user input.
-In that way the background is separated from the foreground and a model about the appearance of the background is calculated.
-Since noise appears on the pattern as well, the distorted parts are corrected based on the calculated noise model.
-After that gradient based line detection is performed and the results are separated into clusters where pattern and noise classes are defined and candidates of the latter are eliminated.
-The final image is thresholded to create a binary image, where the shoeprint is clearly visible and recognizable whereas the clutter is suppressed on the pattern and eliminated on the background.
-Throughout the whole processing pipeline morphological operations and small structure elimination is applied multiple times.
-First when a mask for background is built, and also in the end of the pipeline to eliminate small inconsistencies on the pattern.
+Finally, a semi-automated framework is presented which is evaluated on the FID-300 database.
+In the first step user input specifying the noise is required.
+The input is separated into tiles, and the subparts are compared based on the Fourier-Mellin features of the given region and of the neighborhood selected by the user.
+In that way the background is separated from the foreground and a noise model based on the background is determined.
+Since noise appears on the pattern as well, those parts are corrected according to the calculated noise model.
+After that, gradient based line detection is performed and the results are separated into clusters, where the clustering criteria is the difference of the gradients in x and y directions.
+According to the amount of members of each class shoeprint and noise classes are determined.
+Finally, candidates of the latter are eliminated.
+The final image is thresholded to create a binary image, where the shoeprint is recognizable because the clutter is suppressed on the pattern and eliminated on the background.
+Throughout the whole processing pipeline morphological operations and small structure elimination are applied multiple times. 
+First when a mask for background is built, and also in the end of the pipeline to eliminate small inconsistencies on the determined foreground and detected lines. 
+The noise elimination is based on two assumptions.
+First the area selected by the user is representative for the entire image and there is a high contrast between background and shoeprint areas.
+Second, the edges of the shoeprint impressions share similar properties, such as gradient information, frequency as well as overall area and length, and are different from those deriving from cluster of the image.
+Figure \ref{fig:example} shows an example from the FID-300 database \ref{fig:intro:orig} and the enhanced image \ref{fig:intro:enhanced} using the above algorithm.
+The background of the algorithm is masked successfully and the contrast between the shoeprint impression and the background is increased.
+However, in the bottom right corner of the image the weakness of the enhancement method is also shown.
+Small line structures of the original shoe sole pattern resemble the short and fine edges of the noise on the sample and are wrongly eliminated.
+The detailed evaluation of the proposed algorithm is presented in Chapter 5.
 Experimental results show that the enhanced images are clearer, the background is successfully separated and the shoeprint pattern is less noisy than on the original images.
-Figure \ref{fig:example} shows an example sample from the FID-300 database \ref{fig:intro:orig} and the enhanced image \ref{fig:intro:enhanced} with the proposed algorithm.
-Moreover, the improved images have a better matching rate than their original version according to the experiments conducted on the enhanced images, on the original samples and on the synthetic Ground-Truth using three basic image features such as Fourier-Mellin, SIFT and SURF.
+Moreover, the improved images have a better matching rate than their original version according to the experiments conducted on the enhanced images, on the original samples and on the reference images using three basic image features such as Fourier-Mellin, SIFT and SURF.
 
 
 \begin{figure}[h]
   \centering
-  \begin{subfigure}[b]{0.45\columnwidth}
+  \begin{subfigure}[t]{0.45\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{1/00182.jpg}
     \subcaption{Example image from the FID-300 database}
     \label{fig:intro:orig}
   \end{subfigure}
-  \begin{subfigure}[b]{0.45\columnwidth}
+  \begin{subfigure}[t]{0.45\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{1/00182_filtered.jpg}
     \subcaption{Enhanced image}
     \label{fig:intro:enhanced}
   \end{subfigure}
-  \caption{Result of the proposed algorithm}
+  \caption{Result of the proposed algorithm. The background is correctly masked and the contrast between fore- and background is increased. On the bottom right area a weakness of the algorithms is shown, where small pattern structures were wrongly eliminated.  }
   \label{fig:example}
 \end{figure}
 
 \section{Structure of the Work}
 \par
 To gain an overview about the research already done the following section, Chapter 2, gives a review of the literature. 
-Along papers published on the topic of shoeprint identification, matching and enhancement, research of similar domains is presented as well.
-Fields of fingerprint processing and tattoo identification is also overviewed for possibilities of utilizing their solutions in the given problem space.
-Furthermore natural image enhancement and denoising techniques are revised as well.
+Along papers published on the topic of shoeprint identification, matching and enhancement, research on similar domains is presented as well.
+Consequently, fields of fingerprint processing and tattoo identification is also overviewed for possibilities of utilizing their solutions in the given problem space.
+Furthermore, natural image enhancement and denoising techniques are revised as well.
 \par
-In Chapter 3, 4 and 5 the approaches for enhancement are given and discussed if they are applicable for real-life forensic images.
-Chapter 3 presents and evaluates an algorithm for detecting shoe pattern on varying conditions.
+In Chapter 3, 4 and 5 the approaches for enhancement are given and evaluated whether they are applicable for real-life forensic images.
+Chapter 3 presents and reviews an algorithm for detecting shoe pattern on varying conditions.
 Chapter 4 describes an automated noise suppression pipeline.
-In Chapter 5 the new algorithm for enhancing real-life crime scene shoeprint impressions is proposed.
-Details on implementation are revealed as well.
+In Chapter 5 an algorithm for enhancing real-life crime scene shoeprint impressions is proposed.
+Details on implementation are given as well.
 \par
 In Chapter 6 experimental results are shown and the proposed algorithm is evaluated.
 In Chapters 7 and 8 prospective future work is discussed and the final conclusion is given. 
 
 \chapter{Related Work}
 \par
-In order to find and develop an effective algorithm for shoeprint enhancement an overview about relevant research is made first.
-Along the evident literature of image enhancement and noise removal a related topic, discriminative image descriptors, is also considered, to gain the best insight possible and to define an approach which is optimized for the rest of the shoeprint identification pipeline.
+In order to find and develop an effective algorithm for shoeprint enhancement, an overview about relevant research is made first.
+Along the evident literature of image enhancement and noise removal, a related topic, discriminative image descriptors is also considered, to gain the best insight possible and to define an approach which is optimized for the rest of the shoeprint identification pipeline.
 In this chapter the research on the domain of shoeprint identification is reviewed.
 Other than that publications from similar domains such as fingerprint and palmprint detection as well as tattoo identification are described.
 Research for fingerprint identification and tattoo recognition have been chosen for review because of their similar goal of edge structure and minimal image structure recognition.
-Moreover an overview of techniques from the field of natural image enhancement and description along with general image denoising is also given.
-This chapter is separated into three parts, first Image Enhancement techniques are described, after that algorithms developed for Noise Removal specifically are discussed, and lastly proposed Image Descriptors are reviewed.
+Moreover, an overview of techniques from the field of natural image enhancement and description along with general image denoising is also given.
+This chapter is separated into three parts, first, Image Enhancement techniques are described, after that algorithms developed for Noise Removal specifically are discussed, and lastly, proposed Image Descriptors are reviewed.
 
 
 \section{Image Enhancement}
@@ -275,34 +357,34 @@ In this section image enhancement techniques from four specific domains are disc
 \par
 There is an extensive research done in the field of enhancing shoeprint images.
 However,  the problem definition and the use-case of the different publications varies strongly.
-Because of the absence of standard database, the discussed algorithms can be separated into two groups, techniques tested on synthetic samples and on real-life impressions.
+Because of the absence of a standard database, the discussed algorithms are separated into two groups, techniques tested on synthetic samples and on real-life impressions.
 Synthetic samples are scanned in images in a laboratorial environment for the purpose of building a dataset for shoeprint identification.
 The noise derives from scanning artifacts and computationally added distortions and modification.
-Furthermore many algorithms developed for real crime-scene data make restrictions about the input image and exclude noisy and poor quality images.
+Furthermore, many algorithms developed for real crime-scene data make restrictions about the input image and exclude noisy and poor quality images.
 Figure \ref{fig:rw:database} shows example images from a synthetic \ref{fig:rw:synthetic}, from a restricted \ref{fig:rw:restricted} and high \ref{fig:rw:highFID} and low quality samples \ref{fig:rw:lowFID} from the FID-300 dataset.
 In the following discussion it is noticed repeatedly, which kind of dataset the proposed approach was tested on.
 
 \begin{figure}[h]
   \centering
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{2/synthetic.jpg}
     \subcaption{Example image from a synthetic dataset}
     \label{fig:rw:synthetic}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{2/restricted.jpg}
-    \subcaption{Example image from a real crimescene dataset excluding low quality images}
+    \subcaption{Example image from a real crime scene dataset excluding low quality images}
     \label{fig:rw:restricted}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{2/00025.jpg}
     \subcaption{Example high quality image from the FID-300 database}
     \label{fig:rw:highFID}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{2/00174.jpg}
     \subcaption{Example low quality image from the FID-300 database}
@@ -317,7 +399,7 @@ Morphological Operations, Thresholding and Image Filtering are popular technique
 Morphological Operations, especially Opening and Closing, is used in many cases \cite{wang2014automatic}, \cite{kong2014novel}, \cite{li2014retrieval}, \cite{tang2010footwear}, \cite{wu2019crime}, where Wang et al. \cite{wang2014automatic} uses a synthetic dataset, and other than Wu et al. \cite{wu2019crime} the forensic images are restricted to high quality data.
 Wang et al. \cite{wang2014automatic}, Kong et al.  \cite{kong2014novel} and Li et al. \cite{li2014retrieval} use the Morphological Operations to correct inconsistencies after thresholding.
 Similar to the previous approaches Wu et al. \cite{wu2019crime} applies the same pipeline on a real forensic dataset.
-Tang et al. \cite{tang2010footwear} follow the same principle but instead of thresholding, after Canny edge detection is Opening and Closing used.
+Tang et al. \cite{tang2010footwear} follow the same principle but instead of thresholding, after Canny edge detection Opening and Closing is used.
 \par
 To create a binary image and eliminate noise various thresholding techniques are used.
 Otsu  \cite{wu2019crime}, \cite{algarni2008novel}, \cite{alizadeh2017automatic}, \cite{kong2014novel} and adaptive thresholding \cite{wang2014automatic}, \cite{li2014retrieval} are the two most popular algorithms.
@@ -329,24 +411,24 @@ Another way to eliminate noise is image filtering.
 Alizadeh et al. \cite{alizadeh2017automatic} uses a simple Median filter on a synthetic dataset.
 Zhang et al. \cite{zhang2005automatic} test on synthetic database as well, and they take advantage of the Partial Differential Equations approach.
 In this way the edges are preserved while the background is smoothed according to a controlled curvature motion criteria. 
-Katireddy et al. \cite{katireddy2017novel} uses Successive Mean Quantization Transform (SMQT) \cite{nilsson2013smqt} as an only step to enhance a real-life database.
+Katireddy et al. \cite{katireddy2017novel} uses Successive Mean Quantization Transform (SMQT) \cite{nilsson2013smqt} as an only step to enhance the real-life database.
 Figure \ref{fig:rw:SMQT} shows the output of the SMQT algorithm on an example image.
 
 \begin{figure}[h]
   \centering
-  \begin{subfigure}[b]{0.4\columnwidth}
+  \begin{subfigure}[t]{0.4\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{2/SMQTorig.jpg}
     \subcaption{Example shoeprint impression}
     \label{fig:rw:SMQTin}
   \end{subfigure}
-  \begin{subfigure}[b]{0.4\columnwidth}
+  \begin{subfigure}[t]{0.4\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{2/SMQT.jpg}
     \subcaption{Enhanced image with the SMQT algorithm}
     \label{fig:rw:SMQTout}
   \end{subfigure}
-  \caption{Example image about the enhancement feature of the SMQT algorithm \cite{katireddy2017novel} }
+  \caption{Example image presenting the enhancement feature of the SMQT algorithm \cite{katireddy2017novel} }
   \label{fig:rw:SMQT} % \label has to be placed AFTER \caption (or \subcaption) to produce correct cross-references.
 \end{figure}
 
@@ -362,24 +444,24 @@ After SMQT enhancement the Daubechies wavelets are used to separate the fore- an
 
 Bandpass and general image filtering is popular in the field of fingerprint enhancement as well.
 Zhou et al. \cite{zhou2011adaptive} uses a low- and a highpass filter to eliminate striking frequencies. 
-Baig et al. \cite{baig2015enhancement} apply Directional Hilbert transform of Butterworth bandpass to collect the different phase shifts and eliminate the artifacts created by previous thresholding of the input.
+Baig et al. \cite{baig2015enhancement} apply Directional Hilbert transform of Butterworth bandpass to collect the different phase shifts and eliminate the artifacts created by previously thresholding the input.
 Wang et al. \cite{wang2014enhanced} decompose the image into four subbands and process them separately, calculating the noise for every subband respectively.
 Li et al. \cite{li2012texture} use Fourier transformation combined with Scale Invariant Feature Transform (SIFT) \cite{lowe1999object} to enhance the fingerprint images. 
 With SIFT the interesting points in the Fourier domain are found and secured, while the image is filtered to suppress noise and eliminate other inconsistencies.
 Jahan et al. \cite{jahan2017robust} apply Fuzzy filtering followed by thinning.
-Fuzzy filter is a local method to preserve the edge information and fine line structures and suppress the noisy background of the input.
+Fuzzy filter is a local method to preserve the edge information and fine line structures while suppressing the noisy background of the input.
 
 \section*{Tattoo Enhancement}
 
 For tattoo enhancement an algorithm from Han et al. \cite{han2013tattoo} was proposed which combines Gaussian filtering with Hysteresis thresholding. 
 Hysteresis thresholding is a neighborhood-aware approach where a pixel is labelled when it is above a given low threshold and simultaneously connected to other pixels meeting a higher thresholding criteria.
-Acton et al. \cite{acton2008matching} propose to use Active Contour Model to find the boundaries of tattoo images and apply Opening and Closing as well to get rid of small inconsistencies.
+Acton et al. \cite{acton2008matching} propose to use Active Contour Model to find the boundaries of tattoo images and apply Opening and Closing as well to eliminate small inconsistencies.
 
 \section*{Natural Image Enhnacement}
 \par
-Along Signal, especially Bandpass, general Image Filtering and Thresholding, Histogram and Color Operations are also common for natural image enhancement.
+Along with Signal, especially Bandpass, general Image Filtering and Thresholding, Histogram and Color Operations are also frequently used for natural image enhancement.
 Maini et al. \cite{maini2010comprehensive} published a review about natural image enhancing algorithms and defined two main groups of algorithms, Frequency and Spatial Domain Methods.
-First publications utilizing techniques from the first group are discussed, after that the usage of Spatial Domain Methods is reviewed.
+First, publications utilizing techniques from the former group are discussed, followed by a review of Spatial Domain Methods. 
 \par
 Xu et al. \cite{xu2016image} combines Bandpass filtering with adaptive thresholding.
 Similar to Wang et al. \cite{wang2014enhanced} the image is separated into four subbands, and the threshold is calculated for every image separately.
@@ -387,98 +469,97 @@ Sugamya et al. \cite{sugamya2016image} applies Subband Decomposition with two st
 The histogram of the input is equalized globally first, after that it is decomposed into subbands to equalize the values locally for every four generated subimage.
 \par
 Median Filters are used not only in the domain of shoeprint enhancement \cite{alizadeh2017automatic} but also for natural image noise suppression.
-Apart from Median Filter Li et al. \cite{li2014rapid} utilize Average and Wiener Filter as well to suppress the occuring noise and to prepare the input for neighborhood based feature extraction.
+Apart from Median Filter, Li et al. \cite{li2014rapid} utilize Average and Wiener Filter as well to suppress the occuring noise and to prepare the input for neighborhood based feature extraction.
 Feng et al. \cite{feng2011bag} proposed a Bag-of-Words algorithm based on the Gabor wavelets of the input. 
-For preprocessing the Watershed Transform is used.
+For preprocessing, the Watershed Transform is used.
 \par
-Histogram Operations are combined apart from Bandpass filtering as Sugamya et al. \cite{sugamya2016image} do but also with Thresholding as proposed by Yao et al. \cite{yao2016image}.
-Their approach separates the histogram of the input into two parts according to Otsu\'s method, after that the histogram  of the generated subimages is equalized.
-Figure \ref{fig:rw:BHNMT} shows the results of algorithm on an example image.
+Histogram Operations are combined apart from Bandpass filtering, like Sugamya et al. \cite{sugamya2016image} propose, but also with Thresholding as suggested by Yao et al. \cite{yao2016image}. 
+Their approach first separates the histogram of the input into two parts using the Otsu\'s method, then equalizes the histogram of the generated subimages. 
+Figure \ref{fig:rw:BHNMT} shows the results of the above algorithm on an example image.
 
 \begin{figure}[h]
   \centering
-  \begin{subfigure}[b]{0.4\columnwidth}
+  \begin{subfigure}[t]{0.4\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{2/BHNMTorig.jpg}
     \subcaption{Example low-contrast image}
     \label{fig:rw:BHNMTin}
   \end{subfigure}
-  \begin{subfigure}[b]{0.4\columnwidth}
+  \begin{subfigure}[t]{0.4\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{2/BHNMT.jpg}
     \subcaption{Enhanced image with the histogram thresholding algorithm}
     \label{fig:rw:BHNMTout}
   \end{subfigure}
-  \caption{Example image  \cite{yao2016image} about the enhancement feature of the algorithm proposed by Yao et al. \cite{yao2016image} }
+  \caption{Example image of the enhancement feature of the algorithm proposed by Yao et al. \cite{yao2016image} }
   \label{fig:rw:BHNMT} % \label has to be placed AFTER \caption (or \subcaption) to produce correct cross-references.
 \end{figure}
 
 \par
-Color processing techniques are widespread in the topic of natural image enhancement.
-It is used for image dehazing for low contrast images, \cite{singh2018dehazing} and also for classical noise removal \cite{ren2018joint}, \cite{zhang2016simultaneous}. 
+Color processing techniques are widely used for natural image enhancement.
+It is applied for image dehazing at low contrast images, \cite{singh2018dehazing} and also for classical :: biztos erre gondoltal? Classical mint klasszikus stilus, mint a zene vagy epiteszeti iranyzat.. inkabb general, mainstream, regular ::: noise removal \cite{ren2018joint}, \cite{zhang2016simultaneous}. 
 Bhairannawar et al. \cite{bhairannawar2017color} switch from RGB to HSV and use Laplace filter to detect regions with intensity changes. 
 During processing the H channel is not modified to prevent color distortion artifacts.
-Although color processing is a well researched field with many promising solutions, no wider overview is given in this thesis.
-Even though there are shoeprint impression datasets with colored samples \cite{katireddy2017novel}, FID-300 provides grayscale images thus no color processing approach can be used in this specific case. 
+Although color processing is a well researched field with many promising solutions, no wider overview of this topic is given in this thesis, since the here used FIX-300 dataset provides only grayscale images. An example of a shoeuprint impression dataset with colored samples may be find at CITATION. 
+
 
 \section{Noise Removal}
 
-Noise Removal methods are based on estimating the original image, eliminating the deviating features of the data.
+Noise Removal methods are based on estimating the original image and eliminating the deviating features of the data.
 One way is denoising through gradient histogram preservation \cite{zuo2013texture}.
 The distribution of gradients is estimated on the original image, and the noisy image is adjusted to the calculated values.
-An alternative way is to decompose a single image and based on the clear parts the noisy regions are approximated.
-Huang et al. \cite{huang2013self} propose a self-learning algorithm which only considered the high frequency parts of the decomposed image.
-There were several approaches published, where the images are separated spatially instead of the frequency domain.
+An alternative way is to decompose a single image and based on the clear parts, approximate the noisy regions.
+Huang et al. \cite{huang2013self} propose a self-learning algorithm that only considered the high frequency parts of the decomposed image.
+There were several approaches published, where the images are separated spatially instead of on the frequency domain.
 \cite{xu2015patch}, \cite{talebi2013global}, \cite{chatterjee2011patch} and \cite{guo2015efficient} are techniques based on the idea of non-local means, where the image is subsampled into tiles and the pixels are set to the mean of regions belonging to the same cluster.
 The main difference between the previous algorithms is how they classify the image subregions into different classes.
 Taleby et al. \cite{talebi2013global} uses an iterative shrinkage strategy. 
-Chatterjee et al.  \cite{chatterjee2011patch} groups the geometrically similar regions and estimate the noise for every class separately with the Wiener filter, whereas Guo et al. \cite{guo2015efficient} utilize Block Matching to determine the cluster memberships. 
+Chatterjee et al.  \cite{chatterjee2011patch} group the geometrically similar regions and estimate the noise for every class separately with the Wiener filter, whereas Guo et al. \cite{guo2015efficient} utilize Block Matching to determine cluster memberships. 
 Additionally the spatial location is also considered while calculating the mean value in a given class.
-The members are weighted according to the distance to the current region.
+The members are weighted according to their distance to the current region.
 
 \section{Image Description}
 
 Similar to the previous Image Enhancement section \ref{sec:rw:ImageENhancement} this part is also subdivided into four domains offering solutions for the same problem in different areas.
-In this section the published image features are described which are proposed to be the most discriminative for their field.
-Similar topics are reviewed to gain insight about the most powerful descriptors and consider to port them into the domain of shoeprint enhancement.
-Shoeprint descriptors are described first, after that fingerprint features are discussed.
-Following that an overview about tattoo and natural texture descriptors is given at the end.
+Similar topics are reviewed to gain insight about the most powerful descriptors and to consider whether they can be used in the domain of shoeprint enhancement.
+Shoeprint descriptors are described first, followed by the fingerprint features.
+Finally, at the end of the section tattoo and natural texture descriptors are also reviewed. 
 
 \section*{Shoeprint Descriptors}
 \par
-Shoeprint Description  in varying difficulty and quality of the different datasets is a continuous issue in the research of Shoeprint Identification, therefore the properties of the database the given approach was tested on is noted repeatedly.
+Shoeprint Description  in varying difficulty and quality of the different datasets is a continuous issue in the research of Shoeprint Identification, therefore the properties of the database the given approach was tested on is highlighted for each case.
 Signal or frequency domain based image features are popular in both groups of algorithms using synthetic or real samples for testing.
 Gabor Transform is used in several applications tested on synthetic \cite{patil2009rotation}, on restricted \cite{kong2014novel}, \cite{li2014retrieval} and on real forensic data \cite{wu2019crime} as well.
-Patil et al. \cite{patil2009rotation} propose to use the Radon Transform to determine the dominant direction of structures on the print and process the aligned image with the Gabor Transform.
+Patil et al. \cite{patil2009rotation} propose to use the Radon Transform to determine the dominant direction of structures on the print and to process the aligned image with Gabor Transform.
 Kong et al.  \cite{kong2014novel} combined the Gabor features of the sample with Zernike features to describe the shapes in the pattern.
 Li et al. \cite{li2014retrieval} suggest to use the histogram extracted in the Gabor transformed domain as descriptors.
-In the approach published by Wu et al.  \cite{wu2019crime} Gabor Filters are combined with Haar Wavelets and Fourier-Mellin Transform to get an integrated, multi-level descriptor. 
+In the approach published by Wu et al.  \cite{wu2019crime}, Gabor Filters are combined with Haar Wavelets and Fourier-Mellin Transform to get an integrated, multi-level descriptor. 
 There are other publications along that where Fourier-Mellin Transform is proposed for feature description.
-Gueham et al. \cite{gueham2008automatic} use the classical Fourier-Mellin pipeline to compare samples from a synthetic dataset.
-As Wang et al. \cite{wang2014automatic} state, Fourier-Mellin transform allow multi resolution matching, so they apply it successfully on synthetic data.
-Richetelli et al. \cite{richetelli2017classification} classify synthetic shoeprint impressions by applying Fourier-Mellin transform following the calculation of Phase Only Correlation (POC) to determine the translative difference between two images in the frequency domain.
-Gueham et al. \cite{gueham2007automatic} in another paper suggest to use the basic Fourier transform before calculating the POC.
+Gueham et al. \cite{gueham2008automatic} use the classical Fourier-Mellin pipeline to compare samples of a synthetic dataset.
+As Wang et al. \cite{wang2014automatic} state, Fourier-Mellin Transform allow multiresolution matching, so they apply it successfully on synthetic data.
+Richetelli et al. \cite{richetelli2017classification} classify synthetic shoeprint impressions by applying Fourier-Mellin Transform following the calculation of Phase Only Correlation (POC) to determine the translative difference between two images in the frequency domain.
+Gueham et al. \cite{gueham2007automatic} in another paper suggest to use the basic Fourier Transform before calculating the POC.
 Unlike the approach of Gueham et al. \cite{gueham2007automatic}, which were only tested on synthetic images, Kortylewsky et al. \cite{kortylewski2014unsupervised} propose a Fourier Transformation based method for real forensic images.
-It is an unsupervised learning approach, where the periodic structures on a shoeprint are compared in the Fourier domain.
+It is an unsupervised learning approach, where the periodic structures of a shoeprint are compared in the Fourier domain.
 Richetelli et al. \cite{richetelli2017quantitative} compares Randomly Acquired Characteristics of shoeprints, e.g. small damages, modifications and stuck objects on or in the shoesole pattern, examining their Fourier descriptor.
-Other than Fourier-like transformations the use of Power Spectral Density was also proposed for a restricted dataset \cite{dardi2009texture}.
-It is a descriptor for random, broadbrand signals based on the frequency and power.
+Other than Fourier-like transformations, the use of Power Spectral Density was also proposed for a restricted dataset \cite{dardi2009texture}.
+It is a descriptor for random, broadbrand signals based on the the frequency and power.
 \par
 In high quality datasets shape descriptors are a popular choice for feature extraction.
 Algarni et al. \cite{algarni2008novel} suggest to use Hu moments because of its robustness against noise, rotation and resolution.
-For restricted databases it is proposed to combine the feature descriptors, Kong et al. \cite{kong2014novel} incorporate Zernike and Gabor features whereas Tang et al. \cite{tang2010footwear} define their own fundamental shapes based on common basic structures on a shoe sole through Hough Line Transform.
+For restricted databases it is proposed to combine the feature descriptors, Kong et al. \cite{kong2014novel} incorporate Zernike and Gabor features whereas Tang et al. \cite{tang2010footwear} define their own fundamental shapes based on common basic structures on a shoe sole through Hough Line Transform. 
 The extracted features are then stored in an Attributed Relational Graph to represent the entire shoeprint image.
 \par
-SIFT and Harris Detector are the two most popular point descriptors for matching shoeprint images.
-Nibouce et al. \cite{nibouche2009rotation} propose to use a four-level Harris and combine with SIFT on a synthetic database.
-Almaadeed et al. \cite{almaadeed2015partial} use the same combination and the Hessian Detector additionally for the same purpose on a restricted real-life dataset.
+SIFT and Harris Detector are popular point descriptors for matching shoeprint images.
+Nibouce et al. \cite{nibouche2009rotation} propose to use a four-level Harris and combine it with SIFT on a synthetic database.
+Almaadeed et al. \cite{almaadeed2015partial} use the same combination and uses the Hessian Detector additionally for the same purpose in case of restricted real-life datasets.
 Another publication \cite{richetelli2017classification} extract the SIFT features from the frequency domain after applying Fourier-Mellin Transformation and POC on the input image.
 \par
 Kong et al. \cite{kong2017cross}, \cite{kong2019cross} define a new descriptor for real database extracting the mid-level features from a Convolutional Neural Network.
 Wu et al .\cite{wu2019losgsr} also use machine learning to calculate opinion scores for given matching pairs from real forensic data.
 In the learning process manifold ranking is used where he opinions of human experts as well as feature similarities are both incorporated.
 Kortylewsky et al. \cite{kortylewski2016probabilistic} developed hierarchical composition for Active Basis Models for the same real database, FID-300, as used in this thesis, and also extended for natural image environments \cite{kortylewski2019greedy}.
-Sparse representation was also proposed \cite{alizadeh2017automatic} this method however was only tested on synthetic data and not on real forensic dataset.
+Sparse representation was also proposed \cite{alizadeh2017automatic} this method, however, it was only tested on synthetic data and not on a real forensic dataset.
 
 \section*{Fingerprint Descriptors}
 \par
@@ -571,19 +652,19 @@ Furthermore on three examples only a partial shoeprint is depicted and the size 
 
 \begin{figure}[h]
   \centering
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/00009.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/00020.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/00021.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/00066.jpg}
   \end{subfigure}
@@ -639,19 +720,19 @@ After all descriptors are calculated those are selected which occurrence exceed 
 
 \begin{figure}[h]
   \centering
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/00009.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/00009_mask.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/00025.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/00025_mask.jpg}
   \end{subfigure}
@@ -736,31 +817,31 @@ On the one hand on clear samples LBP and SIFT is able to distinguish between for
 
 \begin{figure}[h]
   \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/00025.jpg}
     \subcaption{Example image from the training set}
     \label{fig:pe:25:orig}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/LBP/output_00025.jpg}
     \subcaption{Output using LBP descriptors with radius 3 and 12 sample points}
     \label{fig:pe:25:LBPs}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/LBP/output_00025_6_24_5.jpg}
     \subcaption{Output using LBP descriptors with radius 5 and 24 sample points}
     \label{fig:pe:25:LBPb}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/FM/00025.jpg}
     \subcaption{Output using Fourier-Mellin Descriptor}
     \label{fig:pe:25:FM}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/SIFT/00025.jpg}
     \subcaption{Output using SIFT Descriptor}
@@ -772,31 +853,31 @@ On the one hand on clear samples LBP and SIFT is able to distinguish between for
 
 \begin{figure}[h]
   \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/00066.jpg}
     \subcaption{Example image from the training set}
     \label{fig:pe:66:orig}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/LBP/output_00066_4_12_3.jpg}
     \subcaption{Output using LBP descriptors with radius 3 and 12 sample points}
     \label{fig:pe:66:LBPs}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/LBP/output_00066_6_24_5.jpg}
     \subcaption{Output using LBP descriptors with radius 5 and 24 sample points}
     \label{fig:pe:66:LBPb}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/FM/00066.jpg}
     \subcaption{Output using Fourier-Mellin Descriptor}
     \label{fig:pe:66:FM}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/SIFT/00066.jpg}
     \subcaption{Output using SIFT Descriptor}
@@ -816,31 +897,31 @@ Similarly as on the bottom left part of Figure \ref{fig:pe:25} the fine structur
 
 \begin{figure}[h]
   \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/00182.jpg}
     \subcaption{Input image}
     \label{fig:pe:182:orig}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/LBP/output_00182_4_12_3.jpg}
     \subcaption{Output using LBP descriptors with radius 3 and 12 sample points}
     \label{fig:pe:182:LBPs}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/LBP/output_00182_6_24_5.jpg}
     \subcaption{Output using LBP descriptors with radius 5 and 24 sample points}
     \label{fig:pe:182:LBPb}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/FM/00182.jpg}
     \subcaption{Output using Fourier-Mellin Descriptor}
     \label{fig:pe:182:FM}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{3/SIFT/00182.jpg}
     \subcaption{Output using SIFT Descriptor}
@@ -961,11 +1042,11 @@ If a pixel value is smaller or equal to the calculated mean of the given cluster
 The manually set depth of the recursion is 8, in this way when the final binary codes are converted to a decimal number a range of 0 to 255 is covered.
 \begin{figure}[h]
   \centering
-  \begin{subfigure}[b]{0.09\columnwidth}
+  \begin{subfigure}[t]{0.09\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/21/00021.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.9\columnwidth}
+  \begin{subfigure}[t]{0.9\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/table.jpg}
   \end{subfigure}
@@ -1003,25 +1084,25 @@ This feature is exploited in a later stage of the algorithm, where an edge sensi
 
 \subfloat{
   \centering
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/241/00241.jpg}
     \subcaption{Example image}
     \label{fig:fans:241:orig}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/241/00241_wiener.jpg}
     \subcaption{Wiener filtered image}
     \label{fig:fans:241:wiener}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/241/00241_bi5.jpg}
     \subcaption{Bilateral filtered image}
     \label{fig:fans:241:bi}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/241/00241_denoise.jpg}
     \subcaption{Denoised image}
@@ -1032,25 +1113,25 @@ This feature is exploited in a later stage of the algorithm, where an edge sensi
 
 \subfloat{
     \centering
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/235/00235.jpg}
     \subcaption{Example image}
     \label{fig:fans:235:orig}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/235/00235_wiener.jpg}
     \subcaption{Wiener filtered image}
     \label{fig:fans:235:wiener}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/235/00235_bi5.jpg}
     \subcaption{Bilateral filtered image}
     \label{fig:fans:235:bi}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/235/00235_denoise.jpg}
     \subcaption{Denoised image}
@@ -1060,25 +1141,25 @@ This feature is exploited in a later stage of the algorithm, where an edge sensi
 
 \subfloat{
   \centering
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/21/00021.jpg}
     \subcaption{Example image}
     \label{fig:fans:21:orig}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/21/00021_wiener.jpg}
     \subcaption{Wiener filtered image}
     \label{fig:fans:21:wiener}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/21/00021_bi5.jpg}
     \subcaption{Bilateral filtered image}
     \label{fig:fans:21:bi}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/21/00021_denoise.jpg}
     \subcaption{Denoised image}
@@ -1108,24 +1189,24 @@ Additionally SMQT has similar effect like Histogram Equalization, the background
 
 \subfloat{
   \centering
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/241/00241.jpg}
     \subcaption{Example image}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/241/00241_enhnace.jpg}
     \subcaption{Enhanced image}
     \label{fig:fans:241:enhance}
   \end{subfigure}
- \begin{subfigure}[b]{0.24\columnwidth}
+ \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/241/00241_threshold.jpg}
     \subcaption{Binarized image}
     \label{fig:fans:241:bin}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/241/00241_result.jpg}
     \subcaption{Output image}
@@ -1135,24 +1216,24 @@ Additionally SMQT has similar effect like Histogram Equalization, the background
 
 \subfloat{
     \centering
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/235/00235.jpg}
     \subcaption{Example image}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/235/00235_enhnace.jpg}
     \subcaption{Enhanced image}
     \label{fig:fans:235:enhance}
   \end{subfigure}
- \begin{subfigure}[b]{0.24\columnwidth}
+ \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/235/00235_threshold.jpg}
     \subcaption{Binarized image}
     \label{fig:fans:235:bin}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/235/00235_result.jpg}
     \subcaption{Output image}
@@ -1162,24 +1243,24 @@ Additionally SMQT has similar effect like Histogram Equalization, the background
 
 \subfloat{
   \centering
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/21/00021.jpg}
     \subcaption{Example image}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/21/00021_enhnace.jpg}
     \subcaption{Enhanced image}
     \label{fig:fans:21:enhance}
   \end{subfigure}
- \begin{subfigure}[b]{0.24\columnwidth}
+ \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/21/00021_threshold.jpg}
     \subcaption{Binarized image}
     \label{fig:fans:21:bin}
   \end{subfigure}
-  \begin{subfigure}[b]{0.24\columnwidth}
+  \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{4/21/00021_result.jpg}
     \subcaption{Output image}
@@ -1417,31 +1498,31 @@ Column two and four illustrate the results when the average noise model was used
 
 \subfloat{
   \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/21/orig.jpg}
     \subcaption{																							Example image }
 	\label{fig:sans:21}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/21/20_mean.jpg}
     \subcaption{Enhanced image using average noise model and 20 clusters for gradient classification}
     \label{fig:sans:21:20_mean}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/21/20_cent.jpg}
     \subcaption{Enhanced image using centroids noise model and 20 clusters for gradient classification}
     \label{fig:sans:21:20_cent}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/21/25_mean.jpg}
     \subcaption{Enhanced image using average noise model and 25 clusters for gradient classification}
     \label{fig:sans:21:25_mean}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/21/25_cent.jpg}
     \subcaption{Enhanced image using average noise model and 25 clusters for gradient classification}
@@ -1451,31 +1532,31 @@ Column two and four illustrate the results when the average noise model was used
 
 \subfloat{
   \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/25/orig.jpg}
     \subcaption{Example image}
 	\label{fig:sans:25}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/25/20_mean.jpg}
     \subcaption{Enhanced image using average noise model and 20 clusters for gradient classification}
     \label{fig:sans:25:20_mean}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/25/20_cent.jpg}
     \subcaption{Enhanced image using centroids noise model and 20 clusters for gradient classification}
     \label{fig:sans:25:20_cent}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/25/25_mean.jpg}
     \subcaption{Enhanced image using average noise model and 25 clusters for gradient classification}
     \label{fig:sans:25:25_mean}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/25/25_cent.jpg}
     \subcaption{Enhanced image using average noise model and 25 clusters for gradient classification}
@@ -1492,31 +1573,31 @@ Column two and four illustrate the results when the average noise model was used
 
 \subfloat{
   \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/174/orig.jpg}
     \subcaption{Example image}
 	\label{fig:sans:174}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/174/20_mean.jpg}
     \subcaption{Enhanced image using average noise model and 20 clusters for gradient classification}
     \label{fig:sans:174:20_mean}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/174/20_cent.jpg}
     \subcaption{Enhanced image using centroids noise model and 20 clusters for gradient classification}
     \label{fig:sans:174:20_cent}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/174/25_mean.jpg}
     \subcaption{Enhanced image using average noise model and 25 clusters for gradient classification}
     \label{fig:sans:174:25_mean}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/174/25_cent.jpg}
     \subcaption{Enhanced image using average noise model and 25 clusters for gradient classification}
@@ -1527,31 +1608,31 @@ Column two and four illustrate the results when the average noise model was used
 
 \subfloat{
   \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/204/orig.jpg}
     \subcaption{Example image}
 	\label{fig:sans:204}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/204/20_mean.jpg}
     \subcaption{Enhanced image using average noise model and 20 clusters for gradient classification}
     \label{fig:sans:204:20_mean}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/204/20_cent.jpg}
     \subcaption{Enhanced image using centroids noise model and 20 clusters for gradient classification}
     \label{fig:sans:204:20_cent}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/204/25_mean.jpg}
     \subcaption{Enhanced image using average noise model and 25 clusters for gradient classification}
     \label{fig:sans:204:25_mean}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/204/25_cent.jpg}
     \subcaption{Enhanced image using average noise model and 25 clusters for gradient classification}
@@ -1568,7 +1649,7 @@ Column two and four illustrate the results when the average noise model was used
 \par
 The example images show that varying the algorithm parameters makes a significant difference when the input had low quality.
 This can be explained with two factors.
-First, high quality images have less noise on the pattern, Figures \ref{fig:sans:21} and \ref{dig:sans:204}, or the noise is less varying, Figure \ref{fig:sans:21}, than on a lower quality sample, Figure \ref{fig:sans:174}.
+First, high quality images have less noise on the pattern, Figures \ref{fig:sans:21} and \ref{fig:sans:204}, or the noise is less varying, Figure \ref{fig:sans:21}, than on a lower quality sample, Figure \ref{fig:sans:174}.
 Second, using 20 and 25 classes is overstated, on high quality images there is no high variance between the properties of edges.
 However choosing high amount of classes was an intentional decision, first the structure of the image is better preserved, when the means are calculated on a high amount of subgroups, second using fewer classes leads to eliminating valuable pattern information when deleting the members of the most populated class.
 Comparing the output of the two different kinds of noise models, there is very little difference between their performance.
@@ -1606,37 +1687,37 @@ The postprocessing step assumes that the shoeprint consists of bigger structures
 
 \subfloat{
   \centering
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/21/orig.jpg}
     \subcaption{Example image}
 	\label{fig:sans:pip:21}
   \end{subfigure}
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/21/mask.jpg}
     \subcaption{Background mask}
     \label{fig:sans:pip:21:bg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/21/enhance.jpg}
     \subcaption{Enhanced image after eliminating noise on the foreground}
     \label{fig:sans:pip:21:enh}
   \end{subfigure}
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/21/grad.jpg}
     \subcaption{Gradient image after calculating non-local means}
     \label{fig:sans:pip:21:grad}
   \end{subfigure}
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/21/th.jpg}
     \subcaption{Binarized image using adaptive thresholding}
     \label{fig:sans:pip:21:th}
   \end{subfigure}
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/21/res.jpg}
     \subcaption{Resulting image after eliminating small structures}
@@ -1646,37 +1727,37 @@ The postprocessing step assumes that the shoeprint consists of bigger structures
 
 \subfloat{
   \centering
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/204/orig.jpg}
     \subcaption{Example image}
 	\label{fig:sans:pip:204}
   \end{subfigure}
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/204/mask.jpg}
     \subcaption{Background mask}
     \label{fig:sans:pip:204:bg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/204/enhance.jpg}
     \subcaption{Enhanced image after eliminating noise on the foreground}
     \label{fig:sans:pip:204:enh}
   \end{subfigure}
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/204/grad.jpg}
     \subcaption{Gradient image after calculating non-local means}
     \label{fig:sans:pip:204:grad}
   \end{subfigure}
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/204/th.jpg}
     \subcaption{Binarized image using adaptive thresholding}
     \label{fig:sans:pip:204:th}
   \end{subfigure}
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/204/res.jpg}
     \subcaption{Resulting image after eliminating small structures}
@@ -1686,37 +1767,37 @@ The postprocessing step assumes that the shoeprint consists of bigger structures
 
 \subfloat{
   \centering
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/239/orig.jpg}
     \subcaption{Example image}
 	\label{fig:sans:pip:239}
   \end{subfigure}
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/239/mask.jpg}
     \subcaption{Background mask}
     \label{fig:sans:pip:239:bg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/239/enhance.jpg}
     \subcaption{Enhanced image after eliminating noise on the foreground}
     \label{fig:sans:pip:239:enh}
   \end{subfigure}
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/239/grad.jpg}
     \subcaption{Gradient image after calculating non-local means}
     \label{fig:sans:pip:239:grad}
   \end{subfigure}
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/239/th.jpg}
     \subcaption{Binarized image using adaptive thresholding}
     \label{fig:sans:pip:239:th}
   \end{subfigure}
-  \begin{subfigure}[b]{0.16\columnwidth}
+  \begin{subfigure}[t]{0.16\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/pipeline/239/res.jpg}
     \subcaption{Resulting image after eliminating small structures}
@@ -1742,19 +1823,19 @@ In such cases several enhancement steps are not exploited, thus the quality of t
 
 \begin{figure}[h]
   \centering
-  \begin{subfigure}[b]{0.3\columnwidth}
+  \begin{subfigure}[t]{0.3\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/noise/orig.jpg}
     \subcaption{Example image from the dataset}
     \label{fig:sans:noise:orig}
   \end{subfigure}
-  \begin{subfigure}[b]{0.3\columnwidth}
+  \begin{subfigure}[t]{0.3\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{5/noise/mask.jpg}
     \subcaption{Calculated background mask}
     \label{fig:sans:noise:mask}
   \end{subfigure}
-  \begin{subfigure}[b]{0.3\columnwidth}
+  \begin{subfigure}[t]{0.3\columnwidth}
     \centering
    \includegraphics[width=\textwidth]{5/noise/res.jpg}
     \subcaption{Output of the semi-automated algorithm}
@@ -2109,23 +2190,23 @@ With further development and potential combination of the proposed method a powe
 		The results using the mean noise model are in columns two and four, the output using the centroids are in columns three and five.
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00009.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00009_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00009_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00009_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00009_filtered.jpg}
   \end{subfigure}
@@ -2134,23 +2215,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00017.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00017_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00017_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00017_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00017_filtered.jpg}
   \end{subfigure}
@@ -2159,23 +2240,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00020.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00020_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00020_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00020_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00020_filtered.jpg}
   \end{subfigure}
@@ -2184,23 +2265,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00021.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00021_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00021_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00021_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00021_filtered.jpg}
   \end{subfigure}
@@ -2209,23 +2290,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00025.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00025_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00025_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00025_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00025_filtered.jpg}
   \end{subfigure}
@@ -2234,23 +2315,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00066.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00066_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00066_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00066_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00066_filtered.jpg}
   \end{subfigure}
@@ -2259,23 +2340,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00171.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00171_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00171_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00171_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00171_filtered.jpg}
   \end{subfigure}
@@ -2284,23 +2365,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00174.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00174_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00174_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00174_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00174_filtered.jpg}
   \end{subfigure}
@@ -2309,23 +2390,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00178.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00178_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00178_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00178_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00178_filtered.jpg}
   \end{subfigure}
@@ -2334,23 +2415,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00182.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00182_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00182_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00182_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00182_filtered.jpg}
   \end{subfigure}
@@ -2359,23 +2440,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00197.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00197_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00197_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00197_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00197_filtered.jpg}
   \end{subfigure}
@@ -2384,23 +2465,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00204.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00204_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00204_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00204_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00204_filtered.jpg}
   \end{subfigure}
@@ -2410,23 +2491,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00217.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00217_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00217_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00217_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00217_filtered.jpg}
   \end{subfigure}
@@ -2436,23 +2517,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00223.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00223_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00223_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00223_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00223_filtered.jpg}
   \end{subfigure}
@@ -2462,23 +2543,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00232.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00232_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00232_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00232_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00232_filtered.jpg}
   \end{subfigure}
@@ -2488,23 +2569,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00233.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00233_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00233_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00233_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00233_filtered.jpg}
   \end{subfigure}
@@ -2513,23 +2594,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00235.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00235_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00235_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00235_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00235_filtered.jpg}
   \end{subfigure}
@@ -2538,23 +2619,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00239.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00239_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00239_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00239_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00239_filtered.jpg}
   \end{subfigure}
@@ -2563,23 +2644,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00241.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00241_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00241_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00241_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00241_filtered.jpg}
   \end{subfigure}
@@ -2589,23 +2670,23 @@ With further development and potential combination of the proposed method a powe
 
 \begin{figure}[h]
 \centering
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/00250.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/mean/00250_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k20/centroids/00250_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/mean/00250_filtered.jpg}
   \end{subfigure}
-  \begin{subfigure}[b]{0.19\columnwidth}
+  \begin{subfigure}[t]{0.19\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{appA/k25/centroids/00250_filtered.jpg}
   \end{subfigure}
