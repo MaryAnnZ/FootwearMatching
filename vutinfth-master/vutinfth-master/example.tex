@@ -127,12 +127,12 @@ This thesis investigates the possibilities for enhancement of shoeprint samples 
 The main challenge of this task is to correctly filter the pattern of the shoeprint regardless of the versatile, possibly heavily structured and cluttered noise on the samples.
 Among fully automated methods, a semi-automated technique is also tested, where user input is required for noise separation.
 \par
-The aim of this work is to give an overview about the current state of the art and to define an universal approach which is able to filter and enhance the shoeprint data despite the presence of noise and varying image quality.
+The aim of this work is to give an overview about the current state of the art and to define an approach which is able to filter and enhance the shoeprint data despite the presence of noise and varying image quality.
 Along two fully-automated algorithms a semi-automated noise-suppression and enhancement pipeline for shoeprint images is introduced. 
 The noisy pixels are identified based on the Fourier-Mellin features of a background pixel selected by the user.
 At the same time a noise model is calculated to eliminate that structure on the shoeprint pattern as well.
-Additionally, the pixels are clustered based on their gradients and the non-local means approach is applied
-The experimental results show that the processed images are clearer, the pattern is sharper, the noise is completely eliminated in the detected background area and suppressed in the foreground region.
+Additionally, the pixels are clustered based on their gradients and the non-local means approach is applied.
+The experimental results show that the processed images are clearer, the pattern is sharper, the noise is masked in the detected background area and suppressed in the foreground region.
 Furthermore besides qualitative evaluation also a quantitative evaluation is performed using three basic image descriptor features and the results show that the enhanced images achieve higher accuracy than the original images.
 
 
@@ -156,18 +156,14 @@ The work of forensic experts is not only time consuming and expensive, but there
 Furthermore, the stages of the human matching process are not necessarily reproducible considering the opinions of multiple experts.
 \par
 There is an excessive amount of research already done in order to help or replace the work of forensic experts \cite{rida2019forensic}.
-However this task is challanging because of the versatility of conditions, the features and properties of the pattern on the shoe, like age, material, etc., the characteristics of the ground where the shoeprint is left and environmental conditions, for example weather, highly influence the overall quality of the acquired sample.
+However this task is challanging because of the versatility of conditions, the features and properties of the pattern on the shoe, like age, material, etc., the characteristics of the ground where the shoeprint is left and environmental conditions, for example weather, highly influence the overall appearance of the acquired sample.
 Figure \ref{fig:int:varying} shows samples of the same shoe captured under different conditions from the FID-300 \cite{kortylewski2014unsupervised} dataset.
-Such high amount of factors results in changing appearance causing high intra class variance while searching for common features of the same sheprint pattern.
-In this thesis a universal and wide-rage dataset is defined as a database which is regularly used in the evaluation of the algorithms and depicts the common scenarios occurring at real-life crime scenes.
-Such dataset makes it possible to estimate the applicability of the given algorithm in real-life scenarios and enables comparison between the already published techniques.
-But, according to Rida et al. \cite{rida2019forensic} no such database is available yet.
+Such high amount of factors results in changing appearance causing high intra-class variance while searching for common features of the same shoeprint pattern.
+To make the features more robust and to lower the influence of those factors sheprint enhancement is proposed.
 \par
-In 2014 a new dataset called FID-300 \cite{kortylewski2014unsupervised} was released that aims to solve the database problem described above.
+In 2014 a new dataset called FID-300 \cite{kortylewski2014unsupervised} was released that consists shoeprint samples collected by the police. 
 It contains over 1000 reference shoeprint patterns acquired in a laboratory.
-Moreover, the database introduces 300 new shoeprint samples collected by the police providing an insight to images forensic experts work with on a daily basis.
-FID-300 is a wide-ranged database because it provides samples from varying sceanrios.
-But the evaluation of the majority of the already published methods is only available on different datasets, thus it is not universal.
+Moreover, the database introduces 300 new real-life shoeprint samples providing an insight to images forensic experts work with on a daily basis.
 
 \begin{figure}[h]
   \centering
@@ -219,30 +215,34 @@ But the evaluation of the majority of the already published methods is only avai
 
 \section{Problem Definition}
 \par
-This work focuses on the ways of increasing the sample quality.
+This work focuses on the ways of increasing the sample quality in terms of the amount of noise on the image and the intensity difference between the fore- and the background.
 Since the already available methods are evaluated on different datasets a comparison between them is a challenging task.
-In this thesis three prototypical enhancing techniques are developed and tested in order to create an overview of the published technologies and their performance, and to find a method which handles real crime scene samples universally.
+Furthermore, they focus on the definition of robust descriptor and a powerful matching algorithm to overcome the problem of versatile appearance of the shoeprints.
+In this thesis three prototypical preprocessing techniques are developed and tested to enhance the shoeprint samples and to make the extracted features more accurate. 
 \par
 For evaluation and testing the FID-300 database is used.
 The dataset contains both reference prints as well as on a crime secured, real shoeprint patterns.
 Additionally, the Ground Truth about every real sample and its belonging reference print is also available.
 The goal of this work is to define an image processing pipeline which correctly identifies and enhances the shoe patterns and eliminates or suppresses the noise on the pattern samples regardless of the quality of the image.
-A secondary objective is to gain an overview about the algorithms already published, and make an estimation which methods are applicable in real-life scenarios based on their performance on the FID-300 database. 
+A secondary objective is to gain an overview about the preformance of the algorithms, and make an estimation which methods are applicable in real-life scenarios based on their performance on the FID-300 database. 
 
 \section{Challenges}
 \par
-An obstacles in the topic of shoeprint enhancement and in automatic shoeprint matching in general is the versatile image quality and appearance as well as the lack of universal and wide database.
+An obstacles in the topic of shoeprint enhancement and in automatic shoeprint matching in general is the versatile image quality and appearance.
 There are approaches available which build models for given structures of the shoeprint \cite{tang2010footwear}, \cite{alizadeh2017automatic}, but they are limited to given parts of the shoesole and are tested on a restricted database.
 Moreover, there is an inference from noise of multiple sources.
 Firstly, the produced shoeprint and its background depends on the properties of the ground where the impression was made, the roughness and unevenness of a given type of surface distorts the original shoe sole pattern and those features on the ground appear as noise on the final sample.
 The impressions of Figure \ref{fig:int:varying:1} and \ref{fig:int:varying:20} were made on an even surface whereas on Figure \ref{fig:int:varying:17} and \ref{fig:int:varying:25} cluttered background is visible caused by the surface properties.
 Furthermore, objects on the surface, above or behind the left shoeprint potentially cover or distort the original pattern, or prevent to secure the complete area of the original shoe sole.
 On Figures \ref{fig:int:varying:9} and \ref{fig:int:varying:66} only partial shoeprints were secured, on the left side of Figure \ref{fig:int:varying:66} the structures of the shoe sole pattern are hardly visible because of the additional noise.
+Other than that illumination changes occur as well \ref{fig:int:varying:20}.
 Besides, the pattern on the original shoe can also be distorted or modified.
 These alterations possibly contain valuable information about the owner, however, they make it more difficult to match the pattern with the reference prints captured on unused shoes.
-Lastly, there are multiple shoeprint securing methods producing different results for the same print \cite{katireddy2017novel}. 
+Additionally, there are multiple shoeprint securing methods producing different results for the same print \cite{katireddy2017novel}. 
 The shoeprint securing technique used depends on the properties of the ground. 
 The securing method and the additional properties of the floor, for example if it was clean or dusty when making an impression, also determine if the positive \ref{fig:int:cap:pos} or the negative \ref{fig:int:cap:neg}, the pattern or the space between them, image is captured.
+Furthermore, the majority of the publications focus on the development of robust feature sets and matching algorithms and not on the preprocessing of the shoeprint samples, therefore there  is limited knowledge available about the specific domain of shoeprint enhnacement.
+Proposed methods for forensic shoeprint matching are discussed in the following chapter.
 
 \begin{figure}[h]
   \centering
@@ -273,9 +273,9 @@ Thus it is challenging to plan a new algorithm based on the published results be
 
 \section{Contribution}
 \par
-In this thesis an overview about image enhancement methods is given.
+In this thesis an overview about shoeprint enhancement methods is given.
 Multiple approaches are implemented, discussed and evaluated.
-Two ways to increase the quality of a given shoeprint sample are to enhance the pattern regardless of the noise and to suppress or eliminate the noise without losing any pattern information.
+Two ways to increase the quality, defined as the contrast between the fore- and the background, of a given shoeprint sample are to enhance the pattern regardless of the noise and to suppress or eliminate the noise without losing any pattern information.
 Along fully-automated methods semi-automated algorithms are also considered.
 Three different approaches are introduced and examined in respect to their performance on real-life image samples.
 \par
@@ -631,123 +631,36 @@ Varied Local Edge Pattern Descriptors (VLEP) \cite{yan2016edge} are used to repr
 Every pixel of an edge is described by the angle and by the magnitude of the gradient, which stand for edge direction and strength, respectively. 
 Wang et al. \cite{wang2018using} extend the feature to be scale invariant by combining two or more modified VLEPs, one calculated on a different scale and another calculated on different scale and resolution.
 
-\chapter{Pattern Detection}
+\chapter{Methodology}
+
 \par
-In this and in the following two chapters three different approaches are introduced and discussed if they are usable for enhancement of real-life footwear impression.
+In this chapter three different algorithms for shoeprint enhancement are introduced, the first one is based on feature learning, the second one uses image filtering and the third one builds a Fourie-Mellin based noise model and applies the non-local means algorithm as well.
 As mentioned earlier the testing data of already published algorithms varies, thus it is difficult to make an estimation about their performance on the FID-300  \cite{kortylewski2014unsupervised} dataset.
 For that reason three prototypical application are developed and evaluated in this thesis, and the one with most promising results is further analyzed.
-The goal of these three chapters is to give an overview about possible directions of development and to provide information about the effectiveness of the given techniques on a real-life forensic dataset.
+The goal of this chapter is to give an overview about possible directions of development and to present the working pipeline and the implementation details of the proposed methods.
 \par
-In this thesis two ways are considered to increase the quality of a given input, namely, first, to find and enhance the information regardless of the properties and presence of noise, or second, to suppress any kind of noise preserving the information. 
-In this chapter an experimental application for the first possibility is introduced. 
-%In Chapter 4 an approach for noise suppression is discussed.
-%In Chapter 5 a semi-automated enhancement algorithm is presented.
-The theoretical background and the structure is discussed in the first section, afterwards implementation details are reported, followed by a qualitative evaluation of the results.
+A measure for image quality is the signal to noise ratio, a high value indicates high quality image, where the content is clearly visible, a lower value stands for low quality where the noise suppresses the content of the image.
+In case of forensic images, the outlines of the shoeprint pattern represent the content, the information of the image, and clutter or additional objects in the background cause noise. 
+The three proposed algorithms attempt to enhance the shoeprint impressions by increasing the signal to noise ratio of the input, thus increasing the contrast between the fore- and the background of the image.
+Two ways are considered to increase the quality of a given input, namely, first, to find and enhance the information regardless of the properties and presence of noise, or second, to suppress any kind of noise preserving the information. 
+The first algorithm focuses on finding the shoeprint pattern in varying conditions, the second one filters noise and the last one combines both of them by suppressing the noise with the calculated noise model and enhancing shoeprint pattern information using the non-local means method.
 
+\section{Feature Learning for Shoeprint Detection}
 
-\section{Methodology}
 \par
 To find the shoeprint pattern in an input regardless the noise a robust and discriminative descriptor is defined.
 Since the noise and other inference is highly variable in real-life settings, the impressions from the same shoe differs depending on the circumstances causing high intra-class variance.
-On Figure \ref{fig:pe:varying} samples from the same shoeprint are shown, noise occurs not only in the background but also on the shoeprint itself \ref{fig:pe:varying:66}, the appearance of noise changes within one image \ref{fig:pe:varying:21} and illumination changes occur as well \ref{fig:pe:varying:20}.
-Furthermore, on four examples \ref{fig:pe:varying:9}. \ref{fig:pe:varying:17}, \ref{fig:pe:varying:21}, \ref{fig:pe:varying:66} only a partial shoeprint is depicted and the size and resolution of the samples also varies. 
-
-\begin{figure}[h]
-  \centering
-  \begin{subfigure}[t]{0.13\columnwidth}
-    \centering
-    \includegraphics[width=\textwidth]{1/00003.jpg}
-	\caption{}
-	\label{fig:pe:varying:3}
-  \end{subfigure}
-   \begin{subfigure}[t]{0.13\columnwidth}
-    \centering
-    \includegraphics[width=\textwidth]{1/00009.jpg}
-	\caption{}
-	\label{fig:pe:varying:9}
-  \end{subfigure}
- \begin{subfigure}[t]{0.13\columnwidth}
-    \centering
-    \includegraphics[width=\textwidth]{1/00017.jpg}
-	\caption{}
-	\label{fig:pe:varying:17}
-  \end{subfigure}
- \begin{subfigure}[t]{0.13\columnwidth}
-    \centering
-    \includegraphics[width=\textwidth]{1/00020.jpg}
-	\caption{}
-	\label{fig:pe:varying:20}
-  \end{subfigure}
- \begin{subfigure}[t]{0.13\columnwidth}
-    \centering
-    \includegraphics[width=\textwidth]{1/00021.jpg}
-	\caption{}
-	\label{fig:pe:varying:21}
-  \end{subfigure}
- \begin{subfigure}[t]{0.13\columnwidth}
-    \centering
-    \includegraphics[width=\textwidth]{1/00025.jpg}
-	\caption{}
-	\label{fig:pe:varying:25}
-  \end{subfigure}
- \begin{subfigure}[t]{0.13\columnwidth}
-    \centering
-    \includegraphics[width=\textwidth]{1/00066.jpg}
-	\caption{}
-	\label{fig:pe:varying:66}
-  \end{subfigure}
-  \caption{Example images from the FID-300 \cite{kortylewski2014unsupervised} dataset, where the soheprint is captured under different conditions.}
-  \label{fig:pe:varying}
-\end{figure}
-
+Because of that a discriminative feature learning algorithm is proposed based on the work of Guo et al. \cite{guo2012discriminative}.
+With the proposed adaptive feature selection, it is possible to learn the discriminative features of a texture and to adjust the selection process according to a given set of reference images of the same texture, according to the versatile appearance of impressions deriving from the same shoe sole.
+While training multiple samples of the same texture captured in different circumstances are processed and the features selected on the single images are summarized in the feature pool.
 \par
-Because of the high intra-class variance, a discriminative feature learning algorithm is proposed based on the work of Guo et al. \cite{guo2012discriminative}.
-In their work a three-layered Local Binary Pattern (LBP) feature learning algorithm is introduced for natural texture description, the schematic workflow the algorithm is shown on Figure \ref{fig:pe:workflow}
-They utilize on feature selection where only the discriminative descriptors are chosen and propagated further.
-In the first layer, where robustness is granted, those features are selected that describe the majority of a given texture.
-This is done by finding the frequently appearing descriptors and ignoring the rare ones since they are more sensitive to noise.
-The descriptors of the given texture are selected in the order of their frequencies, starting with the most frequent one.
-If the already selected descriptors cover a bigger region of the original texture than a given threshold, the selection process terminates and the chosen descriptors are propagated for the next level.
-The selection of threshold is crucial in this process; if it is too high, less robust descriptors with low frequency are also selected, when the threshold is too low, only the most frequent descriptors are considered and valuable details of the texture are ignored.
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=\textwidth]{3/workflow.jpg}
-  \caption{The workflow of the three-layered feature learning algorithm  \cite{guo2012discriminative}.}
-  \label{fig:pe:workflow} % \label has to be placed AFTER \caption (or \subcaption) to produce correct cross-references.
-\end{figure}
-
-\par
-The following two layers work according to Fisher\'s Separation Criteria, the second layer aims to minimize intra-class variance, whereas the third layer ensures maximum inter-class distance. 
-The second layer provides discriminative power.
-It gathers all selected descriptors from the previous layer of the same texture on different samples and intersects those sets.
-The assumption is that the same texture have similar properties under varying circumstances.
-During this process, features are selected that occur in every sample of the given texture.
-\par
-In the last, third layer representation capability is ensured.
-This layer merges all remaining features from the second layer into one set to create a dominant feature pool.
-In the second layer a feature set for a given texture is created based on the extracted descriptors from all samples of the same texture, in the third layer those feature sets of every occurring textures are collected and united.
-\par
-For the purpose of this prototypical implementation only the first two layers are used, because the goal is to distinguish between noise and information, thus two classes, pattern and noise, are defined. 
-Since the noise has no regularity along the samples, descriptors for shoe patterns are only learned.
-The primary assumption is that there is a fundamental similarity between every shoeprint image, e.g. regular line structures, recurring basic patterns, which is detected and learned.
-Guo et al. \cite{guo2012discriminative} proposed their algorithm for LBP features, and since it is a popular descriptor for natural textures \cite{hong2014combining}, \cite{ahonen2009rotation} and fingerprints \cite{wang2013pixel}, \cite{rida2018palmprint}, LBP is chosen to be a candidate descriptor for shoeprint detection.
-In the research of shoeprint identification both frequency based feature descriptors, such as Fourier-Mellin Transform \cite{wu2019crime}, \cite{gueham2008automatic}, and SIFT \cite{nibouche2009rotation}, \cite{richetelli2017classification} are already proposed descriptors, thus these are also selected for feature learning.
-\par
-The three-layered learning algorithm is implemented for three different feature descriptors, LBP, Fourier-Mellin and SIFT, but the learning process follows the same steps as proposed by Guo et al. \cite{guo2012discriminative}.
-In the first layer Guo et al. \cite{guo2012discriminative} suggest a threshold based on the area the selected features cover on the original image.
-However, this criteria is altered in the case of LBP and SIFT to adjust the learning algorithm to the needs of this research.
-Three-layered learning was developed originally to find a discriminative feature set for several texture images from a wide database, from \cite{ojala2002outex}, \cite{dana1999reflectance}, \cite{boland2001neural}, \cite{jantzen2005pap} and \cite{brahnam2007introduction}, but in this project no such dataset is available since only a subset of samples from FID-300 are used for learning. 
-Since there is no labeled data in the FID-300 \cite{kortylewski2014unsupervised} dataset available, the samples chosen for training were labeled manually.
+The feature learning algorithm proposed in \cite{guo2012discriminative} was developed originally to find a discriminative feature set for several texture images from a wide database, from \cite{ojala2002outex}, \cite{dana1999reflectance}, \cite{boland2001neural}, \cite{jantzen2005pap} and \cite{brahnam2007introduction}, but in this project no such dataset is available since only a subset of samples from FID-300 are used for learning. 
+The FID-300 \cite{kortylewski2014unsupervised} dataset consists of 300 real-life forensic samples and 1175 reference samples, thus not every reference sample has a corresponding real impression, and the majority of reference images with existing corresponding real samples have only one or two examples for real impression in the database.
+Since the feature learning algorithm requires multiple representations for the same texture a shoe sole with the highest amount of real-life samples is chosen as training set.
+It contains six real-life shoeprint impressions and their reference image. 
+Since there is no pixel wise labeled data in the FID-300 dataset available, the samples chosen for training were labeled manually by comparing the sample images to their reference and marking all pixels which are part of the shoeprint pattern.
 Figure \ref{fig:pe:mask} shows two example images. 
 The black regions of the mask show the shoeprint information whereas the white pixels indicate the background.
-Furthermore, the goal is to distinguish between noise and shoeprint and not to find discriminative features within multiple texture images.
-For that reason, features are firstly extracted both from the fore- and background of the samples, where the foreground contains the exact shoeprint pattern and the background is the noisy ground where the shoeprint is lying. 
-After this, to achieve high inter-class distance despite the absence of the third layer, frequent descriptors of the noise are determined and all of them are eliminated from the pattern descriptors.
-The remaining pattern descriptors are propagated to the next level. 
-In case of Fourier-Mellin Transform no such modification is made.
-After all descriptors are calculated, those  are selected which occurrence exceed a given threshold as Guo et al. \cite{guo2012discriminative} proposed.
-
 
 \begin{figure}[h]
   \centering
@@ -772,55 +685,78 @@ After all descriptors are calculated, those  are selected which occurrence excee
 \end{figure}
 
 \par
-An easy way to compare two descriptor is to calculate the complete matches within one sample.
+In the work of Guo et al. \cite{guo2012discriminative} a three-layered Local Binary Pattern (LBP) feature learning algorithm is introduced for natural texture description, the schematic workflow the algorithm is shown on Figure \ref{fig:pe:workflow}
+They utilize on feature selection where only the discriminative descriptors are chosen and propagated further.
+In the first layer the samples of the same textures are examined separately.
+Robustness is granted by selecting those features that describe the majority of a texture on the given sample.
+This is done by finding the frequently appearing descriptors and ignoring the rare ones since they are more sensitive to noise.
+The descriptors of the given texture are selected in the order of their frequencies, starting with the most frequent one.
+If the already selected descriptors cover a bigger region of the original texture than a given threshold, the selection process terminates and the chosen descriptors are propagated for the next level.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{3/workflow.jpg}
+  \caption{The workflow of the three-layered feature learning algorithm  \cite{guo2012discriminative}.}
+  \label{fig:pe:workflow} % \label has to be placed AFTER \caption (or \subcaption) to produce correct cross-references.
+\end{figure}
+
+
+\par
+Guo et al. \cite{guo2012discriminative} proposed their algorithm for LBP features, and since it is a popular descriptor for natural textures \cite{hong2014combining}, \cite{ahonen2009rotation} and fingerprints \cite{wang2013pixel}, \cite{rida2018palmprint}, LBP is chosen to be a candidate descriptor for shoeprint detection.
+In the research of shoeprint identification both frequency based feature descriptors, such as Fourier-Mellin Transform \cite{wu2019crime}, \cite{gueham2008automatic}, and SIFT \cite{nibouche2009rotation}, \cite{richetelli2017classification} are already proposed descriptors, thus these are also selected for feature learning.
+Therefore along LBP, the feature learning algorithm is also implemented for Fourier-Mellin and SIFT, but the selection process follows the same steps as proposed by Guo et al. \cite{guo2012discriminative}.
+For the Fourier-Mellin calculation the images are extended by mirroring the edges to have a uniform-sized, 5x5, descriptor in all cases.
+For LBP features two different settings are considered, one with a radius of 3 and 12 sample points and one with a radius of 5 and 24 sample points.
+These parameter settings were determined experimentally and their performance is discussed in the following chapter.
+\par
+An easy way to count the frequency  of one descriptor is to count the number of complete matches with every other descriptor within one sample .
 This method, however, results in high amount of descriptors with little number of occurrence.
-Consequently, a similarity measure is used for all three candidate features. If the similarity value reaches a predefined threshold the two descriptors are considered the same, and the operation is applied according to the tasks of the given layer.
-At LBP histogram correlation is used for comparison, at SIFT Brute-Force matcher is applied and at the Fourier-Mellin Transform the similarity measure proposed in \cite{gueham2008automatic} used.
-The correlation coefficient between two Fourier-Mellin descriptors is given by:
+Consequently, a similarity measure is used for all three candidate features. 
+As similarity measure histogram correlation is used for LBP, matcher called Brute-Force is applied for SIFT and the Fourier-Mellin features are evaluated using the correlation coefficient proposed  in \cite{gueham2008automatic}.
+Brute-Force compares one feature to every other features of the image and sets the closest one as match storing the distance value between them.
+The correlation coefficient proposed by Gueham et al. \cite{gueham2008automatic} is given as follows:
 \[ corr(FM_{1},FM_{2}) = \frac{\sum\limits_{m}\sum\limits_{n}(FM_{1mn}-\overline{FM_{1}})(FM_{2mn}-\overline{FM_{2}})}{\sqrt{(\sum\limits_{m}\sum\limits_{n}(FM_{1mn}-\overline{FM_{1}})^2)(\sum\limits_{m}\sum\limits_{n}(FM_{2mn}-\overline{FM_{2}})^2)}}  \]
 \label{FMcorr}
 where $FM_{1}$ and $FM_{2}$ are two Fourier-Mellin Features to compare and $\overline{FM_{1}}$ and $\overline{FM_{2}}$ are the mean values of the corresponding features.
+If the similarity value reaches a predefined threshold the two descriptors are considered the same and the counter for the frequency of the given features is increased.
+The experimentally determined threshold for similarity is  90\% for LBP histogram correlation, 300 for the maximal distance of two SIFT features and higher correlation than 1.4 between two Fourier-Mellin descriptors.
+\par
+Guo et al. \cite{guo2012discriminative} suggest a threshold based on the area the selected features cover on the original image.
+The selection of threshold is crucial; if it is too high, less robust descriptors with low frequency are also selected, when the threshold is too low, only the most frequent descriptors are considered and valuable details of the texture are ignored.
+The parameter settings are determined experimentally and every Fourier-Mellin feature is propagated which occures at least 10 times on the shoeprint pattern.
+However, this criteria is altered in the case of LBP and SIFT to eliminate by moise distorted descriptors as follows.
+Features are firstly extracted both from the fore- and the background of the samples, where the foreground contains the exact shoeprint pattern and the background is the noisy ground where the shoeprint is lying. 
+After this, to achieve high inter-class distance between shoeprint pattern and noise, frequent descriptors of the noise are determined and all of them are eliminated from the pattern descriptors.
+The same similarity measures defined above are utilized to determine the frequency of the noise descriptors and to eliminate them from the pattern descriptors.
+If the histogram correlation between two LBP noise features is higher than 90\% or the matching distance between two SIFT descriptors is lower than 300 the counter for frequency of the given noise feature is increased.
+These thresholds and the following parameter setting are determined experimentally and the noise similarity criteria is set to be the same the required similarity between descriptors of the shoeprint patterns.
+Afterwards the most frequent noise descriptors are determined, occurring at least 100 times among LBP and at least 10 times among SIFT features.
+All LBP and SIFT shoeprint descriptors descriptors are eliminated which have higher than 90\% correlation with or have smaller than 250 distance to any dominant noise descriptor.
+The remaining pattern descriptors are propagated to the next level. 
+\par
+The following two layers work according to Fisher's Separation Criteria, the second layer aims to minimize intra-class variance, whereas the third layer ensures maximum inter-class distance. 
+The second layer gathers all selected descriptors from the previous layer of the same texture, so the extracted shoeprint pattern features, on different samples and intersects those sets.
+The assumption is that the same texture have similar properties under varying circumstances.
+During this process, features are selected that occur in every sample of the given texture.
+If there is a feature in every sample of the same texture with a high enough similarity the feature is chosen and added to the final descriptor pool.
+The same similarity measures defined in the first layer are used for feature comparison, the thresholds for similarity are determined experimentally.
+If the correlation between two LBP descriptor is higher than 90\%, the distance between two SIFT features is smaller than 450 and the correlation between two Fourier-Mellin features is higher than 1.4, the feature is chosen and added to the final set of descriptors.
+\par
+In the last, third layer representation capability is ensured.
+This layer merges all remaining features from the second layer into one set to create a dominant feature pool.
+In the second layer a feature set for a given texture is created based on the extracted descriptors from all samples of the same texture, in the third layer those feature sets of every occurring textures are collected and united.
+For the purpose of this prototypical implementation only the first two layers are used, because only one texture class, "shoeprint", is defined.
+Since the noise pattern is unique to each sample and thus seemingly does not follow any regularities across them, descriptors for shoe patterns are only learned.
+That means, that only one texture set is available, thus no merging across multiple textures is needed.
 \par
 At the end of the learning process a descriptor pool is created.
 The shoeprint area of a new input is determined based on those learnt features using the same comparison techniques as in the learning phase.
-
-\section{Implementation}
-\par
-In this section implementation details of the modified three-layered learning algorithms are revealed and parameter settings are specified.
-This and the following algorithms are written in Python 2.7 \cite{van1995python} using OpenCV 4.1.1 \cite{opencv_library}.
-Being a prototypical implementation, the values of the variables stated in this section are determined through experiments.
-\par
-When starting the application the training data is read.
-It consists of the original shoeprint images and mask images where the relevant regions of the corresponding shoeprint impression is marked.
-The two sets of pictures are stored in a vector, it is assumed that the mask has the exact same size as the corresponding shoeprint image, that every image has a mask and that the images and masks are stored in the same order.
-For training a limited amount of seven images were selected and labeled manually.
-The FID-300 \cite{kortylewski2014unsupervised} dataset consists of 300 real-life forensic samples and 1175 reference samples, thus not every reference sample has a corresponding real impression, and the majority of reference images with existing corresponding real samples have only one or two examples for real impression in the database.
-The chosen seven images depict shoeprint images from the same shoe, one of them is a reference sample the rest of them is a real one.
-\par
-To speed up the shoeprint recognition, the learnt features are stored in a \texttt{.txt} file.
-It is determined if a new learning process starts or the already calculated descriptors are read from file.
-When the learning starts the descriptors for all pixels are calculated.
-For the Fourier-Mellin calculation the images are extended by mirroring the edges to have a uniform-sized, 5x5, descriptor in all cases.
-For LBP features two different settings are considered, one with a radius of 3 and 12 sample points and one with a radius of 5 and 24 sample points.
-After that similar descriptors are merged and their frequency is calculated.
-If the histogram correlation of two LBP features is higher than 90\%, if the distance between two SIFT features is lower than 300 and if the correlation between two Fourier-Mellin features is higher than 1.4 the two descriptors are combined.
-Afterwards the most frequent noise descriptors are determined, occurring at least 100 times among LBP and at least 10 times among SIFT features.
-All LBP and SIFT descriptors are eliminated which have higher than 90\% correlation with or have smaller than 250 distance to any dominant noise descriptor.
-The remaining features are then propagated to the next layer.
-In case of Fourier-Mellin Transform all descriptors are selected which occur at least 10 times on the given pattern.
-\par
-In the second layer the dominant descriptors of multiple samples are compared.
-If there is a feature in every training image with a high enough similarity the feature is chosen and added to the final descriptor pool.
-If the correlation between two LBP descriptor is higher than 90\%, the distance between two SIFT features is smaller than 450 and the correlation between two Fourier-Mellin features is higher than 1.4, the feature is chosen and added to the final set of descriptors.
-At the end of this process the whole set of descriptor is written into file.
-\par
-If the descriptors are available the input image is processed.
 The descriptors of the input image are determined similarly as in the training phase.
 For every pixel of the input a descriptor is calculated, in case of Fourier-Mellin transform the borders of the input are extended by mirroring.
 The output image is calculated by comparing the descriptors of the input with the ones in the descriptor pool.
 In case of LBP and Fourier-Mellin features the correlation value is written into the resulting image which is normalized at the end of calculation.
 The result image of the SIFT feature comparison is binary, it is set to one if the descriptor of the corresponding pixel has a smaller distance than 200 to any descriptor from the learned set.
-At the end of the application the resulting images are saved.
+This distance is determined experimentally, its influence on the resulting image is discussed in the following chapter.
 
 \section{Evaluation}
 \par
@@ -1884,6 +1820,9 @@ To get a detailed overview about its performance, additional quantitative tests 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Results and Discussion}
+%and discussed if they are usable for enhancement of real-life footwear impression
+%and to provide information about the effectiveness of the given techniques on a real-life forensic dataset
+%This and the following algorithms are written in Python 2.7 \cite{van1995python} using OpenCV 4.1.1 \cite{opencv_library}.
 \par
 In this chapter the quantitative results of the semi-automated approach conducted on a minimal dataset from FID-300 are presented and discussed.
 The testing database consist of 20 images, the selected images and the output of the algorithm are shown in the Appendix \ref{AppA}.
