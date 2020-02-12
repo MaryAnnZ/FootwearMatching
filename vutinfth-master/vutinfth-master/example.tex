@@ -1066,13 +1066,11 @@ Because only the residual noise around the outlines of the shoeprint has to be d
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Results and Discussion}
-%and discussed if they are usable for enhancement of real-life footwear impression
-%and to provide information about the effectiveness of the given techniques on a real-life forensic dataset
-%This and the following algorithms are written in Python 2.7 \cite{van1995python} using OpenCV 4.1.1 \cite{opencv_library}.
-
-%Furthermore it is examined, if this approach is usable for real shoeprint identification algorithms.
-%In the following section the experimental results are presented.
-%Furthermore, the performance and the usability of the proposed algorithm is discussed.
+\label{results}
+\par
+In this chapter the experimental results of the presented algorithms are shown and it is discussed if they are usable for enhancement of real-life footwear impression.
+Along the qualitative evaluation of all algorithms the quantitative evaluation of the most promising one is also given.
+All algorithms are written in Python 2.7 \cite{van1995python} using OpenCV 4.1.1 \cite{opencv_library}.
 
 
 \section{Qualitative Evaluation of the Feature Learning Algorithm}
@@ -1702,7 +1700,7 @@ Column two and four illustrate the results when the average noise model was used
 }
 
 \par
-The example images show that varying the algorithm parameters makes a significant difference when the input had low quality.
+The example images,  \ref{fig:sans:res1} and \ref{fig:sans:res2}, show that varying the algorithm parameters makes a significant difference when the input had low quality.
 This is explained with two factors.
 First, high quality images have less noise on the pattern, Figures \ref{fig:sans:21} and \ref{fig:sans:204}, or the noise is less varying, Figure \ref{fig:sans:21}, than on a lower quality sample, Figure \ref{fig:sans:174}.
 Second, using 20 and 25 classes for the non-local means algorithm is overstated, on high quality images there is no high variance between the properties of edges thus classes with little amount of members are generated .
@@ -1913,7 +1911,7 @@ In such cases several enhancement steps are not exploited, thus the quality of t
     \label{fig:sans:noise:res}
   \end{subfigure}
  
-  \caption{Output of the Shoeprint Enhancement algorithm, where no estimation about the background can be made; \ref{fig:sans:noise:orig} Example image from the dataset; \ref{fig:sans:noise:mask} Calculated background mask; \ref{fig:sans:noise:res} Output of the semi-automated algorithm}
+  \caption{Output of the Shoeprint Enhancement algorithm, where no estimation about the background can be made; \ref{fig:sans:noise:orig} Example image from the dataset; \ref{fig:sans:noise:mask} Calculated background mask; \ref{fig:sans:noise:res} Output of the Shoeprint Enhancement algorithm}
   \label{fig:sans:noise}
 \end{figure}
 }
@@ -1928,232 +1926,127 @@ To get a detailed overview about its performance, additional quantitative tests 
 
 \section{Quantitative Evaluation of Shoeprint Enhancement with Non-Local Means}
 \par
-In this chapter the quantitative results of the semi-automated approach conducted on a minimal dataset from FID-300 are presented and discussed.
+The visual improvement resulting from the different algorithms were already discussed in the previous sections.
+According to the qualitative evaluation the Shoeprint Enhancement Algorithm with Non-Local Means, providing more exact shoeprint layout than the Feature Learning algorithm and being less shoeprint pattern specific than the Fully-Automated pipeline, had the most promising results further tests are conducted.
+In this chapter the quantitative results on a minimal dataset from FID-300 are presented and discussed.
+First the testing dataset is described, afterwards, following the presentation of the evaluation score, the quantitative results on the dataset are discussed.
+
+\subsection{Testing Dataset}
+
 The testing database consist of 20 images, the selected images and the output of the algorithm are shown in the Appendix \ref{AppA}.
 When selecting the testing dataset, no restrictions were made, low quality and heavily cluttered images are also part of the experimental database.
-Since the evaluation in the previous chapter showed that the semi-automated approach is not effective on samples with detailed, fine line structures, those images \ref{appA:204}, \ref{appA:223}, \ref{appA:241} are excluded while testing.
-Furthermore it was mentioned as well that in case of low intensity difference no background estimation is possible. For that reason images \ref{appA:217} and \ref{appA:232} are also disregarded while evaluation.
-\par
-The visual improvement caused by the different algorithms were already discussed in the previous chapters.
-Now the analytical results of the semi-automated method are analyzed based on the performance of three basic feature descriptors.
-The goal of the algorithm is shoeprint enhancement and to increase the overall sample quality and not to develop a powerful descriptor or a matching technique.
-Hence for evaluation three basic descriptors were chosen, Fourier-Mellin features, SIFT and SURF, which are popular techniques for shoeprint, fingerprint and for natural image description.
+Since the evaluation in the previous chapter showed that the Showprint Enhancement approach is not effective on samples with detailed, fine line structures, those images \ref{appA:204}, \ref{appA:223}, \ref{appA:241} are excluded from the test.
+Furthermore, it was mentioned as well that in case of low intensity difference no background estimation is possible. Therefore images \ref{appA:217} and \ref{appA:232} are also disregarded during the evaluation.
+Additionally, the corresponding reference images of every member of the minimal database were also selected and stored.
+
+\subsection{Evaluation Technique}
+
+For evaluation three basic descriptors were chosen, Fourier-Mellin features, SIFT and SURF, which are popular techniques for shoeprint, fingerprint and for natural image description.
 Fourier-Mellin transform was proposed for shoeprint description several times \cite{gueham2008automatic}, \cite{richetelli2017classification}, \cite{wu2019crime}.
-Along shoeprint description \cite{nibouche2009rotation}, \cite{richetelli2017classification} SIFT is also favored for fingerprint \cite{zhou2011adaptive} and for tattoo identification \cite{yi2015impact}, \cite{han2013tattoo}.
+Along with shoeprint description \cite{nibouche2009rotation}, \cite{richetelli2017classification} SIFT is also favored for fingerprint \cite{zhou2011adaptive} and for tattoo identification \cite{yi2015impact}, \cite{han2013tattoo}.
 Although SURF is not common for shoeprint recognition it is popular in related areas such as fingerprint description \cite{jahan2017robust}, tattoo matching \cite{yi2015impact} and natural texture description \cite{prabhakar2012lbp}.
 The evaluation is done by comparing the matching performance of those descriptors on the original samples and on the enhanced images.
-If the basic descriptors, without embedding in a more complex pipeline, achieve higher accuracy on the processed  images than on the original ones, it implies successful enhancement.
-The experimental results already conducted on the field indicate \cite{rida2019forensic} that using a complex approach increase matching accuracy, however when one given pipeline is used for evaluation it is not clear if the enhancement is optimized for that specific pipeline or is generally valid.
+\par
+If the basic descriptors, without embedding  a more complex pipeline, achieve higher accuracy on the processed  images than on the original ones, it implies successful enhancement. 
+The experimental results already conducted on the field indicate \cite{rida2019forensic} that using a complex approach increase matching accuracy, however, when one given pipeline is used for evaluation it is not clear if the enhancement is optimized for that specific pipeline or whether it is generally valid.
 Evaluating based on the feature descriptors which are the core parts of many image matching algorithms provides general results on the performance.
 \par
-For matching the extracted features two algorithms are used Brute-Force matching (BF) and Fast Library for Approximate Nearest Neighbors (FLANN).
-BF compares a feature of one image to every other features of the other one and sets the closest one as match, whereas FLANN picks the best matches from the neighborhood, it does not examine all possible feature point so it is faster than BF.
-The criteria for 'good match' is set to 0.8 while testing.
-For matching the shoeprint samples the corresponding reference images of every member of the minimal database were selected and stored, and it is examined how many 'good matches' were found between the samples and the Ground Truth images.
-At the end of the matching process a ranking among the Ground Truth images is made, the one with the most 'good matches' is the first, the one with the second most 'good matches' is the second and so on.
-The ranking of the belonging reference of the given sample is noted and the final score is made by averaging the noted ranking values  of every image from the testing dataset.
-That means if the belonging Ground Truth image of every member of the dataset had the most 'good matches', thus the highest ranking, the final score is 1.
+For matching the extracted features, two algorithms are used: Brute-Force matching (BF) \cite{schaeffer1993re} and Fast Library for Approximate Nearest Neighbors (FLANN) \cite{muja2009fast}.
+As mentioned in the previous chapter, BF compares a feature of one image to every other features of the other one and sets the closest one as match, whereas FLANN picks the best matches from the neighborhood, it does not examine all possible feature point so it is faster than BF.
+Both techniques provide a variable about the certainty of the matches, 1 means perfect match, 0 stands for no correspondence.
+The criteria for 'good match' is set to 0.8 for testing and it is examined how many 'good matches' are there between the sample and the Ground Truth images separately.
+At the end of the matching process the Ground Truth images are ordered according to the amount of 'good matches' to the same shoeprint sample, the one with the most 'good matches' is the first, the one with the second most 'good matches' is the second and so on.
+The position of the belonging reference of the given sample is noted and the final score of the algorithm with given settings is made by averaging the noted ranking values  of every image from the testing dataset.
+That means if the belonging Ground Truth image of every member of the dataset had the most 'good matches', thus the best ranking, the final score is 1.
 Lower performance is indicated with higher score, correct matching results in lower score.
+
+\subsection{Quantitative Evaluation}
+
 \par
-To create a baseline the original samples were matched to the Ground Truth images \ref{tab:BL}.
-For comparison the scores of all four possible settings of the enhancing algorithm is presented in Tables \ref{tab:25Mean}, \ref{tab:25Cent} and \ref{tab:20Mean}, \ref{tab:20Cent}.
-Table \ref{tab:ov} gives an overview about the overall performance of the discussed pipelines, in the upper side of the rows the calculated average score of both matching techniques is shown from Tables \ref{tab:25Mean}, \ref{tab:25Cent} and \ref{tab:20Mean}, \ref{tab:20Cent} and \ref{tab:BL}.
-In the lower part of the rows the average score of both matching techniques is displayed.
-In the last column the average score of all descriptors using both matching techniques is shown.
-To understand the performance of the proposed enhancing method this table is analyzed in the following.
+Now the analytical results of the Shoeprint Enhancement Algorithm with Non-Local Means method are evaluated based on the performance of  the three basic feature descriptors.
+To create a baseline the original samples were matched to the Ground Truth images.
+For reproducibility the scores of all four possible settings  of the enhancing algorithms and of the baseline are given in the Appendix \ref{AppB}.
+Table \ref{tab:ov} gives an overview of the accumulated performance of the discussed settings.
+In the upper side of the cells the average score of both matching techniques, BF and FLANN, are shown.
+In the lower part of the cells the average score of both matching techniques is displayed.
+In the last column the average score of all descriptors, F-M, SIFT and SURF, using both matching techniques is shown.
+In the table, multiple cells are highlighted, the one in the first row shows the best score in the baseline, 5.24.
+The cells with blue background highlight the scenarios, when the enhanced samples outperformed the best baseline result.
+To understand the performance of the proposed enhancing method, this table is analyzed in the following.
 \par
-Focusing on the first (F-M) and third (SURF) column of the table, the matching of the enhanced shoeprints always outperforms the original samples regardless the pipeline settings, except one case when FLANN matching is used on the output of 20 classes and average noise model.
-However, considering the second column (SIFT) of the table that is not the case, and the enhanced images are not able to achieve the performance of the original images.
+Focusing on the first (F-M) and third (SURF) column of the table, the matching of the enhanced shoeprints always outperforms the corresponding baseline regardless the pipeline settings, except one case when FLANN matching is used on the output of 20 classes and in the case of the average noise model.
+However, considering the second column (SIFT) of the table this is not the case, and the enhanced images are not able to achieve the performance of the unprocessed images.
 Wang et al. \cite{wang2017manifold} state that SIFT is less effective on binarized images, since it seeks less information about the structure of the image than in the original version.
-On the other hand they also mention that SURF suffers from the same limitation, which is not the case in our experiments.
+On the other hand, they also mention that SURF suffers from the same limitation, which is not the case in our experiments.
 This contradiction is explainable by examining the working pipeline of SURF, it uses a blob-detector to determine feature points which is suitable for shoeprint identification.
-The majority of shoeprints contain closed structures such as circles or polygons that are recognized by a blob-detector.
-Thus even though working on a binary image is not ideal for SIFT nor for SURF, the latter is able to overcome its weakness by taking advantage of the specific features of a shoe sole pattern.
+The majority of shoeprints contain closed structures, such as circles or polygons that are recognized by a blob-detector.
+Thus, even though working on a binary image is not ideal neither for SIFT nor for the SURF, the latter is able to overcome its weakness by taking advantage of the specific features of a shoe sole pattern. 
 
-\begin{minipage}{\linewidth}
-\centering
-\begin{tabular}{ccccccc}
-& \multicolumn{2}{c}{ F-M } & \multicolumn{2}{c}{ SIFT } & \multicolumn{2}{c}{ SURF } \\
-& BF & FLANN & BF & FLANN & BF & FLANN \\
-1 & 12 & 13 & 9 & 4 & 1 & 1 \\
-2 & 4 & 5 & 1 & 3 & 2 & 2 \\
-3 & 5 & 7 & 2 & 1 & 4 & 4 \\
-4 & 5 & 6 & 1 & 1 & 5 & 2 \\
-5 & 6 & 1 & 1 & 1 & 5 & 4 \\
-6 & 6 & 6 & 4 & 6 & 6 & 6 \\
-7 & 6 & 6 & 2 & 8 & 8 & 9 \\
-8 & 3 & 4 & 4 & 3 & 8 & 8 \\
-9 & 2 & 1 & 7 & 4 & 7 & 7 \\
-10 & 9 & 10 & 12 & 9 & 13 & 12 \\
-11 & 2 & 1 & 12 & 13 & 11 & 11 \\
-16 & 6 & 5 & 1 & 1 & 9 & 6 \\
-17 & 1 & 1 & 6 & 5 & 1 & 1 \\
-18 & 13 & 11 & 12 & 7 & 12 & 12 \\
-20 & 8 & 11 & 6 & 4 & 7 & 3 \\
-Score & 5.866666667 & 5.866666667 & 5.333333333 & 4.666666667 & 6.6 & 5.866666667 \\
-\end{tabular}
-\captionof{table}{Baseline results matching the original images with the unprocessed Ground Truth images}
- \label{tab:BL} 
-\end{minipage}
-
-
-\begin{minipage}{\linewidth}
-\centering
-\begin{tabular}{ccccccc}
-\multirow{2}{*}{ } & \multicolumn{2}{c}{ F-M } & \multicolumn{2}{c}{ SIFT } & \multicolumn{2}{c}{ SURF } \\
-& BF & FLANN & BF & FLANN & BF & FLANN \\
-1 & 1 & 1 & 2 & 8 & 4 & 9 \\
-2 & 1 & 1 & 11 & 10 & 1 & 2 \\
-3 & 3 & 4 & 1 & 1 & 6 & 7 \\
-4 & 2 & 3 & 8 & 10 & 7 & 8 \\
-5 & 1 & 2 & 5 & 3 & 4 & 4 \\
-6 & 5 & 9 & 2 & 3 & 6 & 8 \\
-7 & 13 & 12 & 13 & 13 & 8 & 8 \\
-8 & 2 & 2 & 12 & 11 & 8 & 8 \\
-9 & 8 & 11 & 13 & 6 & 4 & 4 \\
-10 & 4 & 9 & 7 & 3 & 1 & 1 \\
-11 & 2 & 2 & 6 & 8 & 12 & 11 \\
-16 & 5 & 6 & 1 & 1 & 4 & 6 \\
-17 & 2 & 3 & 7 & 10 & 1 & 2 \\
-18 & 6 & 7 & 1 & 1 & 7 & 2 \\
-20 & 5 & 2 & 4 & 6 & 3 & 2 \\
-Score & 4 & 4.933333333 & 6.2 & 6.266666667 & 5.066666667 & 5.466666667 \\
-\end{tabular}
-\captionof{table}{Results using 25 classes and the average noise model}
- \label{tab:25Mean} 
-\end{minipage}
-
-
-\begin{minipage}{\linewidth}
-\centering
-\begin{tabular}{ccccccc}
-\multirow{2}{*}{ } & \multicolumn{2}{c}{ F-M } & \multicolumn{2}{c}{ SIFT } & \multicolumn{2}{c}{ SURF } \\
-& BF & FLANN & BF & FLANN & BF & FLANN \\
-1 & 2 & 1 & 5 & 6 & 1 & 1 \\
-2 & 1 & 1 & 2 & 3 & 1 & 2 \\
-3 & 6 & 9 & 1 & 1 & 2 & 5 \\
-4 & 1 & 1 & 8 & 10 & 4 & 2 \\
-5 & 5 & 7 & 1 & 2 & 2 & 3 \\
-6 & 4 & 6 & 1 & 1 & 3 & 3 \\
-7 & 13 & 11 & 13 & 13 & 8 & 8 \\
-8 & 3 & 2 & 12 & 11 & 8 & 8 \\
-9 & 8 & 11 & 13 & 6 & 4 & 4 \\
-10 & 7 & 6 & 10 & 8 & 4 & 2 \\
-11 & 4 & 4 & 9 & 8 & 10 & 5 \\
-16 & 4 & 4 & 2 & 8 & 6 & 7 \\
-17 & 6 & 5 & 5 & 12 & 1 & 2 \\
-18 & 7 & 7 & 3 & 3 & 1 & 1 \\
-20 & 2 & 1 & 12 & 9 & 1 & 1 \\
-Score & 4.866666667 & 5.066666667 & 6.466666667 & 6.733333333 & 3.733333333 & 3.6 \\
-\end{tabular}
-\captionof{table}{Results using 25 classes and the centroids noise model}
- \label{tab:25Cent} 
-\end{minipage}
-
-\begin{minipage}{\linewidth}
-\centering
-\begin{tabular}{ccccccc}
-\multirow{2}{*}{ } & \multicolumn{2}{c}{ F-M } & \multicolumn{2}{c}{ SIFT } & \multicolumn{2}{c}{ SURF } \\
-& BF & FLANN & BF & FLANN & BF & FLANN \\
-1 & 1 & 1 & 5 & 8 & 3 & 6 \\
-2 & 1 & 1 & 13 & 13 & 3 & 5 \\
-3 & 1 & 2 & 1 & 1 & 5 & 6 \\
-4 & 3 & 5 & 8 & 9 & 1 & 3 \\
-5 & 3 & 7 & 3 & 3 & 1 & 2 \\
-6 & 10 & 13 & 2 & 3 & 7 & 7 \\
-7 & 13 & 12 & 13 & 13 & 8 & 8 \\
-8 & 7 & 9 & 13 & 12 & 4 & 4 \\
-9 & 8 & 11 & 13 & 6 & 4 & 4 \\
-10 & 2 & 5 & 7 & 5 & 1 & 1 \\
-11 & 3 & 2 & 8 & 8 & 10 & 7 \\
-16 & 2 & 2 & 9 & 6 & 5 & 5 \\
-17 & 3 & 2 & 9 & 3 & 1 & 3 \\
-18 & 10 & 9 & 1 & 3 & 10 & 10 \\
-20 & 4 & 4 & 4 & 6 & 2 & 2 \\
-Score & 4.733333333 & 5.666666667 & 7.266666667 & 6.6 & 4.333333333 & 4.866666667 \\
-\end{tabular}
-
-\captionof{table}{Results using 20 classes and the average noise model}
- \label{tab:20Mean} 
-\end{minipage}
-
-\begin{minipage}{\linewidth}
-\centering
-\begin{tabular}{ccccccc}
-\multirow{2}{*}{ } & \multicolumn{2}{c}{ F-M } & \multicolumn{2}{c}{ SIFT } & \multicolumn{2}{c}{ SURF } \\
-& BF & FLANN & BF & FLANN & BF & FLANN \\
-1 & 2 & 3 & 6 & 7 & 1 & 1 \\
-2 & 1 & 1 & 3 & 4 & 3 & 3 \\
-3 & 1 & 3 & 2 & 3 & 4 & 5 \\
-4 & 1 & 1 & 11 & 9 & 5 & 5 \\
-5 & 3 & 6 & 7 & 5 & 7 & 8 \\
-6 & 8 & 8 & 3 & 3 & 1 & 2 \\
-7 & 13 & 12 & 13 & 13 & 8 & 8 \\
-8 & 7 & 9 & 13 & 12 & 4 & 4 \\
-9 & 8 & 10 & 13 & 6 & 4 & 4 \\
-10 & 7 & 6 & 12 & 9 & 1 & 1 \\
-11 & 1 & 1 & 6 & 8 & 6 & 7 \\
-16 & 4 & 2 & 1 & 3 & 9 & 9 \\
-17 & 5 & 5 & 9 & 9 & 1 & 2 \\
-18 & 5 & 3 & 4 & 2 & 8 & 3 \\
-20 & 6 & 6 & 8 & 10 & 2 & 2 \\
-Score & 4.8 & 5.066666667 & 7.4 & 6.866666667 & 4.266666667 & 4.266666667 \\
-\end{tabular}
-\captionof{table}{Results using 20 classes and the centroids noise model}
- \label{tab:20Cent} 
-\end{minipage}
+\definecolor{custGrey}{rgb}{0.5,0.5,0.55}
+\definecolor{custBlue}{rgb}{0, 0.55, 1}
+\newcolumntype{?}{!{\vrule width 1.1pt}}
 
 %\begin{sidewaystable}
 \begin{minipage}{\linewidth}
 \centering
 \centering
-\begin{tabular}{cccccccc}
-& \multicolumn{2}{c}{ F-M } & \multicolumn{2}{c}{ SIFT } & \multicolumn{2}{c}{ SURF } & \multirow{2}{*}{ Average Results } \\
+\begin{tabular}{c?cc|cc|cc?c}
+& \multicolumn{2}{c|}{ F-M } & \multicolumn{2}{c|}{ SIFT } & \multicolumn{2}{c?}{ SURF } & \multirow{2}{*}{ Average Results } \\
 & BF & FLANN & BF & FLANN & BF & FLANN & \\
-Baseline & 5.66 & 5.24 & 6.03 & 5.47 & 7.8 & 7.07 & \multirow{2}{*}{ 6.21 } \\
-& \multicolumn{2}{c}{ 5.45 } & \multicolumn{2}{c}{ 5.75 } & \multicolumn{2}{c}{ 7.44 } & \\
-25 Average & 4 & 4.93 & 6.2 & 6.27 & 5.07 & 5.47 & \multirow{2}{*}{ 5.32 } \\
-& \multicolumn{2}{c}{ 4.47 } & \multicolumn{2}{c}{ 6.23 } & \multicolumn{2}{c}{ 5.27 } & \\
-25 Centroids & 4.87 & 5.07 & 6.47 & 6.73 & 3.73 & 3.6 & \multirow{2}{*}{ 5.08 } \\
-& \multicolumn{2}{c}{ 4.97 } & \multicolumn{2}{c}{ 6.6 } & \multicolumn{2}{c}{ 3.67 } & \\
+\specialrule{2.5pt}{1pt}{1pt}
+Baseline & 5.66 & \cellcolor{custGrey} 5.24 & 6.03 & 5.47 & 7.8 & 7.07 & \multirow{2}{*}{ 6.21 } \\
+& \multicolumn{2}{c|}{ 5.45 } & \multicolumn{2}{c|}{ 5.75 } & \multicolumn{2}{c?}{ 7.44 } & \\
+\specialrule{1.1pt}{1pt}{1pt}
+25 Average & \cellcolor{custBlue} 4 & \cellcolor{custBlue} 4.93 & 6.2 & 6.27 & \cellcolor{custBlue} 5.07 & 5.47 & \multirow{2}{*}{ 5.32 } \\
+& \multicolumn{2}{c|}{ \cellcolor{custBlue} 4.47 } & \multicolumn{2}{c|}{ 6.23 } & \multicolumn{2}{c?}{ 5.27 } & \\
+\hline
+25 Centroids & \cellcolor{custBlue} 4.87 & \cellcolor{custBlue} 5.07 & 6.47 & 6.73 & \cellcolor{custBlue} 3.73 & \cellcolor{custBlue} 3.6 & \multirow{2}{*}{5.08 } \\
+& \multicolumn{2}{c|}{ \cellcolor{custBlue} 4.97 } & \multicolumn{2}{c|}{ 6.6 } & \multicolumn{2}{c?}{ \cellcolor{custBlue} 3.67 } & \\
+\hline
 20 Average & 5.44 & 5.57 & 6.63 & 5.9 & 6.63 & 6.11 & \multirow{2}{*}{ 6.05 } \\
-& \multicolumn{2}{c}{ 5.50 } & \multicolumn{2}{c}{ 6.27 } & \multicolumn{2}{c}{ 6.37 } & \\
-20 Centorids & 4.8 & 5.07 & 7.4 & 6.87 & 4.27 & 4.27 & \multirow{2}{*}{ 5.44 } \\
-& \multicolumn{2}{c}{ 4.93 } & \multicolumn{2}{c}{ 7.13 } & \multicolumn{2}{c}{ 4.27 } & \\
+& \multicolumn{2}{c|}{ 5.50 } & \multicolumn{2}{c|}{ 6.27 } & \multicolumn{2}{c?}{ 6.37 } & \\
+\hline
+20 Centorids & \cellcolor{custBlue} 4.8 & \cellcolor{custBlue} 5.07 & 7.4 & 6.87 &  \cellcolor{custBlue} 4.27 & \cellcolor{custBlue} 4.27 & \multirow{2}{*}{  5.44 } \\
+& \multicolumn{2}{c|}{ \cellcolor{custBlue} 4.93 } & \multicolumn{2}{c|}{ 7.13 } & \multicolumn{2}{c?}{ \cellcolor{custBlue} 4.27 } & \\
 \end{tabular}
 \captionof{table}{Overview about the performance of the analyzed pipelines}
  \label{tab:ov} 
 %\end{sidewaystable}
 \end{minipage}
 
-
 \par
-Examining the first row of Table \ref{tab:ov}, the best score the original shoeprints achieved is 5.24 (BF matching of Fourier-Mellin features), whereas the worst accuracy is 7.80 (BF matching of SURF features).
-The best accuracy of the baseline is outperformed several times, the Fourier-Mellin features achieve better accuracy regardless the matching technique in every case except when working with 20 classes and average model noise model, where the scores are minimally lower, 5.44 for BF and 6.57 for FLANN.
+Examining the first row of Table \ref{tab:ov}, the best score the original shoeprints achieved is 5.24 (BF matching of Fourier-Mellin features, highlighted with gray), whereas the worst accuracy is 7.80 (BF matching of SURF features).
+The best accuracy of the baseline is outperformed several times, the Fourier-Mellin features achieve better accuracy regardless the matching technique in nearly every case.
+The two exceptions are when working with 20 classes and average model noise model, where the scores are minimally lower, 5.44 for BF and 6.57 for FLANN
 SURF features achieve the overall best scores for matching the enhanced images.
 Matching the results produced by using 20 classes and centroids as noise model the score of 4.27 is noted for both BF and FLANN.
-But in case of the output generated by 25 classes and centroids as noise models a better value of 3.73 and 3.60 is achieved.
-Furthermore, the worst performance of the baseline algorithm is 7.80, which is outperformed in every test case.
-The worst score noted for the enhanced image matching is 7.40 which was provided by SIFT BF matching of the samples processed by the setting with 20 classes and using centroid models.
+But in case of the output generated by 25 classes and centroids as noise models, a better value of 3.73 and 3.60 is achieved.
+Furthermore, the worst performance of the baseline algorithm is 7.80, which is outperformed in every test case scenario.
+The worst score noted for the enhanced image matching is 7.40, which was provided by SIFT BF matching of the samples processed by a setting with 20 classes and using centroid models.
+The low performance is caused by the accumulated effect of multiple factors.
+As mentioned earlier SIFT is not ideal for binarized image feature matching, thus this underperforms consequently the results provided by F-M and SURF.
+Additionally, the results was produced using 20 instead of 25 classes, so a less-detailed non-local means smoothing was applied whereas more edges were eliminated when deleting the most populated class before smoothing.
 
 \par
-Considering the overall accuracy (last column) of the different settings, the enhanced matching always provide better results than the baseline.
-Comparing the scores of the enhanced samples to each other the pipeline using only 20 classes and the averaged noise model has the lowest performance.
-Using 20 classes but the centroids for noise representation results in score improvement of above 0.5 points achieving 5.44.
-The best scores were reached by the images where 25 classes were used earning 5.32 and 5.08 points, for average and centroid noise models respectively.
+Considering the overall accuracy (last column) of the different settings, the enhanced matching always provide better results than the accumulated baseline.
+Comparing the scores of the enhanced samples to each other, the pipeline using only 20 classes and the averaged noise model has the lowest performance.
+Using 20 classes but centroids for noise representation results in score improvement of over 0.5 points, achieving 5.44.
+The best scores were reached by the images where 25 classes were used, earning 5.32 and 5.08 points, for average and centroid noise models respectively.
 These values show that detailed algorithms lead to better enhancement.
 Using 25 classes outperforms the case when the differences of eigenvalues are grouped into 20 classes.
-Building a more versatile model for noise representation using the centroids of the k-means algorithm results in better scores than the images enhanced with the average noise model have.
+Building a more versatile model for noise representation using the centroids of the k-means algorithm results in better scores than the images enhanced with the average noise model.
 The fact that both settings using 25 classes outperformed the ones with less classes implies that detailed clustering of extracted edges is more important that the  choice of noise representation in noise suppression step.
+Furthermore, when 25 classes and centroids are used the average performance is better, 5.08, than the best accuracy achieved in the baseline, 5.24, even though in the accumulated results the underperforming SIFT features are included as well.
+This shows, that this setting is the most robust and powerful one compared to the other three scenarios.
 
 \par
 The experimental results presented in this chapter show that the proposed image enhancement algorithm supports accuracy improvement.
-The performance of the algorithm was tested on a versatile subset of images selected from the FID-300 dataset.
-However it has to be noted that the proposed method needs further improvement to be able to handle all possible samples of the FID-300 dataset.
-For known limitations of the algorithm samples with detailed, fine line structures and low contrast between fore- and background were excluded from testing.
-The matching based on the Fourier-Mellin features is the most robust one, it outperforms the baseline algorithm never having worse scores than 5.57 and the difference between the best- and worst case scenarios is only 1.57.
+The performance of the Shoeprint Enhancement  algorithm was tested on a versatile subset of images selected from the FID-300 dataset.
+However, the proposed method needs further improvement to be able to handle all possible samples of the FID-300 dataset .
+For known limitations of the algorithm discussed in the previous section, samples with detailed, fine line structures and low contrast between fore- and background were excluded from testing.
+The matching based on the Fourier-Mellin features is the most robust one, it outperforms the accumulated baseline results, never having worse scores than 5.57, and the difference between the best- and worst case scenarios is only 1.57.
 SURF provides the best score in given cases but it also reaches above 6.00 scores multiple times, thus the difference between the best and worst accuracy is above 3.6.
-The robustness and the high-quality of Fourier-Mellin features is promising, since many current shoeprint matching algorithms already use it for feature description  \cite{gueham2008automatic}, \cite{richetelli2017classification}, \cite{wu2019crime} or are based on other frequency domain descriptors \cite{algarni2008novel}, \cite{wang2014automatic}, \cite{katireddy2017novel}.
+The robustness and the high-quality of Fourier-Mellin features is promising, since many current shoeprint matching algorithms already use it for feature description  \cite{gueham2008automatic}, \cite{richetelli2017classification}, \cite{wu2019crime} or are based on other frequency domain descriptors \cite{algarni2008novel}, \cite{wang2014automatic}, \cite{katireddy2017novel}. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Future Work}
@@ -2258,7 +2151,7 @@ With further development and potential combination of the proposed method a powe
 \bibliography{intro}
 
 \begin{appendices}
-		\chapter{Appendix A}
+		\chapter{Appendix Dataset}
 		\label{AppA}
 		This section contains the images selected for testing.
 		The samples was chosen from FID-300 and are representative for the database, no restriction were made while selecting the images, low quality images are also part of the experimental setting.
@@ -2768,6 +2661,158 @@ With further development and potential combination of the proposed method a powe
   \end{subfigure}
 \caption{}
 \end{figure}  
+
+\chapter{Appendix Results}
+\label{AppB}
+		This section contains the quantitative results of the Showprint Enhancement Algorithm with Non-Local Means.
+		The testing dataset is presented in \ref{AppA}.
+		The accumulated results are presented and discussed in Chapter 4 \ref{results}.
+		The four tables ,\ref{tab:25Mean}, \ref{tab:25Cent} and \ref{tab:20Mean}, \ref{tab:20Cent}, present the matching scores of the different settings separately and are given to enlighten the reproducibility of the algorithm.
+		Furthermore, to create a baseline the original samples were matched to the Ground Truth images \ref{tab:BL}.
+
+\begin{minipage}{\linewidth}
+\centering
+\begin{tabular}{c|cc|cc|cc}
+& \multicolumn{2}{c}{ F-M } & \multicolumn{2}{c}{ SIFT } & \multicolumn{2}{c}{ SURF } \\
+& BF & FLANN & BF & FLANN & BF & FLANN \\
+\hline
+1 & 12 & 13 & 9 & 4 & 1 & 1 \\
+2 & 4 & 5 & 1 & 3 & 2 & 2 \\
+3 & 5 & 7 & 2 & 1 & 4 & 4 \\
+4 & 5 & 6 & 1 & 1 & 5 & 2 \\
+5 & 6 & 1 & 1 & 1 & 5 & 4 \\
+6 & 6 & 6 & 4 & 6 & 6 & 6 \\
+7 & 6 & 6 & 2 & 8 & 8 & 9 \\
+8 & 3 & 4 & 4 & 3 & 8 & 8 \\
+9 & 2 & 1 & 7 & 4 & 7 & 7 \\
+10 & 9 & 10 & 12 & 9 & 13 & 12 \\
+11 & 2 & 1 & 12 & 13 & 11 & 11 \\
+16 & 6 & 5 & 1 & 1 & 9 & 6 \\
+17 & 1 & 1 & 6 & 5 & 1 & 1 \\
+18 & 13 & 11 & 12 & 7 & 12 & 12 \\
+20 & 8 & 11 & 6 & 4 & 7 & 3 \\
+\hline
+Score & 5.87 & 5.87 & 5.33 & 4.67 & 6.6 & 5.87 \\
+\end{tabular}
+\captionof{table}{Baseline results matching the original images with the unprocessed Ground Truth images}
+ \label{tab:BL} 
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\centering
+\begin{tabular}{c|cc|cc|cc}
+\multirow{2}{*}{ } & \multicolumn{2}{c}{ F-M } & \multicolumn{2}{c}{ SIFT } & \multicolumn{2}{c}{ SURF } \\
+& BF & FLANN & BF & FLANN & BF & FLANN \\
+\hline
+1 & 1 & 1 & 2 & 8 & 4 & 9 \\
+2 & 1 & 1 & 11 & 10 & 1 & 2 \\
+3 & 3 & 4 & 1 & 1 & 6 & 7 \\
+4 & 2 & 3 & 8 & 10 & 7 & 8 \\
+5 & 1 & 2 & 5 & 3 & 4 & 4 \\
+6 & 5 & 9 & 2 & 3 & 6 & 8 \\
+7 & 13 & 12 & 13 & 13 & 8 & 8 \\
+8 & 2 & 2 & 12 & 11 & 8 & 8 \\
+9 & 8 & 11 & 13 & 6 & 4 & 4 \\
+10 & 4 & 9 & 7 & 3 & 1 & 1 \\
+11 & 2 & 2 & 6 & 8 & 12 & 11 \\
+16 & 5 & 6 & 1 & 1 & 4 & 6 \\
+17 & 2 & 3 & 7 & 10 & 1 & 2 \\
+18 & 6 & 7 & 1 & 1 & 7 & 2 \\
+20 & 5 & 2 & 4 & 6 & 3 & 2 \\
+\hline
+Score & 4 & 4.93 & 6.2 & 6.27 & 5.07 & 5.47 \\
+\end{tabular}
+\captionof{table}{Results using 25 classes and the average noise model}
+ \label{tab:25Mean} 
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\centering
+\begin{tabular}{c|cc|cc|cc}
+\multirow{2}{*}{ } & \multicolumn{2}{c}{ F-M } & \multicolumn{2}{c}{ SIFT } & \multicolumn{2}{c}{ SURF } \\
+& BF & FLANN & BF & FLANN & BF & FLANN \\
+\hline
+1 & 2 & 1 & 5 & 6 & 1 & 1 \\
+2 & 1 & 1 & 2 & 3 & 1 & 2 \\
+3 & 6 & 9 & 1 & 1 & 2 & 5 \\
+4 & 1 & 1 & 8 & 10 & 4 & 2 \\
+5 & 5 & 7 & 1 & 2 & 2 & 3 \\
+6 & 4 & 6 & 1 & 1 & 3 & 3 \\
+7 & 13 & 11 & 13 & 13 & 8 & 8 \\
+8 & 3 & 2 & 12 & 11 & 8 & 8 \\
+9 & 8 & 11 & 13 & 6 & 4 & 4 \\
+10 & 7 & 6 & 10 & 8 & 4 & 2 \\
+11 & 4 & 4 & 9 & 8 & 10 & 5 \\
+16 & 4 & 4 & 2 & 8 & 6 & 7 \\
+17 & 6 & 5 & 5 & 12 & 1 & 2 \\
+18 & 7 & 7 & 3 & 3 & 1 & 1 \\
+20 & 2 & 1 & 12 & 9 & 1 & 1 \\
+\hline
+Score & 4.87 & 5.07 & 6.47 & 6.73 & 3.73 & 3.60 \\
+\end{tabular}
+\captionof{table}{Results using 25 classes and the centroids noise model}
+ \label{tab:25Cent} 
+\end{minipage}
+
+\begin{minipage}{\linewidth}
+\centering
+\begin{tabular}{c|cc|cc|cc}
+\multirow{2}{*}{ } & \multicolumn{2}{c}{ F-M } & \multicolumn{2}{c}{ SIFT } & \multicolumn{2}{c}{ SURF } \\
+& BF & FLANN & BF & FLANN & BF & FLANN \\
+\hline
+1 & 1 & 1 & 5 & 8 & 3 & 6 \\
+2 & 1 & 1 & 13 & 13 & 3 & 5 \\
+3 & 1 & 2 & 1 & 1 & 5 & 6 \\
+4 & 3 & 5 & 8 & 9 & 1 & 3 \\
+5 & 3 & 7 & 3 & 3 & 1 & 2 \\
+6 & 10 & 13 & 2 & 3 & 7 & 7 \\
+7 & 13 & 12 & 13 & 13 & 8 & 8 \\
+8 & 7 & 9 & 13 & 12 & 4 & 4 \\
+9 & 8 & 11 & 13 & 6 & 4 & 4 \\
+10 & 2 & 5 & 7 & 5 & 1 & 1 \\
+11 & 3 & 2 & 8 & 8 & 10 & 7 \\
+16 & 2 & 2 & 9 & 6 & 5 & 5 \\
+17 & 3 & 2 & 9 & 3 & 1 & 3 \\
+18 & 10 & 9 & 1 & 3 & 10 & 10 \\
+20 & 4 & 4 & 4 & 6 & 2 & 2 \\
+\hline
+Score & 4.73 & 5.67 & 7.27 & 6.6 & 4.33 & 4.87 \\
+\end{tabular}
+
+\captionof{table}{Results using 20 classes and the average noise model}
+ \label{tab:20Mean} 
+\end{minipage}
+
+\begin{minipage}{\linewidth}
+\centering
+\begin{tabular}{c|cc|cc|cc}
+\multirow{2}{*}{ } & \multicolumn{2}{c}{ F-M } & \multicolumn{2}{c}{ SIFT } & \multicolumn{2}{c}{ SURF } \\
+& BF & FLANN & BF & FLANN & BF & FLANN \\
+\hline
+1 & 2 & 3 & 6 & 7 & 1 & 1 \\
+2 & 1 & 1 & 3 & 4 & 3 & 3 \\
+3 & 1 & 3 & 2 & 3 & 4 & 5 \\
+4 & 1 & 1 & 11 & 9 & 5 & 5 \\
+5 & 3 & 6 & 7 & 5 & 7 & 8 \\
+6 & 8 & 8 & 3 & 3 & 1 & 2 \\
+7 & 13 & 12 & 13 & 13 & 8 & 8 \\
+8 & 7 & 9 & 13 & 12 & 4 & 4 \\
+9 & 8 & 10 & 13 & 6 & 4 & 4 \\
+10 & 7 & 6 & 12 & 9 & 1 & 1 \\
+11 & 1 & 1 & 6 & 8 & 6 & 7 \\
+16 & 4 & 2 & 1 & 3 & 9 & 9 \\
+17 & 5 & 5 & 9 & 9 & 1 & 2 \\
+18 & 5 & 3 & 4 & 2 & 8 & 3 \\
+20 & 6 & 6 & 8 & 10 & 2 & 2 \\
+\hline
+Score & 4.8 & 5.07 & 7.4 & 6.87 & 4.27 & 4.27 \\
+\end{tabular}
+\captionof{table}{Results using 20 classes and the centroids noise model}
+ \label{tab:20Cent} 
+\end{minipage}
+
 
 \end{appendices}
 
