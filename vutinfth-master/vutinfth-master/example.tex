@@ -327,7 +327,7 @@ Moreover, the improved images have a better matching rate than their original ve
 \par
 To gain an overview about the research already done the following section, Chapter 2, gives a review of the literature. 
 Along papers published on the topic of shoeprint identification, matching and enhancement, research on similar domains is presented as well.
-Consequently, fields of fingerprint processing and tattoo identification is also overviewed for possibilities of utilizing their solutions in the given problem space.
+Consequently, the field of fingerprint processing is also overviewed for possibilities of utilizing their solutions in the given problem space.
 Furthermore, natural image enhancement and denoising techniques are revised as well.
 \par
 In Chapter 3 the approaches for enhancement are given.
@@ -342,109 +342,196 @@ In Chapters 5 prospective future work is discussed and the final conclusion is g
 \chapter{Related Work}
 \par
 In order to find and develop an effective algorithm for shoeprint enhancement, an overview about relevant research is made first.
-Along the literature of image enhancement and noise removal, a related topic, discriminative image descriptors, is also considered to gain better insight and to define an approach which is optimized for the rest of the shoeprint identification pipeline.
+Along the literature of image enhancement and noise removal another related topics are also reviewed.
+Discriminative image descriptors are considered as well to gain better insight and to define an approach which is optimized for the rest of the shoeprint identification pipeline.
 In this chapter the research on the domain of shoeprint identification is reviewed.
-Other than that publications from similar domains such as fingerprint and palmprint detection as well as tattoo identification are described.
-Research for fingerprint identification and tattoo recognition have been chosen for review because of their similar goal of edge structure and minimal image structure recognition.
+Other than that, publications from similar domains such as fingerprint and palmprint detection as well are described.
+Research for fingerprint identification have been chosen for review because of their similar goal of edge and image structure recognition.
 Moreover, an overview of techniques from the field of natural image enhancement and description along with general image denoising is also given.
-This chapter is separated into three parts, first, Image Enhancement techniques are described, after that algorithms developed for Noise Removal specifically are discussed, and lastly, proposed Image Descriptors are reviewed.
+This chapter is separated into three parts, first, image enhancement techniques are described, after that algorithms developed for noise removal specifically are discussed, and lastly, proposed image descriptors are reviewed.
 
 
 \section{Image Enhancement}
 \label{sec:rw:ImageENhancement}
 
-In this section image enhancement techniques from four specific domains are discussed, these are shoe- and fingerprint identification, tattoo recognition and natural image enhancement.
+In this section image enhancement techniques from four specific domains are discussed, these are shoe- and fingerprint identification and natural image enhancement.
 
 \section*{Shoeprint Enhancement}
 
 \par
-There is an extensive research done in the field of enhancing shoeprint images \cite{rida2019forensic}.
+There is extensive research done in the field of enhancing shoeprint images \cite{rida2019forensic}.
 However,  the problem definition and the use-case of the different publications varies strongly.
-Because of the absence of a common database, the discussed algorithms are separated into two groups, techniques tested on synthetic samples, on shoeprint impressions generated for the purpose of evaluation of shoeprint identification algorithms, and on real-life impressions.
-In a synthetic dataset the noise derives from scanning artifacts and computationally added distortions and modification.
+Because of the absence of a common database, the discussed algorithms are separated into two groups, techniques tested on synthetic samples, i. e. on shoeprint impressions generated for the purpose of evaluation of shoeprint identification algorithms, and on real-life impressions.
 Furthermore, a group of algorithms developed for real crime-scene data makes restrictions about the input image and exclude images by a predefined criteria, for example noise and quality.
 Figure \ref{fig:rw:database} shows example images from a synthetic \ref{fig:rw:synthetic}, from a restricted \ref{fig:rw:restricted} and high \ref{fig:rw:highFID} and low quality samples \ref{fig:rw:lowFID} from the FID-300 dataset.
-In the following discussion it is noticed repeatedly, which kind of dataset the proposed approach was tested on.
+Tables \ref{tab:ref} and \ref{tab:ref:alg} provide an overview about the used datasets of the discussed algorithms.
+The former contains further information about the accuracy of the algorithms, the latter gives keywords about the proposed methods of the publications.
+The algorithms presented in the "real" section of the dataset were tested on the FID-300 dataset, also used in this thesis.
 
 \begin{figure}[h]
   \centering
   \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{2/synthetic.jpg}
-    \subcaption{Example image from a synthetic dataset}
+    \subcaption{}
     \label{fig:rw:synthetic}
   \end{subfigure}
   \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{2/restricted.jpg}
-    \subcaption{Example image from a real crime scene dataset excluding low quality images}
+    \subcaption{}
     \label{fig:rw:restricted}
   \end{subfigure}
   \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{2/00025.jpg}
-    \subcaption{Example high quality image from the FID-300 database}
+    \subcaption{}
     \label{fig:rw:highFID}
   \end{subfigure}
   \begin{subfigure}[t]{0.24\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{2/00174.jpg}
-    \subcaption{Example low quality image from the FID-300 database}
+    \subcaption{}
     \label{fig:rw:lowFID}
   \end{subfigure}
-  \caption{Example images of a synthetic \cite{alizadeh2017automatic}, of a restricted \cite{li2014retrieval} and of the FID-300 \cite{kortylewski2014unsupervised} dataset}
+  \caption{Example images of the different datasets of the forensic shoeprint matching algorithms
+	\ref{fig:rw:synthetic} Example image from a synthetic dataset \cite{alizadeh2017automatic}; \ref{fig:rw:restricted} Example image from a real crime scene dataset excluding low quality images \cite{li2014retrieval}; \ref{fig:rw:highFID} Example high quality image from the FID-300 database \cite{kortylewski2014unsupervised}; \ref{fig:rw:lowFID} Example low quality image from the FID-300 database \cite{kortylewski2014unsupervised}}
   \label{fig:rw:database}
 \end{figure}
 
+
 \par
-Morphological Operations, Thresholding and Image Filtering are popular techniques for improving the quality of both kind, realistic and synthetic, of input data.
-Morphological Operations, especially Opening and Closing, is used in many cases \cite{wang2014automatic}, \cite{kong2014novel}, \cite{li2014retrieval}, \cite{tang2010footwear}, \cite{wu2019crime}, where Wang et al. \cite{wang2014automatic} uses a synthetic dataset, and other than Wu et al. \cite{wu2019crime} the forensic images are restricted to high quality data.
+Morphological Operations are popular techniques for improving the quality of both kind, realistic and synthetic, of input data, namely Opening and Closing, is used in many cases \cite{wang2014automatic}, \cite{kong2014novel}, \cite{li2014retrieval}.
 Wang et al. \cite{wang2014automatic}, Kong et al.  \cite{kong2014novel} and Li et al. \cite{li2014retrieval} use the Morphological Operations to correct inconsistencies after thresholding.
-Similar to the previous approaches Wu et al. \cite{wu2019crime} applies the same pipeline on a real forensic dataset.
-Tang et al. \cite{tang2010footwear} follow the same principle but instead of thresholding, after Canny edge detection Opening and Closing is used.
+Similar to the previous approaches Wu et al. \cite{wu2019crime} also applies Opening and Closing after thresholding on a real forensic dataset.
+In case of the algorithm proposed by Tang et al. \cite{tang2010footwear}, the input is binarized with Canny edge detection, the inconsistencies are eliminated afterwards again with Opening and Closing.
+However, as seen on Table \ref{tab:ref:alg}, Morphological Operations are mainly used on high quality data.
+They are applied on binarized data, but, except of Wu et al. \cite{wu2019crime}, the other discussed algorithms tested on FID-300 use no enhancement methods and focus on the definition of robust descriptor instead.
+Furthermore, Morphological Operations are only used for small corrections in the presented publications, Figure\ref{fig:rw:restricted}, but on FID-300 samples noise causes bigger distortions than Opening and Closing are able to handle, Figure \ref{fig:rw:lowFID}.
 \par
 To create a binary image and eliminate noise various thresholding techniques are used.
 Otsu  \cite{wu2019crime}, \cite{algarni2008novel}, \cite{alizadeh2017automatic}, \cite{kong2014novel} and adaptive thresholding \cite{wang2014automatic}, \cite{li2014retrieval} are two popular algorithms.
-Algarni et al. \cite{algarni2008novel} and Alizedah et al. \cite{alizadeh2017automatic} along with Wang et al. \cite{wang2014automatic} published their algorithms for synthetic datasets.
-Kong et al. \cite{kong2014novel} and Li et al. \cite{li2014retrieval} tested on restricted, whereas Wu et al. \cite{wu2019crime} developed their approach for real forensic database.
-Wang et al. \cite{wang2014automatic} and Wu et al. \cite{wu2019crime} combine thresholding with a grid based approach to calculate exact thresholds for every subarea of the picture.
+Wang et al. \cite{wang2014automatic} and Wu et al. \cite{wu2019crime} combine Otsu thresholding with a grid based approach to calculate exact thresholds for every subarea of the picture.
+Similar to the Morphological Operations, thresholding is preferred on high quality images, Table \ref{tab:ref:alg}.
+Wu et al. \cite{wu2019crime} adjust the algorithm for lower quality images by calculating several thresholds for subregions of the image.
+Nevertheless, the neglect of thresholding methods for real datasets indicates that they can not defeat the changing conditions on the samples of the FID-300 datset.
+
+\begin{minipage}{\linewidth}
+\begin{tabular}{c|c|c|c}
+Algorithm & Kind of Dataset & Size of Dataset & Accuracy \\
+\specialrule{2.5pt}{1pt}{1pt}
+Algarni et al. (2008) \cite{algarni2008novel} & \multirow{8}{*}{ synthetic } & 500 & 99\% * \\
+Gueham et al. (2007) \cite{gueham2007automatic} & & 100 & 100\% * \\
+Gueham et al. (2008) \cite{gueham2008automatic} & & 500 & 99\% @ 10 * \\
+Alizadeh et al. (2017) \cite{alizadeh2017automatic} & & 190 & 99\% * \\
+Wang et al. (2014) \cite{wang2014automatic} & & 210000 & 91\% @ 2\% * \\
+Nibouche et al. (2009) \cite{nibouche2009rotation} & & 300 & 90\% * \\
+Zhang et al. (2005) \cite{zhang2005automatic} & & 512 & 98\% @ 4\% * \\
+Patil et al. (2009) \cite{patil2009rotation} & & 1400 & 91\% * \\
+\hline
+Almaadeed et al. (2015) \cite{almaadeed2015partial} & \multirow{6}{*}{ restricted } & 300 & 99\% * \\
+Kong et al. (2014) \cite{kong2014novel} & & 104 & 64\% @ 20 \\
+Li et al. (2014) \cite{li2014retrieval} & & 195 & 94\% \\
+Tang et al. (2010) \cite{tang2010footwear} & & 2660 & 71\% @ 1\% * \\
+Dardi et al. (2009) \cite{dardi2009texture} & & 87 & 73\% @ 10 * \\
+Katireddy et al. (2017) \cite{katireddy2017novel} & & 800 & no matching done \\
+\hline
+Wu et al. (2019) \cite{wu2019crime} & \multirow{6}{*}{ real } & 300 & 93\% @ 2\% \\
+Wu et al. (2019) \cite{wu2019losgsr} & & 300 & 68\% @ 1\% \\
+Kong et al. (2017) \cite{kong2017cross} & & 300 & 90\% \\
+Kong et al. (2019) \cite{kong2019cross} & & 300 & 86\% @ 1\% \\
+Kortylewski et al. (2014) \cite{kortylewski2014unsupervised} & & 300 & 86\% @ 20\% * \\
+Kortylewski et al. (2016) \cite{kortylewski2016probabilistic} & & 300 & 71\% @ 20\% * \\
+\end{tabular}
+\captionof{table}{Overview about the database and the performance of the algorithms proposed for forensic image matching. The entries labeled with "*" originate from \cite{rida2019forensic}}
+ \label{tab:ref} 
+\end{minipage}
+
+\begin{sidewaystable}
+\begin{minipage}{\linewidth}
+\centering
+\begin{tabular}{c|c|c|c}
+Algorithm & Kind of Dataset & Enhancement Method & Descriptor \\
+\specialrule{2.5pt}{1pt}{1pt}
+Algarni et al. (2008) \cite{algarni2008novel} & \multirow{8}{*}{ synthetic } & Otsu th. & Hu moments \\
+Gueham et al. (2007) \cite{gueham2007automatic} & & Bandpass filtering & Fourier Transf. with Phase Only Corr. \\
+Gueham et al. (2008) \cite{gueham2008automatic} & & - & Fourier-Mellin Transf. \\
+Alizadeh et al. (2017) \cite{alizadeh2017automatic} & & Otsu th., Median filter & Sparse representation \\
+Wang et al. (2014) \cite{wang2014automatic} & & Morphological op., Adaptive th. & Fourier-Mellin Transf. \\
+Nibouche et al. (2009) \cite{nibouche2009rotation} & & - & Harris and SIFT \\
+Zhang et al. (2005) \cite{zhang2005automatic} & & Partial Differential Equations & Fourier Transf. \\
+Patil et al. (2009) \cite{patil2009rotation} & & - & Gabor Transform \\
+\hline
+Almaadeed et al. (2015) \cite{almaadeed2015partial} & \multirow{6}{*}{ restricted } & - & Hessian Detector \\
+Kong et al. (2014) \cite{kong2014novel} & & Morphological op., Otsu th. & Gabor Transff, Zernike Features \\
+Li et al. (2014) \cite{li2014retrieval} & & Morphological op., Adaptive th., Bandpass filtering & Gabor Transf. \\
+Tang et al. (2010) \cite{tang2010footwear} & & Morphological op., Canny edge detection & Hough Line Transf. \\
+Dardi et al. (2009) \cite{dardi2009texture} & & - & Power Spectral Density \\
+Katireddy et al. (2017) \cite{katireddy2017novel} & & SMQT, Daubechies wavelets & - \\
+\hline
+Wu et al. (2019) \cite{wu2019crime} & \multirow{6}{*}{ real } & Morphological op. , Otsu th. & Gabor Transf., Fourier-Mellin Transf. \\
+Wu et al. (2019) \cite{wu2019losgsr} & & - & Manifold ranking \\
+Kong et al. (2017) \cite{kong2017cross} & & - & CNN \\
+Kong et al. (2019) \cite{kong2019cross} & & - & CNN \\
+Kortylewski et al. (2014) \cite{kortylewski2014unsupervised} & & - & Fourier Transf \\
+Kortylewski et al. (2016) \cite{kortylewski2016probabilistic} & & - & Active Basis Model \\
+\end{tabular}
+\captionof{table}{Overview about the database and the proposed methods for enhancement and feature descriptors of algorithms proposed for forensic image matching.}
+\label{tab:ref:alg} 
+\end{minipage}
+\end{sidewaystable}
+
 \par
 Another way to eliminate noise is image filtering.
-Alizadeh et al. \cite{alizadeh2017automatic} uses a simple Median filter on a synthetic dataset.
-Zhang et al. \cite{zhang2005automatic} test on synthetic database as well, and they take advantage of the Partial Differential Equations approach.
+Alizadeh et al. \cite{alizadeh2017automatic} uses a simple Median filter.
+Zhang et al. \cite{zhang2005automatic} take advantage of the Partial Differential Equations approach.
 In this way the edges are preserved while the background is smoothed according to a controlled curvature motion criteria. 
 Katireddy et al. \cite{katireddy2017novel} uses Successive Mean Quantization Transform (SMQT) \cite{nilsson2013smqt} as an only step to enhance the real-life database.
 Figure \ref{fig:rw:SMQT} shows the output of the SMQT algorithm on an example image.
+There are, thus two proposed ways for filtering, the first one is general smoothing, the second one is edge preserving filtering.
+Comparing the databases the proposed algorithms were tested on, the latter seems to be more suitable for forensic images of FID-300 for two reasons.
+Smoothing is sufficient for images such as Figure \ref{fig:rw:synthetic} where the sample is clear and the shoeprint pattern consists of strong edges \cite{alizadeh2017automatic}, but it potentially damages the pattern information on lower quality samples such as Figure \ref{fig:rw:lowFID}.
+Furthermore, Katireddy et al. \cite{katireddy2017novel} tested their algorithm on restricted real samples, which is more similar to FID-300 than synthetic images. 
 
 \begin{figure}[h]
   \centering
   \begin{subfigure}[t]{0.4\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{2/SMQTorig.jpg}
-    \subcaption{Example shoeprint impression}
+    \subcaption{}
     \label{fig:rw:SMQTin}
   \end{subfigure}
   \begin{subfigure}[t]{0.4\columnwidth}
     \centering
     \includegraphics[width=\textwidth]{2/SMQT.jpg}
-    \subcaption{Enhanced image with the SMQT algorithm}
+    \subcaption{}
     \label{fig:rw:SMQTout}
   \end{subfigure}
-  \caption{Example image presenting the enhancement feature of the SMQT algorithm \cite{katireddy2017novel} }
+  \caption{Example image presenting the enhancement feature of the SMQT algorithm \cite{katireddy2017novel};
+		\ref{fig:rw:SMQTin} Example shoeprint impression; \ref{fig:rw:SMQTout} Enhanced image with the SMQT algorithm}
   \label{fig:rw:SMQT} % \label has to be placed AFTER \caption (or \subcaption) to produce correct cross-references.
 \end{figure}
 
 \par
 Bandpass operators are also used for noise suppression.
-The images are converted to the frequency domain where high and low frequencies are eliminated.
-Gueham et al. \cite{gueham2007automatic} and Richetelli et al. \cite{richetelli2017classification} utilize this method on a synthetic database.
-Li et al. \cite{li2014retrieval} work with a restricted real dataset, where only the lower frequencies are eliminated.
-Another frequency based approach was proposed by Katireddy et al. \cite{katireddy2017novel} for real dataset based on Daubechies wavelets
+The images are converted to the frequency domain where high and low frequencies are eliminated, Gueham et al. \cite{gueham2007automatic},  Richetelli et al. \cite{richetelli2017classification}.
+In the algorithm of Li et al. \cite{li2014retrieval} only the lower frequencies are eliminated.
+Another frequency based approach was proposed by Katireddy et al. \cite{katireddy2017novel} for real dataset based on Daubechies wavelets.
 After SMQT enhancement the Daubechies wavelets are used to separate the fore- and background and to remove the noise in the latter.
+In case of FID-300 it is challenging to define a heuristic for noise because of its versatile appearance.
+Therefore, Bandpass filtering potentially damages the pattern information.
+However, separating the fore- and the background, as Katireddy et al. \cite{katireddy2017novel} propose, makes it possible to process the noise and shoeprint impression independently.
+Furthermore, it also gives a sample about the appearance of noise on a given image, thus a calculation of a noise model is possible.
+
+\par
+It is outstanding that the majority of reviewed publications working on the FID-300 dataset do not suggest to use enhancement techniques, Table \ref{tab:ref:alg}.
+As illustrated on Figure \ref{fig:int:cap}, the appearance of noise changes greatly, thus, it is challenging to define a universal algorithm which deals with the  varying noise accurately.
+Additionally, the presented algorithms in Table \ref{tab:ref}, do not use a-priori knowledge about the samples, no information about the appearance of noise nor of the shoeprint is available.
+Because of that, they focus on the definition of robust descriptor and powerful matching technique which finds the corresponding shoeprints, despite the high shoeprint pattern to noise ratio and changing conditions.
 
 \section*{Fingerprint Enhancement}
-
-Bandpass and general image filtering is popular in the field of fingerprint enhancement as well.
+\par
+Bandpass \cite{zhou2011adaptive}, \cite{baig2015enhancement} and general image filtering  \cite{jahan2017robust} is popular in the field of fingerprint enhancement as well.
 Zhou et al. \cite{zhou2011adaptive} uses a low- and a highpass filter to eliminate striking frequencies. 
 Baig et al. \cite{baig2015enhancement} apply Directional Hilbert transform of Butterworth bandpass to collect the different phase shifts and eliminate the artifacts created by previously thresholding the input.
 Wang et al. \cite{wang2014enhanced} decompose the image into four subbands and process them separately, calculating the noise for every subband respectively.
@@ -452,16 +539,37 @@ Li et al. \cite{li2012texture} use Fourier transformation combined with Scale In
 With SIFT the interesting points in the Fourier domain are found and secured, while the image is filtered to suppress noise and eliminate other inconsistencies.
 Jahan et al. \cite{jahan2017robust} apply Fuzzy filtering followed by thinning.
 Fuzzy filter is a local method to preserve the edge information and fine line structures while suppressing the noisy background of the input.
+Similar to forensic shoeprint samples, fingerprint images also depict a 2 dimensional object where the information derives from the line pattern of the sample, Figure \ref{fig:rw:fingerprint}.
+The usage of bandpass filtering and signal transform for fingerprint images shows, that the edge content of the input do not influence their performance.
+The proposed methods indicate that they are suitable also for fine-lined images, such as finger- or palmprint samples \ref{fig:rw:fp}, which is promising when using them shoeprint impressions with detailed and fine-lined pattern as well \ref{fig:rw:ref}. 
 
-\section*{Tattoo Enhancement}
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}[t]{0.4\columnwidth}
+    \centering
+    \includegraphics[width=\textwidth]{2/fingerprint.jpg}
+    \subcaption{}
+    \label{fig:rw:fp}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.4\columnwidth}
+    \centering
+    \includegraphics[width=\textwidth]{2/00241.jpg}
+    \subcaption{}
+    \label{fig:rw:ref}
+  \end{subfigure}
+  \caption{Similarity between a fingerprint sample and a shoeprint  impression;
+		\ref{fig:rw:fp} Fingerprint image \cite{van2016fingerprint}; \ref{fig:rw:ref} fine-lined shoeprint pattern from FID-300  \cite{kortylewski2014unsupervised}}
+  \label{fig:rw:fingerprint} % \label has to be placed AFTER \caption (or \subcaption) to produce correct cross-references.
+\end{figure}
 
-For tattoo enhancement an algorithm from Han et al. \cite{han2013tattoo} was proposed which combines Gaussian filtering with Hysteresis thresholding. 
-Hysteresis thresholding is a neighborhood-aware approach where a pixel is labelled when it is above a given low threshold and simultaneously connected to other pixels meeting a higher thresholding criteria.
-Acton et al. \cite{acton2008matching} propose to use Active Contour Model to find the boundaries of tattoo images and apply Opening and Closing as well to eliminate small inconsistencies.
+%\section*{Tattoo Enhancement}
+
+%For tattoo enhancement an algorithm from Han et al. \cite{han2013tattoo} was proposed which combines Gaussian filtering with Hysteresis thresholding. 
+%Hysteresis thresholding is a neighborhood-aware approach where a pixel is labelled when it is above a given low threshold and simultaneously connected to other pixels meeting a higher thresholding criteria.
+%Acton et al. \cite{acton2008matching} propose to use Active Contour Model to find the boundaries of tattoo images and apply Opening and Closing as well to eliminate small inconsistencies.
 
 \section*{Natural Image Enhnacement}
 \par
-Along with Signal, especially Bandpass, Filtering, general Image Filtering and Thresholding, Histogram and Color Operations are frequently used for natural image enhancement as well.
 Maini et al. \cite{maini2010comprehensive} published a review about natural image enhancing algorithms and defined two main groups of algorithms, Frequency and Spatial Domain Methods.
 First, publications utilizing techniques from the former group are discussed, followed by a review of Spatial Domain Methods. 
 \par
@@ -469,15 +577,25 @@ Xu et al. \cite{xu2016image} combines Bandpass filtering with adaptive threshold
 Similar to Wang et al. \cite{wang2014enhanced} the image is separated into four subbands, and the threshold is calculated for every image separately.
 Sugamya et al. \cite{sugamya2016image} applies Subband Decomposition with two staged Histogram Equalization.
 The histogram of the input is equalized globally first, after that it is decomposed into subbands to equalize the values locally for every four generated subimage.
+In these methods the subbands are enhanced separately and reconstructed into the final output in the end.
+With processing the shoeprint impressions on different subbands, a method specialized for noise on the given frequency can be defined.
+Even though the appearance of noise varies across the samples, with decomposition it is separated into known subbands.
+This way a filtering method for general noise is built by breaking the down into known parts, into known subbands.  
 \par
 Median Filters are used not only in the domain of shoeprint enhancement \cite{alizadeh2017automatic}, but also for natural image noise suppression.
 Apart from Median Filter, Li et al. \cite{li2014rapid} utilize Average and Wiener Filter as well to suppress the occurring noise and to prepare the input for neighborhood based feature extraction.
 Feng et al. \cite{feng2011bag} proposed a Bag-of-Words algorithm based on the Gabor wavelets of the input. 
 For preprocessing, the Watershed Transform is used.
+With Wiener Filter and Bag-of-Words method a representation about the estimated noiseless image is built and with filtering this model is approximated.
+Along edge preserving filter this approach is favorable, when enhancing shoeprint images with varying noise.
+This way, regardless of the appearance of the clutter and non-pattern elements, the original image is estimated, thus the non-shoeprint parts are suppressed.
+The performance of these methods, however, depends on the underlying estimation of the original image \cite{li2014rapid}.
 \par
 Histogram Operations are combined apart from Bandpass filtering, like Sugamya et al. \cite{sugamya2016image} propose, also with Thresholding as suggested by Yao et al. \cite{yao2016image}. 
 Their approach first separates the histogram of the input into two parts using the Otsu\'s method, then equalizes the histogram of the generated subimages. 
 Figure \ref{fig:rw:BHNMT} shows the results of the above algorithm on an example image.
+As Figure \ref{fig:rw:BHNMT} illustrates, this method is more suitable for dehazing tasks. 
+Even though, there are low-contrast images in FID-300 available, such as Figure \ref{fig:int:cap:neg}, the artifact is not derived from haze.
 
 \begin{figure}[h]
   \centering
@@ -512,55 +630,67 @@ One way is denoising through gradient histogram preservation \cite{zuo2013textur
 The distribution of gradients is estimated on the original image, and the noisy image is adjusted to the calculated values.
 An alternative way is to decompose a single image and based on the clear parts, approximate the noisy regions.
 Huang et al. \cite{huang2013self} propose a self-learning algorithm that only considers the high frequency parts of the decomposed image.
-In \cite{xu2015patch}, \cite{talebi2013global}, \cite{chatterjee2011patch} and \cite{guo2015efficient} images  are separated spatially instead of on the frequency domain, the techniques are based on the idea of non-local means, where the pixels are clkustered according to a given criteria and they are set to the mean of the members belonging to the same cluster.
+In \cite{xu2015patch}, \cite{talebi2013global}, \cite{chatterjee2011patch} and \cite{guo2015efficient} images  are separated spatially instead of on the frequency domain, the techniques are based on the idea of non-local means, where the pixels are clustered according to a given criteria and they are set to the mean of the members belonging to the same cluster.
 The difference between the previous algorithms is how they classify the pixels or regions into different classes.
 Taleby et al. \cite{talebi2013global} uses an iterative shrinkage strategy. 
 Chatterjee et al.  \cite{chatterjee2011patch} group the geometrically similar regions and estimate the noise for every class separately with the Wiener filter, whereas Guo et al. \cite{guo2015efficient} utilize Block Matching to determine cluster memberships. 
 Additionally the spatial location is also considered while calculating the mean value in a given class.
 The members are weighted according to their distance to the current region.
+Offering adjustable classification criteria, the non-local means method is promising for the enhancement of forensic shoeprint impressions.
+If a feature is defined which is different between noise and shoeprint pattern elements but similar within those, with non-local means the two components are processed separately.
+In the next section proposed feature descriptors are reviewed, so an overview about possible classification criteria can be made.
 
 \section{Image Description}
 
 Similar to the previous Image Enhancement section \ref{sec:rw:ImageENhancement} this part is also subdivided into four domains offering solutions for image description in different areas.
 Similar topics are reviewed to gain insight about the powerful descriptors and to consider whether they can be used in the domain of shoeprint enhancement.
 Shoeprint descriptors are described first, followed by the fingerprint features.
-Finally, at the end of the section tattoo and natural texture descriptors are also reviewed. 
+Finally, at the end of the section natural texture descriptors are also reviewed. 
 
 \section*{Shoeprint Descriptors}
 \par
-Shoeprint Description in varying datasets is an issue in the research of Shoeprint Identification, therefore the properties of the database the given approach was tested on is highlighted for each case.
-Signal or frequency domain based image features are popular in both groups of algorithms using synthetic or real samples for testing.
-Gabor Transform is used in several applications tested on synthetic \cite{patil2009rotation}, on restricted \cite{kong2014novel}, \cite{li2014retrieval} and on real forensic data \cite{wu2019crime} as well.
+Shoeprint Description in varying datasets is an issue in the research of shoeprint identification, therefore the properties of the database the given approach was tested on is given in Tables \ref{tab:ref} and \ref{tab:ref:alg}.
 Patil et al. \cite{patil2009rotation} propose to use the Radon Transform to determine the dominant direction of structures on the print and to process the aligned image with Gabor Transform.
 Kong et al.  \cite{kong2014novel} combined the Gabor features of the sample with Zernike features to describe the shapes in the pattern.
 Li et al. \cite{li2014retrieval} suggest to use the histogram extracted in the Gabor transformed domain as descriptors.
 In the approach published by Wu et al.  \cite{wu2019crime}, Gabor Filters are combined with Haar Wavelets and Fourier-Mellin Transform to get an integrated, multi-level descriptor. 
-There are other publications along that where Fourier-Mellin Transform is proposed for feature description.
-Gueham et al. \cite{gueham2008automatic} use the classical Fourier-Mellin pipeline to compare samples of a synthetic dataset.
-As Wang et al. \cite{wang2014automatic} state, Fourier-Mellin Transform allow multiresolution matching, so they apply it successfully on synthetic data.
+There are other publications along that where Fourier-Mellin Transform is proposed for feature description, e.g. Gueham et al. \cite{gueham2008automatic}.
+Wang et al. \cite{wang2014automatic} apply multiresolution matching based on  Fourier-Mellin Transform.
 Richetelli et al. \cite{richetelli2017classification} classify synthetic shoeprint impressions by applying Fourier-Mellin Transform following the calculation of Phase Only Correlation (POC) to determine the translative difference between two images in the frequency domain.
 Gueham et al. \cite{gueham2007automatic} in another paper suggest to use the basic Fourier Transform before calculating the POC.
-Unlike the approach of Gueham et al. \cite{gueham2007automatic}, which were only tested on synthetic images, Kortylewsky et al. \cite{kortylewski2014unsupervised} propose a Fourier Transformation based method for real forensic images.
+Kortylewsky et al. \cite{kortylewski2014unsupervised} also propose a Fourier Transformation based method for real forensic images.
 It is an unsupervised learning approach, where the periodic structures of a shoeprint are compared in the Fourier domain.
 Richetelli et al. \cite{richetelli2017quantitative} compares Randomly Acquired Characteristics of shoeprints, e.g. small damages, modifications and stuck objects on or in the shoesole pattern, examining their Fourier descriptor.
-Other than Fourier-like transformations, the use of Power Spectral Density was also proposed for a restricted dataset \cite{dardi2009texture}.
+Other than Fourier-like transformations, the use of Power Spectral Density was also proposed \cite{dardi2009texture}.
 It is a descriptor for random, broadbrand signals based on the the frequency and power.
+In Table \ref{tab:ref} the matching accuracy of the descriptors above is also listed.
+Comparing that value the Fourier-Mellin features seem to outperform the Gabor and the Fourier Transform having as high accuracy as 99 and 100\%.
+However, the  evaluation was done on different datasets, the above 95\% accuracy was reached on synthetic images.
+Two algorithms \cite{kortylewski2014unsupervised} and \cite{wu2019crime} were tested on FID-300 and the latter achieved 93\% accuracy by the combination of Gabor and Fourier-Mellin transform.
+This shows, that Fourier-Mellin features are powerful descriptors for synthetic images, and they are also applicable for lower quality data, such as the samples of FID-300.
 \par
-In high quality, so synthetic or restricted datasets shape descriptors are a popular choice for feature extraction.
+%In high quality, so synthetic or restricted datasets shape descriptors are a popular choice for feature extraction.
 Algarni et al. \cite{algarni2008novel} suggest to use Hu moments because of its robustness against noise, rotation and resolution.
-For restricted databases it is proposed to combine the feature descriptors, Kong et al. \cite{kong2014novel} incorporate Zernike and Gabor features whereas Tang et al. \cite{tang2010footwear} define their own fundamental shapes based on common basic structures on a shoe sole through Hough Line Transform. 
+It is also proposed to combine the feature descriptors, Kong et al. \cite{kong2014novel} incorporate Zernike and Gabor features whereas Tang et al. \cite{tang2010footwear} define their own fundamental shapes based on common basic structures on a shoe sole through Hough Line Transform. 
 The extracted features are then stored in an Attributed Relational Graph to represent the entire shoeprint image.
+Comparing the datasets the algorithms were introduced for, Table \ref{tav:ref}, it is outstanding that shape descriptors were only introduced for high-quality data and not for samples from FID-300.
+On FID-300 images there is a high amount of noise which distorts the original shoeprint pattern.
+In this cases shape descriptors are less suitable, because the original outlines of given element are modified or covered by the noise.
 \par
-SIFT and Harris Detector are popular point descriptors for matching shoeprint images.
-Nibouce et al. \cite{nibouche2009rotation} propose to use a four-level Harris and combine it with SIFT on a synthetic database.
+Point descriptors were also proposed for shoeprint impression matching.
+Nibouce et al. \cite{nibouche2009rotation} propose to use a four-level Harris and combine it with SIFT.
 Almaadeed et al. \cite{almaadeed2015partial} use the same combination and uses the Hessian Detector additionally for the same purpose in case of restricted real-life datasets.
 Another publication \cite{richetelli2017classification} extract the SIFT features from the frequency domain after applying Fourier-Mellin Transformation and POC on the input image.
+Similar to the shape descriptors, point descriptors were tested only on high quality data, Table \ref{tab:ref:alg}.
+Even though SIFT is a robust descriptor  \cite{lowe1999object}, its neglect by algorithms introduced for FID-300 indicates, that it does not overcome the issue of high signal-to-noise ratio on the samples.
 \par
 Kong et al. \cite{kong2017cross}, \cite{kong2019cross} define a descriptor for real database extracting the mid-level features from a Convolutional Neural Network.
 Wu et al .\cite{wu2019losgsr} also use machine learning to calculate opinion scores for given matching pairs from real forensic data.
 In the learning process manifold ranking is used where he opinions of human experts as well as feature similarities are both incorporated.
 Kortylewsky et al. \cite{kortylewski2016probabilistic} developed hierarchical composition for Active Basis Models for the same real database, FID-300, as used in this thesis, and also extended for natural image environments \cite{kortylewski2019greedy}.
-Sparse representation was also proposed in \cite{alizadeh2017automatic}, this method, however, was only tested on synthetic data and not on a real forensic dataset.
+The algorithms presented in this section were all tested on FID-300.
+Comparing to other descriptors previously discussed in this section, it is outstanding that the majority utilize on machine learning, and introduce a detailed descriptor for low-quality data.
+That implies that for a robust descriptor training is indispensable, and to deal with the varying and high amount of noise the descriptor needs to be adjustable and adapted to the given data.
 
 \section*{Fingerprint Descriptors}
 \par
@@ -568,71 +698,90 @@ Signal domain representations, because of their robustness against rotation, are
 Multi-resolution representation through Gabor expansion was proposed by Bolle et al. \cite{bolle2012fingerprint} to achieve a localized texture descriptor.
 Van et al. \cite{van2016fingerprint} use Adaptively Adjusted Modified Finite Radon Transform after Gabor filtering to connect edges and eliminate inconsistencies.
 Rida et al. \cite{rida2018palmprint} propose an ensemble descriptor consisting of Gabor filter, Local Binary Pattern, Histogram of Oriented Gradient and Line detector to represent a palmprint impression.
-Other than that, Li et al. \cite{li2012texture} suggest to use Directional Filter Banks, where the image is separated into eight directions and every subimage is decomposed into two frequencies via Wavelet Transform. 
-\par 
+Other than that, Li et al. \cite{li2012texture} suggest to use Directional Filter Banks, where the image is separated into eight subimages, which then are further decomposed into two frequencies via Wavelet Transform.
+In case of shoeprint impressions Fourier-Mellin features were dominating, they were proposed in several publications  \cite{gueham2007automatic}, \cite{wu2019crime} and achieved high accuracy \ref{tab:ref}, but for fingerprint descriptors Gabor Transform and Radon Transform are preferred.
+This indicates that the latter is more suitable for fine-lined, detailed patterns, illustrated on Figure \ref{fig:rw:fp}, and the former is more applicable on bigger geometrical structures, Figure \ref{fig:int:varying}.
+This observation also foresights the performance of Fourier-Mellin features on detailed shoeprint patterns such as shown on Figure \ref{fig:rw:ref}. 
+\par
 Unlike at shoeprint image representation, in case of fingerprint images several point feature descriptors were proposed.
 In \cite{zhou2011adaptive} SIFT features were fused with Hough Transform and Minutiae Information of the fingerprint.
-Chen et al. \cite{chen2013hierarchical} also use the Hough Transform and extend it with a hierarchical voting score to improve the matching information available. 
+Chen et al. \cite{chen2013hierarchical} also use the Hough Transform and extend it with a hierarchical voting score to improve the matching information. 
 Along  \cite{rida2018palmprint} Ghandehari et al. \cite{ghandehari2012palmprint} recommend to use HOG in a 3-level Gaussian pyramid to estimate the local strength of different types of edges on the image.
 Jahan et al. \cite{jahan2017robust} suggest to combine the Minutiae Information with Speeded Up Robust Features and compare them with a Neural Network to find the matching pairs.
-\par
-According to the following publications, Local Binary Patterns (LBP) are also suitable for fingerprint description.
-As mentioned previously, Rida et al. \cite{rida2018palmprint} published a combined feature vector that LBP is also a part of.
-Wang et al. \cite{wang2013pixel} modify the usual LBP pipeline with Pixel to Patch sampling to increase the quality of the descriptor without slowing down the calculation.
-At Pixel to Patch sampling,  instead of interpolation the weighted average of the neighboring pixels in a given radius is calculated. 
-Additionally, the Local Neighboring Intensity Relationships subtracted from their grey-scale information are also considered.
-\par
-Sparse representations are also used for fingerprint description.
-Rida et al. \cite{rida2018palmprint} stores the hybrid features in that way, whereas Shao et al. \cite{shao2013fingerprint} represents predefined fingerprint patches, called dictionary atoms, in a sparse way.
+Local descriptors are suitable for fingerprint images because of the compactness of information.
+That is, however, not guaranteed on forensic shoeprint samples.
+Depending on the original shoesole, the elements of the shoeprint are possibly bigger and widespraed on the input image, Figure  \ref{fig:rw:ref}, compared to  fingerprint sample, Figure \ref{fig:rw:fp}.
+%\par
+%According to the following publications, Local Binary Patterns (LBP) are also suitable for fingerprint description.
+%As mentioned previously, Rida et al. \cite{rida2018palmprint} published a combined feature vector that LBP is also a part of.
 
-\section*{Tattoo Descriptors}
-\par
-For tattoo description, three methods are overviewed, which are signal domain features, point descriptors, especially SIFT, and shape features, whereas Kim et al. \cite{kim2015robust} fuses all three of them. 
-For local descriptor, the Shape Context Features are used, whereas for global descriptor multi-level SIFT and the Fourier Transform is utilized. 
-Acton et al. \cite{acton2008matching} built an Active Contour Model which consists of Haar Wavelet, an HSV histogram and a Fourier Shape Descriptor.
-\par
-Other than  \cite{kim2015robust}, there are multiple publications available, such as \cite{duangphasuk2013tattoo}, that take advantage of SIFT features for tattoo image description.
-It is common to combine them with other shape descriptor to have a more detailed representation.
-Han et al. \cite{han2013tattoo} fuse Active Shape Models with SIFT, in \cite{yi2015impact} SURF is added and in \cite{kim2016tattoo} SIFT is extended with the Local Self Similarity measure.
-Duangphasuk et al. \cite{duangphasuk2013tattoo} base their approach mainly on shape description and similar to  \cite{kim2015robust} use Shape Context Features for tattoo representation.
+%\par
+%Sparse representations are also used for fingerprint description.
+%Rida et al. \cite{rida2018palmprint} stores the hybrid features in that way, whereas Shao et al. \cite{shao2013fingerprint} represents predefined fingerprint patches, called dictionary atoms, in a sparse way.
+
+%\section*{Tattoo Descriptors}
+%\par
+%For tattoo description, three main methods are overviewed, which are signal domain features, point descriptors, especially SIFT, and shape features, and  Kim et al. \cite{kim2015robust} fuses all three of them. 
+%For local descriptor, the Shape Context Features are used, whereas for global descriptor multi-level SIFT and the Fourier Transform is utilized.
+%Acton et al. \cite{acton2008matching} built an Active Contour Model which consists of Haar Wavelet, an HSV histogram and a Fourier Shape Descriptor.
+%Wavelet tarnsforms and shape features were also introduced for shoprint identification \cite{wang2014automatic}, \cite{algarni2008novel}.
+%Using them on tattoo images shows that they are robust against illumination changes and distortions, since tattoos are ommonly . 
+%\par
+%Other than  \cite{kim2015robust}, there are multiple publications available, such as \cite{duangphasuk2013tattoo}, that take advantage of SIFT features for tattoo image description.
+%It is common to combine them with other shape descriptor to have a more detailed representation.
+%Han et al. \cite{han2013tattoo} fuse Active Shape Models with SIFT, in \cite{yi2015impact} SURF is added and in \cite{kim2016tattoo} SIFT is extended with the Local Self Similarity measure.
+%Duangphasuk et al. \cite{duangphasuk2013tattoo} base their approach mainly on shape description and similar to  \cite{kim2015robust} use Shape Context Features for tattoo representation. %am�gy ezzel az angoloknak az lenne a baja, hogy cask felsorolsz egy sor m�dszert, de igaz�b�l semmit nem tudunk meg arr�l, hogy ezek milyenek. M�rmint, nem azt, hogy mit jelentenek ezek a szavak, hanem azt, hogy mi�rt fontos az, hogy ezeket felsoroljad. Ezek jobb� teszik az munk�t? Ezek nem m�k�dtek? Ezek alapj�n �rod a ti�det? Mi�rt �rdemes egy�ltal�n ezt felsorolni? Mi�rt fontos, hogy ismerjem ezeket a neveket?
 
 \section*{Natural Texture Descriptors}
 \par
-For natural texture description signal domain features and LBPs are frequently used.
+For natural texture description signal domain features are now reviewed .
 Mistry et al. \cite{mistry2017content}  mix multiple features, mainly color and texture descriptors.
 For texture description, Gabor Wavelet and Binarized Statistical Images  \cite{kannala2012bsif} are used simultaneously.
-Hatipoglu et al. \cite{hatipoglu2000image} suggest applying Dual Tree Complex Wavelet transform instead of Gabor Wavelet.
-Quevedo et al. \cite{quevedo2002description} and Xu et al. \cite{xu2009viewpoint} propose Fractal features, because they are invariant to intensity and scale changes.
-Xu et al. \cite{xu2009viewpoint} recommend to use additional multifractal spectrum to achieve robustness against viewpoint changes and non-rigid deformations  
+Hatipoglu et al. \cite{hatipoglu2000image} suggest taking advantage of  applying Dual Tree Complex Wavelet transform instead of Gabor Wavelet.
+Quevedo et al. \cite{quevedo2002description} and Xu et al. \cite{xu2009viewpoint} suggest Fractal features, because they are invariant to intensity and scale changes.
+Xu et al. \cite{xu2009viewpoint} propose using a multifractal spectrum to achieve robustness against viewpoint changes and non-rigid deformations.
 Hayati et al. \cite{hayati2018wirif} and Ahonen et al. \cite{ahonen2009rotation} follow the same principle by incorporating LBP-like features with the frequency domain representation.
-Ahonen et al. \cite{ahonen2009rotation} calculate the LBP of the Fourier features of the image, whereas Hayati et al. \cite{hayati2018wirif} use Wave Inference, where the information of multiple different-sized asymmetric neighborhoods is added respectively. 
+Ahonen et al. \cite{ahonen2009rotation} calculate the LBP of the Fourier features of the image, whereas Hayati et al. \cite{hayati2018wirif} use Wave Inference, where the information of multiple different-sized asymmetric neighborhoods is added respectively.
+Fourier Transformation and Gabor wavelets were introduced for all reviewed topics so far \cite{kortylewski2014unsupervised}, \cite{wu2019crime}, \cite{bolle2012fingerprint}.
+It implies high versatility and robustness of the descriptors, since it is possible to configure them for shoeprint, fingerprint as well as for natural texture description.  
+Descriptors based on signal tranformation are, thus powerful tools, and based on the reviewed literature it is advisable to take advantage on them.
 \par
 There are several publications available which use LBPs for texture description, e.g. \cite{guo2012discriminative}, \cite{hong2014combining}, \cite{ahonen2009rotation}, or for texture classification, e.g. \cite{khellah2011texture}, \cite{guo2010rotation}, \cite{zhang2017learning}.
+Wang et al. \cite{wang2013pixel} modify the usual LBP pipeline with Pixel to Patch sampling to increase the quality of the descriptor without slowing down the calculation.
+At Pixel to Patch sampling, the weighted average of the neighboring pixels in a given radius is calculated instead of interpolation.
+Additionally, the Local Neighboring Intensity Relationships subtracted from their grey-scale information are also considered.
 LBP is frequently used also in combination with other techniques. 
 In \cite{hong2014combining} based on the covariance matrix additional discriminative features are calculated. 
-As mentioned previously, Ahonen et al. \cite{ahonen2009rotation} use the LBP features of the Fourier domain, similarly, in \cite{guo2010completed} LBPs are calculated twice, after separating the input into two components first, into signs and magnitudes, to make the basic LBP rotation invariant as well.
+As mentioned previously, Ahonen et al. \cite{ahonen2009rotation} use the LBP features of the Fourier domain, similarly, in \cite{guo2010completed} LBPs are calculated twice, after that the input is separated into two components, into signs and magnitudes, to make the basic LBP rotation invariant as well.
 Zhang et al.  \cite{zhang2017learning} propose a learning strategy for adaptively weighting the sign and magnitude LBPs to estimate their contribution in the given area. 
 Along the sign and magnitude LBPs, a third modified LBP is also defined, where the local difference vector is determined, in this way robustness against illumination changes is achieved.
 In \cite{khellah2011texture}, LBP is calculated on multiple levels.
 Another solution for rotation invariance is proposed by Davarzany et al. \cite{davarzani2015scale}. 
-In their approach additional circular neighboring radius and a dominant orientation is stored so that scale invariance is also granted.
+In their approach a circular neighboring radius and a dominant orientation is stored so that scale invariance is also granted.
 Li et al. \cite{li2014rapid} process the neighborhood with Rapid Transform, which is robust against cyclic permutation, to achieve the same robustness.
 Wang et al. \cite{wang2017local} suggest solving this problem by storing the radial and tangential information instead of the intensity values.
 Guo et al. \cite{guo2010rotation} defines "LBPV" instead of LBP, where V stands for variance. 
 In their approach the LBP features with high variance are chosen as discriminative, because they indicate high frequency in the related region.
 In \cite{bala2016local} it is proposed to calculate Local Texton Patterns, where the Value channel of the HSV input is subdivided into overlapping subblocks according to its content, and the modified LBP is then determined based on those subregions.
 Fadaei et al. \cite{fadaei2017local} published a similar approach called Local Derivative Radial Patterns.
-Instead of binary coding, a multi-level coding is used in four directions, and the differences between neighbors are weighted additionally.
+Instead of binary coding, a multi-level coding is used in multiple directions, and the differences between neighbors are weighted additionally. 
 Chahi et al. \cite{chahi2018local} define Local Ternary Patterns which store the directional patterns explicitly.
-\par
-In \cite{kannala2012bsif}, a new LBP similar descriptor is defined called Binary Statistical Image Feature (BSIF) which is also proposed to use by Crossier et al. \cite{crosier2010using}. %REVIEW. 
-In BSIF, pre-learnt filters are used and the responses are stored in the feature.
-It can handle large intra-class variance when used for classification, however, it varies greatly when the scale changes. 
-For this reason, Crossier et al. \cite{crosier2010using} suggest calculating the features on multiple resolutions in order to gain scale invariance as well.
-\par
-Varied Local Edge Pattern Descriptors (VLEP) \cite{yan2016edge} are used to represent edge information.
-Every pixel of an edge is described by the angle and by the magnitude of the gradient, which stand for edge direction and strength, respectively. 
-Wang et al. \cite{wang2018using} extend the feature to be scale invariant by combining two or more modified VLEPs, one calculated on a different scale and another calculated on different scale and resolution.
+Even though, LBPs are extensively researched for natural textures, their applicability for forensic shoeprint impressions is questionable.
+LBPs were not suggested shoeprint identification by the publications reviewed in the previous sections.
+Furthermore, the presented algorithms of this section focus on invariance against rotation, e. g. \cite{khellah2011texture}, scale, e.g. \cite{davarzani2015scale}  and illumination, e.g. \cite{zhang2017learning}.
+This is a possible issue on natural texture images, but on forensic shoeprint impressions, as discussed in the following chapter, distortions and additional noise are the main challenges.
+For that reason the benefits of LBP are limited in the field of shoeprint matching.
+%\par
+%In \cite{kannala2012bsif}, a new LBP similar descriptor is defined called Binary Statistical Image Feature (BSIF) which is also proposed to use by Crossier et al. \cite{crosier2010using}.
+%In BSIF, pre-learnt filters are used and the responses are stored in the feature vector.
+%It can handle large intra-class variance when used for classification, however, it varies greatly when the scale changes. 
+%For this reason, Crossier et al. \cite{crosier2010using} suggest calculating the features on multiple resolutions in order to gain scale invariance as well.
+%\par
+%Varied Local Edge Pattern Descriptors (VLEP) \cite{yan2016edge} are used to represent edge information.
+%Every pixel of an edge is described by the angle and by the magnitude of the gradient, which stand for edge direction and strength, respectively.
+%Wang et al. \cite{wang2018using} extend the feature to be scale invariant by combining two or more modified VLEPs, one calculated on a different
+ 
+
 
 \chapter{Methodology}
 
@@ -2085,7 +2234,7 @@ In this way the functionality of the proposed algorithms is extended and their c
 \par
 Forensic shoeprint identification is an extensively studied research area \cite{rida2019forensic}, nevertheless there are several possibilities for improvement.
 In this thesis three different approaches for forensic shoeprint enhancement are introduced, to increase the contrast between the shoeprint pattern and its background, and to suppress the noise on the forensic samples.
-Based on the available shoeprint recognition literature and research done in related fields such as fingerprint and tattoo identification and natural image enhancement, three prototypical mathods are presented and compared to increase the quality of crime scene footwear impressions from the FID-300 dataset.
+Based on the available shoeprint recognition literature and research done in related fields such as fingerprint and natural image enhancement, three prototypical mathods are presented and compared to increase the quality of crime scene footwear impressions from the FID-300 dataset.
 \par
 The first one is based on the idea of feature learning.
 Samples from the FID-300 dataset were labeled pixel-wise, to accurately distinguish between the fore- and the background area.
