@@ -17,10 +17,10 @@ import pixelDescriptor
 import signalTransform
 
 
-firstVersionPreprocessing = True
+firstVersionPreprocessing = False
 LBPdenoising = False
 LBPLearning = False
-mainPipeline = False
+mainPipeline = True
 SIFTdescriptor = False
 HOGdescriptor = False
 lbpImg = np.empty((0, 0))
@@ -182,14 +182,20 @@ if HOGdescriptor or SIFTdescriptor or LBPLearning or signalLearning :
         cv.imshow("res2", img - np.uint8((1 - res) * 255))
         cv.waitKey(0)
 
+    # test = cv.imread('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/new/FM/00182.jpg', 0)
+    # test = histogramOperations.equalizeHistogram(test)
+    # cv.imwrite('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/new/FM/00182_eq.jpg',
+    #     test)
+    # cv.imshow('test', test)
+    # cv.waitKey(0)
     if signalLearning :
         # features = signalTransform.threeLayeredLearning(images, masks)
         print("reading signal feature")
         features = np.loadtxt(
-            'C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/training/discriminative_FM.txt',
+            'C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/training/discriminative_FM_095.txt',
             delimiter=',')
         print("features read")
-        img = cv.imread('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/GT/00182.png', 0)
+        img = cv.imread('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/orig/00182.jpg', 0)
         windowHeight = 5
         windowWidth = 5
         rep = cv.copyMakeBorder(img, windowHeight, windowHeight, windowWidth, windowWidth, cv.BORDER_REFLECT101)
@@ -214,22 +220,24 @@ if HOGdescriptor or SIFTdescriptor or LBPLearning or signalLearning :
             print x
         res = util.normalize(res, 1)
         cv.imwrite(
-            'C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/FM/output_00003_FM_window5.jpg',
+            'C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/new/FM/00182.jpg',
             res * 255)
         cv.imshow("res", res)
         cv.imshow("res2", img - np.uint8((1 - res) * 255))
         cv.waitKey(0)
 
-name = '00021'
+name = '00235'
 
-imgOrig = cv.imread('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/new/k25/centroids/' + name + '_filtered.jpg', 0)
+imgOrig = cv.imread('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/new/k20/centroids/' + name + '_filtered.jpg', 0)
+
 # imgGT = cv.imread('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/training/00003.png', 0)
 
+# img = cv.imread('C:/Users/rebeb/Documents/TU_Wien/Dipl/project/vutinfth-master/vutinfth-master/graphics/appA/' + name + '.jpg', 0)
 # roi = cv.selectROI("Select noise area", img)
-
+# imgOrig = img
 # noiseImg = img[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
 
-maskOrig = cv.imread('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/' + name + '_noise.jpg', 0)
+maskOrig = cv.imread('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/new/mask/' + name + '.jpg', 0)
 maskOrig = doThresholding.otsuThreshold(maskOrig) / 255
 # maskOrig = np.zeros(imgOrig.shape, np.uint8)
 
@@ -690,7 +698,8 @@ if surfMatchFiles or denseSurfMatchFiles :
 
 if signal:
     # test = np.repeat(img, 2, axis=2)
-    corr = signalTransform.eliminateNoise(img, roi[0], roi[1], 106, False )
+    print("im doomed")
+    corr = signalTransform.eliminateNoise(img, roi[0], roi[1], 6, True )
     corr = np.uint8(util.normalize(corr, 255))
     # cv.imwrite('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/easy/00204_corr.jpg', corr)
     # corr = noiseImg
@@ -698,30 +707,34 @@ if signal:
     kernel = np.ones((8,8),np.uint8)
     morph = cv.morphologyEx(th, cv.MORPH_OPEN, kernel)
     morph = cv.morphologyEx(morph, cv.MORPH_CLOSE, kernel)
-    mask = util.normalize(morph, 1)
+    mask = util.normalize(morph, 255)
 
     # img = np.uint8(diffTh)
+    cv.imwrite('C:/Users/rebeb/Documents/TU_Wien/Dipl/project/vutinfth-master/vutinfth-master/graphics/appA/mask/' + name + '.jpg', mask)
     cv.imshow("mask", mask)
     cv.imshow("th", th)
     cv.waitKey(0)
 
+mask = maskOrig
 if mainPipeline :
     areaMask = np.sum(mask)
     height, width = img.shape
     areaImg = width * height
     imgProc = img
     tryEqualize = True
-    if areaMask >=  0.2 * areaImg :
+    if areaMask >=  0.2 * areaImg and areaMask <=  0.8 * areaImg:
         print("eliminate noise")
-        # imgProc = signalTransform.eliminateNoiseOnPattern(img, mask)
+        # imgProc = signalTransform.eliminateNoiseOnPattern(img, mask, name)
         imgProc = cv.imread(
-            'C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/new/fourier/' + name + '_avg.jpg',
+            'C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/new/fourier/' + name + '_sum.jpg',
             0)
         tryEqualize = False
+    else :
+        mask = np.zeros(img.shape)
 
-
+    print("non local means")
     img, classes, equalized = filters.regionBasedNonLocalMeans(imgProc, tryEqualize=tryEqualize)
-
+    print("postprocessing")
     biggestClassIndex = 0
     biggestClassCount = 0
     i = 0
@@ -760,7 +773,8 @@ if mainPipeline :
     cv.imshow("res", adaptive)
     cv.imshow("morph", morph)
     cv.waitKey(0)
-    #
+
+    cv.imwrite('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/new/k20/centroids/' + name + '_grad.jpg', img)
     # cv.imwrite('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/new/k20/mean/' + name + '_extracted.jpg', adaptive)
     # cv.imwrite('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/new/k20/mean/' + name + '_filtered.jpg', morph)
     # cv.imwrite('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/00017_noise.jpg', mask * 255)

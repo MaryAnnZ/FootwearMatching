@@ -136,7 +136,7 @@ def calculateFourierMellin(img) :
 
     return imgLogPolarComplexMags
 
-def eliminateNoiseOnPattern(img, mask, window = 3) :
+def eliminateNoiseOnPattern(img, mask, name = '', window = 3) :
     img_float32 = np.float32(img)
 
     height, width = img.shape
@@ -158,6 +158,7 @@ def eliminateNoiseOnPattern(img, mask, window = 3) :
             if mask[y, x] == 1 :
                 noiseFM += dft_shift_sub
                 noises.append((dft_shift_sub.reshape((-1, 1))).transpose())
+        print x
 
 
     noiseFM /= np.sum(mask)
@@ -204,6 +205,7 @@ def eliminateNoiseOnPattern(img, mask, window = 3) :
             img_back = cv.magnitude(img_back[:, :, 0], img_back[:, :, 1])
 
             resAvg[y, x] = img_back[window, window]
+        print x
 
     plt.subplot(121), plt.imshow(resSub, cmap='gray')
     plt.title('Sub'), plt.xticks([]), plt.yticks([])
@@ -215,8 +217,10 @@ def eliminateNoiseOnPattern(img, mask, window = 3) :
     resAvg = np.uint8(util.normalize(resAvg, 255))
     resSub = np.uint8(util.normalize(resSub, 255))
 
-    cv.imwrite('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/new/fourier/00250_avg.jpg', resAvg)
-    cv.imwrite('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/new/fourier/00250'
+    #this is centroids
+    cv.imwrite('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/new/fourier/' + name + '_avg.jpg', resAvg)
+    #this is mean
+    cv.imwrite('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/new/fourier/' + name +
                '_sum.jpg', resSub)
 
 
@@ -271,8 +275,9 @@ def correlation(img, noise) :
     numerator = np.sum(numerator)
     imgPow = np.multiply(img, img.copy())
     noisePow = np.multiply(noise, noise.copy())
-    denominator = np.multiply(imgPow, noisePow)
-    denominator = np.sum(denominator)
+    # denominator = np.multiply(imgPow, noisePow)
+    denominator = np.sum(imgPow) * np.sum(noisePow)
+    # denominator = np.sum(denominator)
     denominator = math.sqrt(denominator)
     corr = numerator / denominator
     if denominator == 0 or corr == np.nan:
@@ -298,7 +303,7 @@ def threeLayeredLearning(images, masks) :
         descriptors.append(descriptor)
     #Dominantpatternsets J1, J2,y, Jnj of nj images belonging to class j obtained from Algorithm 1.
     print("second Layer")
-    descriptors = getDiscriminativeFeatures(descriptors)
+    descriptors = getDiscriminativeFeatures(descriptors, 0.96)
     name = 'C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/training/discriminative_FM.txt'
     np.savetxt(name, descriptors, delimiter=',')
     #Thediscriminativedominantpatternset JCj for each class j  obtained from Algorithm 2.
@@ -306,7 +311,7 @@ def threeLayeredLearning(images, masks) :
     # getGlobalFeatures()
     return descriptors
 
-def getDominantDescriptors(img, mask, windowWidth = 5, windowHeight = 5, th = 1.4) :
+def getDominantDescriptors(img, mask, windowWidth = 5, windowHeight = 5, th = 0.95) :
     rep = cv.copyMakeBorder(img, windowHeight, windowHeight, windowWidth, windowWidth, cv.BORDER_REFLECT101)
     height, width = img.shape
 
@@ -330,9 +335,9 @@ def getDominantDescriptors(img, mask, windowWidth = 5, windowHeight = 5, th = 1.
     print (len(fmDescriptors))
     for currentPatch in fmDescriptors:
         similarFound = False
-        print count
-        if count > 7000 :
-            break
+        # print count
+        # if count > 7000 :
+        #     break
         print count
         count = count + 1
         for i in similarDescriptors:
@@ -354,7 +359,7 @@ def getDominantDescriptors(img, mask, windowWidth = 5, windowHeight = 5, th = 1.
 
     return dominantDescriptors
 
-def getDiscriminativeFeatures(features, th = 1.4) :
+def getDiscriminativeFeatures(features, th = 0.95) :
     discriminativeFeatures = features[0]
     i = 1
     while i < len(features) :
@@ -365,7 +370,7 @@ def getDiscriminativeFeatures(features, th = 1.4) :
             print("sorting")
             for patch in patches:
                 corr = correlation(feature, patch)
-                # print corr
+                print corr
                 if corr > th :
                     intersection.append(patch)
                     break
