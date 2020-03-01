@@ -1393,22 +1393,22 @@ Figure \ref{fig:pe:25} and Figure \ref{fig:pe:66} show example results of this t
 
 \par
 The visible difference between Figure \ref{fig:pe:25:LBPs} and Figure \ref{fig:pe:25:LBPb} as well as between Figure \ref{fig:pe:66:LBPs} and Figure \ref{fig:pe:66:LBPb} shows that bigger neighborhood of LBP, in this case radius of 5 and 3 are considered, is a better choice for shoeprint description.
-Considering the middle region of Figure \ref{fig:pe:25}, the background in Figure \ref{fig:pe:25:LBPb} is less noisy than in Figure \ref{fig:pe:25:LBPs}.
-This difference is more visible in  Figure \ref{fig:pe:66} where in Figure \ref{fig:pe:66:LBPs} no shoeprint can be recognized meanwhile in Figure \ref{fig:pe:66:LBPb} outlines of the pattern are visible.
-This observation is explainable with the properties of the LBP descriptor: a small neighborhood is more suitable for detailed, high-frequency textures, however, it is also more sensitive to noise.
-The shoe outsole pattern presented in Figures \ref{fig:pe:25}  and \ref{fig:pe:66} consists of big geometrical structures, and the input is noisy, thus big neighborhood is more suitable.
-Comparing Figure \ref{fig:pe:25:LBPs} and Figure \ref{fig:pe:66:LBPs} the contrast between outlines of the shoeprint and the background on the first one is higher, since the original image, Figure \ref{fig:pe:25}, contains less noise than Figure \ref{fig:pe:66}.
+Considering the middle region of Figure \ref{fig:pe:25}, the background in Figure \ref{fig:pe:25:LBPb} is homogen, whereas the same area is noisy in Figure \ref{fig:pe:25:LBPs}.
+This difference is also visible in  Figure \ref{fig:pe:66} where in Figure \ref{fig:pe:66:LBPs} no shoeprint can be recognized meanwhile in Figure \ref{fig:pe:66:LBPb} outlines of the pattern are visible.
+This observation is explainable with the properties of the LBP descriptor: a small, in this case the radius of 3, neighborhood is suitable for detailed, high-frequency textures, however, it is sensitive to noise.
+The shoe outsole pattern presented in Figures \ref{fig:pe:25}  and \ref{fig:pe:66} consists of blob-like geometrical structures, and the input is noisy, thus big neighborhood is more suitable.
+Comparing Figure \ref{fig:pe:25:LBPs} and Figure \ref{fig:pe:66:LBPs} the contrast between outlines of the shoeprint and the background on the first one is higher, since in the original image, Figure \ref{fig:pe:25}, there is no noise on the shoeprint.
 Still focusing on the middle area of Figure \ref{fig:pe:25}, Figure \ref{fig:pe:25:SIFT} shows that the SIFT descriptor is similarly robust against noise in the background as the LBP descriptor.
 SIFT is a robust feature descriptor, therefore it is not surprising that it successfully distinguishes between shoeprint and background in such a clear image like Figure \ref{fig:pe:25}.
-However, examining Figure  \ref{fig:pe:25:FM} the Fourier-Mellin descriptor has more difficulties with the background area, where the middle regions are noisy unlike in  Figure \ref{fig:pe:25:LBPb} and in Figure \ref{fig:pe:25:SIFT}.
-On the other hand, inspecting the bottom left side of the shoeprint, it is seen that the Fourier-Mellin features menaged to find the whole area of pattern, whereas only outlines are recognizable in Figure \ref{fig:pe:25:LBPb} and in Figure \ref{fig:pe:25:SIFT}.
+However, examining Figure  \ref{fig:pe:25:FM} the Fourier-Mellin descriptor has more difficulties with the background area, where,   unlike in  Figure \ref{fig:pe:25:LBPb} and in Figure \ref{fig:pe:25:SIFT}, the middle regions are noisy.
+On the other hand, inspecting the bottom left side of the shoeprint, it is seen that the Fourier-Mellin features find the whole area of pattern, whereas only outlines are labeled in Figure \ref{fig:pe:25:LBPb} and in Figure \ref{fig:pe:25:SIFT}.
 That indicates that the Fourier-Mellin features are more detailed descriptors than LBP and SIFT. 
 The top part of the shoeprint consist of blobs, whereas on the bottom thin lines are seen.
-The LBP and SIFT features mistake those lines as noise, because LBP considers a bigger, radius of 5 is used instead of 3, neighborhood and the robustness of the SIFT descriptor prevents to correctly recognize those fine edges.
-Fourier-Mellin is more sensitive for intensity changes, thus the detailed shoeprint parts are correctly recognized.
+The LBP and SIFT features mistake those lines as noise, because LBP considers a bigger, radius of 5 is used instead of 3, neighborhood and the robustness of the SIFT descriptor prevents to correctly recognize the fine edges.
+Fourier-Mellin is sensitive for intensity changes, thus the detailed shoeprint parts are correctly recognized.
 On the other hand, it also causes noise in the middle and in the top of the image.
-The same phenomenon is seen in Figures  \ref{fig:pe:25:LBPs} and  \ref{fig:pe:25:LBPb}, where the bottom left regions are recognized on the image  with smaller neighborhood, having the radius setting of 3 instead of 5, see Figure \ref{fig:pe:25:LBPs}, but the background is homogeneous on the latter, see \ref{fig:pe:25:LBPb}. 
-Based on these observations,  more robust descriptors, such as LBP with the bigger radius setting and SIFT, are sensitive for blob regions..
+The same phenomenon is seen in Figures  \ref{fig:pe:25:LBPs} and  \ref{fig:pe:25:LBPb}, where the bottom left regions are recognized on the image  with small neighborhood, having the radius setting of 3 instead of 5, see Figure \ref{fig:pe:25:LBPs}, but the background is homogeneous on the latter, see \ref{fig:pe:25:LBPb}. 
+Based on these observations, robust descriptors, such as LBP with the big radius setting and SIFT, are sensitive for blob regions.
 The features less robust against noise, such as Fourier-Mellin, find both kind of regions, fine-lines and blobs,  of a shoeprint.
 In exchange, the background area stays noisy and further image processing is needed.
 
@@ -1450,24 +1450,24 @@ In exchange, the background area stays noisy and further image processing is nee
 
 \par
 %This testing scenario shows that the feature learning algorithm is able to distinguish between fore- and background on clear shoeprint images.
-In Figure \ref{fig:pe:66} the pattern is less recognizable than on the previous example and background pixels are labeled wrongly as pattern.
+In Figure \ref{fig:pe:66}, since background pixels are labeled wrongly as shoeprint, the actual shoeprint is less recognizable than on the previous example.
 If the input image is noisy, as in Figure \ref{fig:pe:66}, the results are not clear, and LBP and SIFT outperform the Fourier-Mellin descriptors.
 In Figure \ref{fig:pe:66:FM} the shoeprint is barely visible, whereas in Figures \ref{fig:pe:66:LBPb} and \ref{fig:pe:66:SIFT} outlines are recognizable.
 This is explainable with the different training process for Fourier-Mellin and for the other two features.
 The selection process for Fourier-Mellin features was the same as suggested by Guo et al. \cite{guo2012discriminative}.
 However, this pipeline were modified for LBP and SIFT features where the descriptors of the annotated background area were also extracted and explicitly eliminated from the final feature pool.
-The results prove, that this modification provide a more robust descriptor set than the originally proposed feature training steps.
+The results prove, that this modification provide a robust descriptor set compared to the originally proposed feature training steps.
 \par
 Comparing all results of the two images, the performance depends on the input quality.
-A noisy input, see Figure \ref{fig:pe:66}, produces less exact results than a clear sample, see Figure \ref{fig:pe:25}.
-Feature learning makes it possible to label, to indicate the shoeprint area and distinguish it from background, in low quality images as well,  see Figure \ref{fig:pe:66}, but in comparison to a high quality input, see Figure \ref{fig:pe:25}, the accuracy is lower.
-That means that the feature learning algorithm does not completely overcome the negative influence of noise, but it makes the descriptors more robust against it.
+A noisy input, see Figure \ref{fig:pe:66}, produces no accurate results, whereas in case of a clear shoeprint image, see Figure \ref{fig:pe:25}, the shoeprint is recognizable.
+Feature learning makes it possible to indicate the shoeprint area and to distinguish it from background, in low quality images as well,  see Figure \ref{fig:pe:66}, but in comparison to a high quality input, see Figure \ref{fig:pe:25}, the accuracy is low.
+That means that the feature learning algorithm does not overcome the negative influence of noise, but it makes the descriptors robust against it.
 \par
 In the second testing scenario an evaluation image set is defined, which consist of non-training shoeprint images, to examine if the features learned on shoeprint images from one specific shoe outsole pattern are able to describe shoeprints of other shoes as well.
 In Figure \ref{fig:pe:182} the results of the Feature Learning algorithm on a non-training sample are shown.
 The results displayed in Figure \ref{fig:pe:182:LBPs} and in Figure \ref{fig:pe:182:LBPb} strengthens the observation that bigger, 5, neighborhood LBP outperforms the smaller, 3, radius descriptor.
 In Figure \ref{fig:pe:LPBexp} further examples are shown, in Figures \ref{fig:pe:204:LBPb}, \ref{fig:pe:241:LBPb} the contrast between the shoeprint and background is big compared to Figures \ref{fig:pe:204:LBPs}, \ref{fig:pe:241:LBPs}, because of the different neighborhood settings.
-Furthermore, examining the middle, noisy part of the images in all three cases a homogenous background is seen containing some falsely labeled pixels.
+Furthermore, examining the middle, noisy part of the images, in all three cases a homogenous background is seen containing some falsely labeled pixels.
 However, the descriptiveness of the LBP features is limited for shoeprint images.
 The goal of enhancement is to increase the contrast between the shoeprint and the background.
 That is, however, not the case, compared to the original images, the contrast is decreased.
@@ -1510,14 +1510,15 @@ That is, however, not the case, compared to the original images, the contrast is
 
 \par
 Observing the bottom part of the shoe in Figure \ref{fig:pe:182} a weakness of LBP and SIFT already discussed is noticeable.
-On the original image there are small structures in the bottom area which are part of the shoeprint.
-Similar to the bottom left part of Figure \ref{fig:pe:25}, the fine structures are partially recognized.
+In the original image, there are fine structures in the bottom area which are part of the shoeprint.
+Similar to the bottom left part of Figure \ref{fig:pe:25}, the structures are partially recognized.
 Comparing Figure \ref{fig:pe:182:FM} to Figure \ref{fig:pe:182:LBPb} and to Figure \ref{fig:pe:182:SIFT}, Fourier-Mellin outperforms LBP and SIFT again labeling the whole area and not only the outlines correctly.
-The output of the Fourier-Mellin features, see Figure \ref{fig:pe:182:FM}, is more clear than in the previous tests, as seen in Figures \ref{fig:pe:25:FM} and \ref{fig:pe:66:FM}, whereas no such change is noticeable between LBP and SIFT features.
+The output of the Fourier-Mellin features, see Figure \ref{fig:pe:182:FM}, is clear, unlike in the previous tests, as seen in Figures \ref{fig:pe:25:FM} and \ref{fig:pe:66:FM}.
+But no such change is noticeable between LBP and SIFT features.
 As mentioned earlier, unlike in the case of LBP and SIFT training, the noise descriptors were not eliminated from the feature pool of Fourier-Mellin descriptors.
-The tests on the training dataset indicated that, by producing less clear images than LBP and SIFT.
+The tests on the training dataset indicated that, by producing noisy images compared to LBP and SIFT.
 However, the evaluation set contains unknown noise which were not part of the training set.
-Therefore, the similar shoeprint elements are recognized and the background is more distinguishable than in the previous cases.
+Therefore, the similar shoeprint elements are recognized and the shoeprint and its background is distinguishable compared to the previous cases.
 
 \begin{figure}[h]
   \centering
@@ -1563,21 +1564,21 @@ Therefore, the similar shoeprint elements are recognized and the background is m
 
 \par
 To summarize, the modified learning strategy introduced for LBP and SIFT descriptor provides a robust feature pool, unlike the original one proposed by Guo et al. \cite{guo2012discriminative}.
-Because the Fourier-Mellin feature pool was created using the original learning strategy, it calculates clear results  on the evaluation dataset and has lower performance on the noisy, training images.
+Because the Fourier-Mellin feature pool was created using the original learning strategy, it calculates clear results  on the evaluation dataset and has lower performance on the training images.
 However, in both cases it is more responsive on detailed areas with fine line structures, such as the bottom left side of Figure \ref{fig:pe:25} and bottom right side of Figure \ref{fig:pe:182}, than LBP and SIFT.
 \par
 There are, however, lower quality samples in the dataset available than the one presented on Figure  \ref{fig:pe:66}, where there is small contrast between the pattern and the background, see Figure  \ref{fig:int:cap:neg}, or there is a high amount of noise on the fore- and the background as well, see Figure \ref{fig:rw:lowFID}.
 The feature pool is created based on a limited training set of seven images.
 Incorporating more samples and altering the learning criteria, e.g. the given feature has to be found in a given ratio of training images and not on every one of them, leads to a broader feature pool.
-Such a feature pool is possibly descriptive for a wider range of images, such as low quailty images, shoeprint images with fine-lined structures, low contrast images etc, as well.
+Such a feature pool is possibly descriptive for a wider range of images, such as low quailty images, shoeprint images with fine-lined structures, low contrast images etc., as well.
 However, this also increases the chance of selecting more noise descriptors into the final feature set.
 
 \subsection{Fully-Automated Noise Elimination Algorithm}
 \par
 Figures \ref{fig:fans:denoise} and \ref{fig:fans:enhance} show the output of the proposed algorithm on every stage and present the final results as well.
 The former one shows the output of the denoising step on three example shoeprint images from the FID-300 database.
-In the second column the Wiener filtered images are shown, in the third one the Bilateral filtered images are displayed whereas the combination of those two pictures is in the last column.
-Considering the background and the amount of noise in the images, a light smoothing is done during the denoising phase.
+In the second column the Wiener filtered images are shown, in the third one the Bilateral filtered images are displayed, whereas the combination of those two pictures is in the last column.
+Considering the background and the amount of noise in the images, moderate smoothing is done during the denoising phase.
 This decision was made to protect the valuable shoeprint information.
 Since no previous knowledge is available about the properties of the shoeprint image, such as appearance and location of noise and the shoeprint, no aggressive filter kernel is used.
 The  size of both kernels is small, being only 5x5, to make sure that the relevant shoeprint information is not distorted.
@@ -1585,21 +1586,21 @@ In the combined image, the contrast between fore- and background is increased.
 Since both filters smooth the background area and preserve the shoeprint, their combination amplifies the blurring effect without damaging the shoeprint in the foreground. 
 Despite the amplifying effect, structured noise elements, such as the white clutter on Figure \ref{fig:fans:235:orig}, are not eliminated.  
 Chatterjee et al. \cite{chatterjee2011patch} proposed a method which calculates the estimated image for Wiener Filter based on geometrically and photometrically similar subregions of the input.
-With such an estimation blurring, which eliminates the previously mentioned structured noise, is possible without damaging the foreground area.
+With such an estimation blurring which eliminates the previously mentioned structured noise is possible without damaging the foreground area.
 Even though their approach had promising results, it was tested on data with Gaussian noise, similar to Figure \ref{fig:fans:241:orig}, and not with irregular cluttered noise seen in the majority of FID-300 images, for example in Figure \ref{fig:fans:235:orig} and in the top of Figure \ref{fig:fans:21:orig}.
 \par
 The second step of the algorithm is enhancement, where SMQT is applied.
 The results are shown in Figures \ref{fig:fans:241:enhance}, \ref{fig:fans:235:enhance} and \ref{fig:fans:21:enhance}.
 The benefits of the SMQT algorithm are ambiguous.
-On the one hand, focusing on the middle area of Figures  \ref{fig:fans:241:enhance} and \ref{fig:fans:235:enhance} the difference between fore- and background is bigger than on the original image.
-The contours of the shoeprint are more outstanding than on the original image.
-Comparing Figure \ref{fig:fans:235:enhance} to Figure \ref{fig:fans:21:denoise}, the shoeprint is darker and there is a brighter area around the contours than on Figure \ref{fig:fans:21:denoise}.
+On the one hand, focusing on the middle area of Figures  \ref{fig:fans:241:enhance} and \ref{fig:fans:235:enhance} the difference between fore- and background is increased compared to the original image.
+The contours of the shoeprint are outstanding ater processing.
+Comparing Figure \ref{fig:fans:235:enhance} to Figure \ref{fig:fans:235:denoise}, the shoeprint is darkened and there is a bright area around the contours..
 On the other hand, not only the shoeprint but also the remaining noise elements became enhanced by SMQT.
 Even though the denoising stage is finished, since only moderate smoothing was applied, there is a considerable amount of noise on the input images for SMQT.
-The soft filtering is able to cope with Gaussian noise, such as on Figure \ref{fig:fans:241:denoise}, but it does not eliminate bigger clutter particles such as in the left side of Figure \ref{fig:fans:235:denoise} or in the upper region of Figure \ref{fig:fans:21:denoise}.
+The soft filtering is able to cope with Gaussian noise, such as on Figure \ref{fig:fans:241:denoise}, but it does not eliminate clutter particles such as in the left side of Figure \ref{fig:fans:235:denoise} and in the upper region of Figure \ref{fig:fans:21:denoise}.
 The SMQT enhancement makes these clutter prominent by increasing the color difference between the noise and the homogeneous background.
-For example, the already mentioned patches on the left side of Figure \ref{fig:fans:235:denoise} are now more visible than on the original image \ref{fig:fans:235:orig}.
-Additionally, SMQT has similar effects to Histogram Equalization: the background on Figure \ref{fig:fans:241:denoise} is near homogeneous, but after applying SMQT, its color changes are more obvious since the original pixel values are mapped now to a wider color range.
+For example, the already mentioned patches in the left side of Figure \ref{fig:fans:235:denoise} are now enhanced compared to  the original image \ref{fig:fans:235:orig}.
+Additionally, SMQT has similar effects to Histogram Equalization: the background on Figure \ref{fig:fans:241:denoise} is near homogeneous, but after applying SMQT, its color changes are obvious since the original pixel values are mapped now to a wider color range.
 Despite its enhancing effect in the background, SMQT also increases the contrast between the outlines of the shoeprint and its surroundings which is a beneficial feature for the following, local binarization step.
 
 \afterpage{
@@ -1800,25 +1801,26 @@ The closing step of the algorithm is postprocessing, consisting of binarization 
 As expected NBM, being a local edge sensitive thresholding algorithm, takes advantage of the contrast difference between the outlines of the shoeprint  and its neighborhood and finds the silhouettes. 
 On all three images, see Figure \ref{fig:fans:241:bin}, Figure \ref{fig:fans:235:bin} and Figure \ref{fig:fans:21:out}, the contours of the patterns are visible.
 However, the drawbacks of NBM discussed in the previous chapter and the enhanced noise by SMQT are evident, since among the correct outlines noise is generated.
-In the background and between the space of the outlines of the shoeprint additional small structures are visible.
+In the background and between the space of the outlines of the shoeprint clutter is visible.
 For this reason, the closing step of small and open structure elimination is executed.
-In Figures \ref{fig:fans:241:out} and \ref{fig:fans:235:out} the majority of background is cleared up and the shoeprint pattern is shown clearly.
+In Figures \ref{fig:fans:241:out} and \ref{fig:fans:235:out} the background is cleared up and the shoeprint pattern is shown.
 On the other hand, in Figure \ref{fig:fans:21:out} the original pattern is not recognizable anymore, as along with the background noise, relevant contour edges were also eliminated, and noise edges attached to the shoeprint were kept.
 \par
 The presented results indicate two things.
-First, NBM with the current postprocessing technique works  on shoeprint images with fine lines, see Figure \ref{fig:fans:241:orig}, and with detailed structures, see Figure \ref{fig:fans:235:orig} than on shoeprint images consisting blob-like elements, such as in Figure \ref{fig:fans:21:orig}.
+First, NBM with the current postprocessing technique works  on shoeprint images with fine-lines, see Figure \ref{fig:fans:241:orig}, and with detailed structures, see Figure \ref{fig:fans:235:orig}.
+In shoeprint images consisting blob-like elements, such as in Figure \ref{fig:fans:21:orig}, the shoeprint is destroyed.
 As already discussed and shown, NBM tends to generate line noise on homogenous areas.
-If the shoeprint consists of dense pattern, there is no big, homogenous background between the different structure elements, thus no noise is generated.
-To solve this problem, Saxena et al. \cite{saxena2019niblack} analyze several improvements for NBM to make it more robust in such conditions and in low quality data.
+If the shoeprint consists of dense pattern, there is no big, bigger than the window size of NBM, homogenous background between the structure elements, thus no noise is generated.
+To solve this problem, Saxena et al. \cite{saxena2019niblack} analyze several improvements for NBM to make it robust in such conditions and in low quality data.
 Second, the heuristics which the two postprocessing steps are based on do not apply to every shoeprint image of the database.
-In Figure  \ref{fig:fans:21:bin}, despite the noise, the shoeprint is clearly recognizable, whereas in Figure \ref{fig:fans:21:out} no shoeprint is seen anymore.
-This implies that the settings of the structure elimination algorithms are not detailed enough, and that more sophisticated postprocessing is needed, which covers further shoeprint images of the database.
+In Figure  \ref{fig:fans:21:bin}, despite the noise, the shoeprint is recognizable, whereas in Figure \ref{fig:fans:21:out} no shoeprint is seen anymore.
+This implies that the settings of the structure elimination algorithms are not detailed enough, and that sophisticated postprocessing is needed, which covers further shoeprint images of the database.
 Shoeprint edges were eliminated because they were shorter than the defined threshold.
 The threshold for edge length were not changed during testing, thus a possible solution for the problem is to always adjust the parameter according to the current image.
 This adjustment is however difficult, since there is no a-priori knowledge about the given shoeprint image available.
 Alternatively, looking at Figure  \ref{fig:fans:21:out}, the outlines of the shoeprint were found originally, but because of the noise they were not connected.
 In the application only 8-neighborhood is considered, a more allowing connectivity criteria, such as neighborhood in a given range, leads to closed contour edges.
-But this causes more connectivity among noise as well.
+But this causes connectivity among noise as well.
 Furthermore, it also magnifies the second problem occurring in Figure \ref{fig:fans:21:out}, that noise edges are connected to the contours, thus are not eliminated.
 In conclusion, an additional postprocessing step is needed to examine the remaining edges and to determine which connection was made unintentionally.
 \par
@@ -1915,20 +1917,20 @@ In this section the experimental results of the Shoeprint Enhancement Algorithm 
 In Figures \ref{fig:sans:res1} and \ref{fig:sans:res2} example results are shown, the original samples are in the first column, the results using 20 classes for gradient clustering are shown in the second and third column, the output using 25 classes are in the fourth and fifth column.
 Column two and four illustrate the results when the average noise model was used for pattern enhancement, whereas column three and five represent the output in case of using the centroids of the k-means algorithm.
 \par
-The example images, see  \ref{fig:sans:res1} and \ref{fig:sans:res2}, show that varying the algorithm parameters makes a significant difference when the input had low quality, namely in shoeprint images with low shoeprint-to-noise ration.
+The example images, see  \ref{fig:sans:res1} and \ref{fig:sans:res2}, show that varying the algorithm parameters makes a significant difference when the input had low quality, namely in shoeprint images with low shoeprint-to-noise ratio.
 This is explained with two factors.
-First, high quality images have less noise on the shoeprint, see Figures \ref{fig:sans:21} and \ref{fig:sans:204}, or the noise is less varying, see Figure \ref{fig:sans:21}, than on a lower quality sample, as in Figure \ref{fig:sans:174}.
+First, high quality images have little or no noise on the shoeprint, see Figures \ref{fig:sans:21} and \ref{fig:sans:204}, or the noise is not varying, see Figure \ref{fig:sans:21} compared to low quality samples, as in Figure \ref{fig:sans:174}.
 Thus, using different noise models do not make a difference, since little noise needs to be removed.
 Second, using 20 and 25 classes for the non-local means algorithm is overstated.
 In high quality images, there is no high variance between the properties of edges, thus classes with little amount of members are generated.
-However, choosing high amount of classes was an intentional decision.
+However, choosing high, 20 and 25, amount of classes was an intentional decision.
 First, the structure of the shoeprint image is preserved, when the means are calculated on a high, 20 and 25, amount of subgroups.
-Second, using fewer, less than 20, classes leads to eliminating valuable shoeprint information when deleting the members of the most populated class.
+Second, using fewer, less than 20, classes leads to eliminating valuable shoeprint information when deleting the members of the class with highest cardinality.
 Comparing the output of the two different kinds of noise models, there is little visible difference between their performance.
 Both models were able to preserve the pattern information where there is no, see  \ref{fig:sans:25}, or little noise, see  \ref{fig:sans:21}, on the shoeprint area.
-Focusing on small details, such as the top of Figure \ref{fig:sans:174}, the average noise model is more aggressive than the centroid one.
+Focusing on details, such as the top of Figure \ref{fig:sans:174}, the average noise model is more aggressive than the centroid one. 
 That observation corresponds to the calculation of the noise representation.
-Taking the average of the descriptors of every noise pixel results in a less detailed model than calculating more representatives, thus it is more destructive than the centroid model.
+Taking the average of the descriptors of every noise pixel results in a general model than calculating more representatives using centorids, thus it is destructive compared to thecentroid model.
 
 
 \afterpage{
@@ -2013,43 +2015,43 @@ Taking the average of the descriptors of every noise pixel results in a less det
 }
 
 \par
-In the images of Figure \ref{fig:sans:204} significant shoeprint parts are missing on the bottom area.
-That is the combined effect of those steps where the heuristic is assumed, that small regions represent noise elements rather than relevant shoeprint information.
+In the images of Figure \ref{fig:sans:204}  shoeprint parts are missing on the bottom area.
+That is the combined effect of those steps where the heuristic is assumed, that small structures, smaller than a given threshold, represent noise elements rather than relevant shoeprint information.
 Therefore the fine-lines of the shoeprint pattern are wrongly considered as noise, and they are eliminated.
 \par
 In Figure \ref{fig:sans:pip} the entire pipeline of the Shoeprint Enhancement algorithm is shown in three example images.
 In Figures  \ref{fig:sans:pip:21:bg}, \ref{fig:sans:pip:204:bg} and \ref{fig:sans:pip:239:bg} the binary mask is shown, where white denotes the background and black the shoeprint area.
-Inspecting the images, the majority of the background is labeled correctly, however, two limitations are visible.
-The first one is the bottom area of Figure \ref{fig:sans:pip:204:bg}, where half of the fine-lined area of the actual shoeprint is cropped.
+Inspecting the images, the background is labeled correctly, however, two limitations are visible.
+The first one is the bottom area of Figure \ref{fig:sans:pip:204:bg}, where half of the fine-lined area of the shoeprint is cropped.
 The background detection is not able to distinguish between the structured noise in the background and the detailed shoeprint in the foreground.
-Furthermore, the fine-lines cover a small area of the three different sized neighborhoods when calculating the correlation with the noise representation, therefore high similarity is noted.
-In this context the fine-lines of the shoeprint pattern are considered as "noise" when comparing them to the noise representation according to the user input.
-Because of the robustness of the Fourier-Mellin features, the thin lines of the shoeprint impression have little influence, thus that area is falsely labeled.
-The other one is in Figures \ref{fig:sans:pip:21:bg}, where, because of the significant change within the background, parts of the top area are falsely labeled as foreground.
-
+Furthermore, the fine-lines cover a limited area of the three different sized neighborhoods when calculating the correlation with the noise representation, therefore those oarts are outweighted by the noisy background and high similarity is noted.
+In this context, the fine-lines of the shoeprint pattern are considered as "noise" when comparing them to the noise representation according to the user input.
+Because of the robustness of the Fourier-Mellin features, the thin lines of the shoeprint impression have no influence, thus that area is falsely labeled.
+The other limitation is in Figure \ref{fig:sans:pip:21:bg}, where, because of the significant change within the background, parts of the top area are falsely labeled as foreground.
+Since the noise model is calculated based on the neighborhood of a single pixel given by the user, any change within the background, but outside of the considered neighborhood, is automatically considered as foreground.
 \par
 The appearance of the input image after eliminating the noise in the foreground is shown in the third column.
 Figures  \ref{fig:sans:pip:204:bg} and \ref{fig:sans:pip:239:bg} illustrate that the noise suppression technique does not damage the pattern area, the difference between the fore- and the background is preserved.
-In Figure \ref{fig:sans:pip:21} there is significant noise on the top region, which is successfully suppressed in Figure \ref{fig:sans:pip:21:enh}.
+In Figure \ref{fig:sans:pip:21} there is noise on the top region, which is successfully suppressed in Figure \ref{fig:sans:pip:21:enh}.
 This indicates that, as expected, the noise and the shoeprint have different Fourier representations.
 Working in the Fourier domain, the noise frequencies are eliminated and the shoeprint is successfully reconstructed.
 \par
 In the fourth column, the results after applying the non-local means algorithm are shown.
-Focusing to the background, nearly homogeneous background is created without applying the noise mask on the images.
+Focusing to the background, homogeneous background is created without applying the noise mask on the images.
 However, in Figure \ref{fig:sans:pip:204:grad} a weakness of the algorithm is also visible.
-The non-local means calculation eliminates the majority of pattern information in both top and bottom area of the original shoeprint.
+The non-local means calculation eliminates the pattern information in both top and bottom area of the original shoeprint.
 Combined with structured background noise, several mixed classes are generated where noise and shoeprint data occur simultaneously.
 The artifacts of this phenomenon are visible not only on the said shoeprint area, but also in the middle of the image, where noise structures were enhanced appearing as bright edges similar to the remaining shoeprint edges.
 \par
 Figures \ref{fig:sans:pip:21:th}, \ref{fig:sans:pip:204:th} and \ref{fig:sans:pip:239:th} show the binarized images after applying the background mask.
-Because of the nearly homogeneous background achieved by non-local means, the thresholding method is able to preserve the extracted lines.
+Because of the homogeneous background achieved by non-local means, the thresholding method is able to preserve the extracted lines.
 With masking, the falsely clustered edges from the previous step, such as the ones in the middle of Figure \ref{fig:sans:pip:204:grad}, are deleted.
 \par
 In the last column the final results are shown after the postprocessing step of eliminating small regions.
-Comparing Figure \ref{fig:sans:pip:21:th} to  Figure \ref{fig:sans:pip:21:res} the latter is less cluttered, there is less noise in the background, small lines around the contours of the shoeprint are eliminated successfully while no relevant edges, the outlines of the shoeprint, were deleted.
+Comparing Figure \ref{fig:sans:pip:21:th} to  Figure \ref{fig:sans:pip:21:res} the latter is not cluttered, the background is homogenous, small lines around the contours of the shoeprint are eliminated successfully while no relevant edges, the outlines of the shoeprint, were deleted.
 However, in Figure \ref{fig:sans:pip:204:res} the shoeprint information is further damaged by the postprocessing step.
-Observing the right side of the bottom area, it is visible that several shoeprint contours were eliminated.
-The postprocessing step assumes that the shoeprint consists of bigger structures such as filled geometries on Figure \ref{fig:sans:pip:21} or broad edges on Figure \ref{fig:sans:pip:239}, thus the fine-lined edges of Figure \ref{fig:sans:pip:204} are automatically considered as noise instead of shoeprint.
+Observing the right side of the bottom area, it is visible that shoeprint contours were eliminated.
+The postprocessing step assumes that the shoeprint consists of big, bigger than a given threshold, structures such as filled geometries on Figure \ref{fig:sans:pip:21} or broad edges on Figure \ref{fig:sans:pip:239}, thus the fine-lined edges of Figure \ref{fig:sans:pip:204} are automatically considered as noise instead of shoeprint.
 
 
 \afterpage{
@@ -2187,11 +2189,11 @@ The postprocessing step assumes that the shoeprint consists of bigger structures
 
 \par
 Along misinterpreting fine-line structures of the shoeprint, there is an additional limitation of the proposed method.
-When there is low contrast between the background and foreground, or the foreground is highly cluttered, no robust estimation can be made about the background area and about the dominant appearance of the noise. 
+When there is low contrast between the background and foreground, or the foreground is cluttered, no robust estimation can be made about the background area and about the dominant appearance of the noise. 
 Such a case is shown in Figure \ref{fig:sans:noise}.
 In this case the output is computed solely based on the gradient-based non-local means method and the postprocessing step.
-When the determined background area is too small or too big, no masking is made after binarizing the image and no noise is eliminated from the foreground, since no noise model is calculated.
-In such cases several enhancement steps are not exploited, thus the quality of the output is lower. 
+When the determined background area is too small or too big, the size is outside of a given range, no masking is made after binarizing the image and no noise is eliminated from the foreground, since no noise model is calculated.
+In such cases enhancement steps are not exploited, thus the quality of the output is low. 
 
 \afterpage{
 \begin{figure}[H]
@@ -2221,10 +2223,10 @@ In such cases several enhancement steps are not exploited, thus the quality of t
 }
 
 \par
-The experimental results show that the Shoeprint Enhancement algorithm provides more precise results, see Figure \ref{fig:sans:25:25_cent}, than the firstly introduced Feature Learning approach, see Figure \ref{fig:pe:25:FM}.
-Furthermore, as in Figure \ref{fig:sans:pip:21:res}, it copes better with noise than the fully-automated method, see Figure \ref{fig:fans:21:out}.
-On the one hand, the Noise Elimination algorithm achieves better results on detailed, fine-lined shoeprints, as seen on Figures \ref{fig:fans:235:out} and \ref{fig:fans:241:out} then the Shoeprint Enhancement one, see Figure \ref{fig:sans:pip:204:res}.
-On the other hand, the Shoeprint Enhancement algorithm has overall higher performance than the two previous ones.
+The experimental results show that the Shoeprint Enhancement algorithm provides precise results, see Figure \ref{fig:sans:25:25_cent} compared to the firstly introduced Feature Learning approach, see Figure \ref{fig:pe:25:FM}.
+Furthermore, unlike theNoise Elimination method, see Figure \ref{fig:fans:21:out}, it also copes with noise, see in Figure \ref{fig:sans:pip:21:res},.
+On the one hand, the Noise Elimination algorithm achieves high quality results on detailed, fine-lined shoeprints, as seen on Figures \ref{fig:fans:235:out} and \ref{fig:fans:241:out} compared to the Shoeprint Enhancement one, see Figure \ref{fig:sans:pip:204:res}.
+The Shoeprint Enhancement algorithm is, however, overall the most robust one compared to the two previous ones.
 First, it is able to deal with low-quality samples, see Figure \ref{fig:sans:174:25_cent}, as well.
 Second, its effectiveness is not limited to one kind of shoeprint outsule pattern such as the previous approach, which only provided good results on densely structured shoeprints, for example Figures \ref{fig:fans:235:out}, \ref{fig:fans:241:out}. 
 Based on the evaluations in the last three sections, the last approach proved to be the most powerful technique from the three proposed algorithms.
@@ -2295,16 +2297,16 @@ The accumulated values, the average of the results, is not highlighted.
 To understand the performance of the proposed enhancing method, this table is analyzed in the followings.
 \par
 Focusing on the first (F-M)  and thrid (SURF) column of the table, the matching of the enhanced shoeprints always outperforms the corresponding baseline regardless the pipeline settings.
-Furthermore, the Fourier-Mellin descriptor achieved better results than the best baseline  except for the one case when 20A is used. 
+Furthermore, the Fourier-Mellin descriptor achieved higher scores than the best baseline except for the one case when 20A is used. 
 However, in the second (SIFT) and third (SURF) column of the table this is not the case.
 Even though SURF always outperformed the corresponding baseline, which is 5.64, in case of 25C and 20C the accuracy of the overall best baseline performance of 4.43 is not met.
-In case of SIFT, the results of the enhanced images are significantly lower than of the original images.
+In case of SIFT, the results of the enhanced images are often, in five cases, lower than of the original images.
 Using BF matching, the enhanced images outperform the corresponding baseline, but achieve only two times out of four better accuracy than the overall best baseline result.
 In case of FLANN matching, the enhanced images always have lower accuracy than the corresponding baseline, which is the best performance noted for the original images. 
 Since the enhnaced images are binarized, the usage of SIFT and SURF is not ideal.
 SIFT is a gradient based descriptor and the majority of that information is lost when thresholding an image.
 Furthermore, local invariant descriptors, such as SIFT and SURF, usually have lower performance on binary images than on grayscale samples \cite{wang2017manifold}.
-However, SURF is generally more robust than SIFT which also explains its better performance even using on binarized images \cite{bay2006surf}.
+However, SURF is more robust than SIFT which also explains its better performance even using on binarized images \cite{bay2006surf}.
 
 \definecolor{custGrey}{rgb}{0.5,0.5,0.5}
 \definecolor{cDarkBlue}{rgb}{0, 0.55, 1}
@@ -2343,24 +2345,24 @@ The Fourier-Mellin features (first column) always outperformed their correspondi
 The two lowest results of the Fourier-Mellin descriptors were provided using 20A settings.
 Furthermore, the 25A settings only outperformed 20A, but no other testing scenario.
 The average noise model caused, thus, lower performance.
-The average noise model is more destructive than the centroid model.
+The average noise model is destructive compared to the centroid model.
 Using the centroid representation, the used noise model is adjustable to the given part of the shoeprint image.
-In this way the chance is lower that shoeprint information is also eliminated. 
+In this way no shoeprint information is also eliminated. 
 Using the centroid model causes at least 0.5 points better score against the average model by comparing the best, 3.79, and the worst, 3.29, accuracy values achieved by average and centroid noise models respectively.
 \par
 Considering the overall accuracy (last column) of the different settings, the enhanced matching always provides better results than the accumulated baseline.
 Furthermore, the overall accuracy is always higher than the best result in the baseline.
 Comparing the variable settings, there is small difference between the best and the worst scores.
 20C provided the highest performance achieving 4.12, whereas the other scenarios achieved 4.30 and 4.29 accuracy only.
-That means, that using less classes for the non-local means algorithm and calculating a detailed noise model leads to 0.18 points better accuracy.
-The detailed noise model led to slightly better by 0.01 results, even though higher, 25 instead of 5, amount of classes were defined.
+That means, that using less classes for the non-local means algorithm, 20 instead of 25, and calculating a detailed noise model leads to 0.18 points better accuracy.
+The detailed noise model led to slightly better by 0.01 points results, even though higher amount of classes, 25 instead of 20, were defined.
 In case of 25C the performance of 4.29 is noted, whereas the other scenarios using the average model achieved 4.30.
-Clustering the edges into less classes enforces the elimination of more edges.
+Clustering the edges into less classes, 20 instead of 25, enforces the elimination of more edges.
 Since the cluster with the highest cardinality is assumed to be a noise class,  owning the fact that using less classes the clusters have higher cardinality  in average than using more classes, the chance is higher that more noise-edges are eliminated.
 The number of classes is, however, a crucial parameter.
-When lowering this value more mixed clusters are created where noise and shoeprint edges are placed in the same cluster.
+When lowering this value mixed clusters are created where noise and shoeprint edges are placed in the same cluster.
 In that case, when the assumed noise cluster is eliminated, valuable parts of the shoeprint are also deleted.
-Moreover, using small number of classes further details of the input are also eliminated when applying the non-local means algorithm.
+Moreover, using small number of classes details of the input are also eliminated when applying the non-local means algorithm.
 The good performance using 20 classes indicates that the amount of classes is sufficient, and do not cause the elimination of potential shoeprint information.
 \par
 The experimental results presented in this chapter show that the proposed image enhancement algorithm supports accuracy improvement.

@@ -17,10 +17,10 @@ import pixelDescriptor
 import signalTransform
 
 
-firstVersionPreprocessing = False
+firstVersionPreprocessing = True
 LBPdenoising = False
 LBPLearning = False
-mainPipeline = True
+mainPipeline = False
 SIFTdescriptor = False
 HOGdescriptor = False
 lbpImg = np.empty((0, 0))
@@ -914,7 +914,7 @@ if LBPdenoising :
     # cv.destroyAllWindows()
 
 if (firstVersionPreprocessing) :
-    name = '00021'
+    name = '00204'
     img = cv.imread('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/orig/' + name + '.jpg', 0)
     path = "C:/Users/rebeb/Documents/TU_Wien/Dipl/project/vutinfth-master/vutinfth-master/graphics/4/21/"
 
