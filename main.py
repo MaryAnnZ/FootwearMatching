@@ -914,9 +914,9 @@ if LBPdenoising :
     # cv.destroyAllWindows()
 
 if (firstVersionPreprocessing) :
-    name = '00204'
+    name = '00233'
     img = cv.imread('C:/Users/rebeb/Documents/TU_Wien/Dipl/FID-300/FID-300/FID-300/test_images/results/images/orig/' + name + '.jpg', 0)
-    path = "C:/Users/rebeb/Documents/TU_Wien/Dipl/project/vutinfth-master/vutinfth-master/graphics/4/21/"
+    path = "C:/Users/rebeb/Documents/TU_Wien/Dipl/project/vutinfth-master/vutinfth-master/graphics/4/233/"
 
     cv.imwrite(path + name + '.jpg', img)
     cv.imwrite(path + name + '_orig_small.jpg', img[0:50,0:50])

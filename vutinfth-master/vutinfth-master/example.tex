@@ -145,10 +145,8 @@ Zusammen mit zwei vollautomatischen Algorithmen wird eine halbautomatische Metho
 Die halbautomatische Methodik in der Arbeit identifiziert verrauschte Pixel basierend auf den Fourier-Mellin-Merkmalen eines von dem Benutzer ausgewählten Hintergrundpixels und dessen Nachbarschaft. 
 Gleichzeitig wird ein Rauschmodell berechnet, um diese Struktur auch von dem restlichen Bild, also von dem Schuhabdruckmuster, zu eliminieren. 
 Zusätzlich werden die Pixel basierend auf ihren Gradienten gruppiert und der Ansatz von "non-local means" wird angewendet um den Kontrast zwischen dem Vor- und dem Hintergrund zu erhöhen.
-Die experimentellen Ergebnisse zeigen, dass die verarbeiteten Bilder klarer sind, das Muster von der Schusohle schärfer ist und das Rauschen unterdrückt wird. 
-Neben der qualitativen Bewertung werden unsere Ergebnisse auch anhand einer quantitativen Analyse bewertet und unter Verwendung von drei grundlegenden Bilddeskriptoren durchgeführt.
-Die Evaluierung zeigt, dass die verbesserten Bilder eine höhere Genauigkeit erzielt als die Originalbilder.
-
+Die qualitative Ergebnisse zeigen, dass die verarbeiteten Bilder klarer sind, das Muster von der Schusohle schärfer ist und das Rauschen unterdrückt wird.
+Die quantitive Analyse basierend auf drei grundlegende Bilddeskriptoren bestätigt dies und zeigt eine höhere Genauigkeit von bis zu 30\% im verbesserten Bild im Vergleich zum Original.
 \end{kurzfassung}
 
 
@@ -162,14 +160,13 @@ This thesis investigates the possibilities for enhancement of shoeprint images f
 The main challenge of this task is to correctly filter the shoe outsole pattern on the shoeprint image regardless of the versatile, possibly heavily structured and cluttered noise in the images.
 Among fully automated methods, a semi-automated technique is also tested, where user input is required for noise separation.
 \par
-The aim of this work is to give an overview of the current state of the art and to define an approach which is able to filter and enhance the shoeprint despite the presence of noise and varying image quality.
-Along two fully-automated algorithms a semi-automated noise-suppression and enhancement pipeline for shoeprint images is introduced. 
-The noisy pixels are identified based on the Fourier-Mellin features of a background pixel and its neighborhood selected by the user.
-At the same time a noise model is calculated to eliminate that structure on the remaining parts of the shoeprint image, thus on the shoeprint, as well.
-Additionally, the pixels are clustered based on their gradients and the non-local means approach is applied.
-The experimental results show that the processed images are clearer, the shoeprint is sharper and the noise is reduced.
-Furthermore besides a qualitative evaluation also a quantitative evaluation is performed using three basic image descriptor features.
-These results show that the enhanced images achieve higher accuracy than the original images.
+The aim of this work is to give an overview of the current state of the art and to define an approach which is able to filter and enhance the shoeprint in spite of the presence of noise and of the varying image quality.
+Along two fully-automated algorithms, a semi-automated noise-suppression and enhancement pipeline for shoeprint images is also introduced. 
+The noisy pixels are identified based on the Fourier-Mellin features of a background pixel selected by the user and its neighborhood.
+At the same time a noise model is calculated to eliminate the noise structure in the remaining parts of the shoeprint image, thus in the shoeprint, as well.
+Additionally, the pixels are clustered based on their gradients and the non-local means approach is applied to suppress remaining noise.
+Qualitative evaluation indicates that the processed images are clearer, the shoeprints are sharper and the noice is reduced. 
+Quantitative analysis using three basic image descriptors confirmed this and showed a higher accurary of up to 30\% in the enhanced images compared to their original. 
 
 
 \end{abstract}
@@ -187,14 +184,14 @@ These results show that the enhanced images achieve higher accuracy than the ori
 \raggedbottom
 \par
 Shoeprints found at crime scenes are important clues or evidences during criminal investigation \cite{kong2014novel}.
-Even though at one third of the crime scenes usable shoeprint images are secured \cite{alexandre1996computerized}, human input is required to identify and analyze the shoeprint images  found \cite{wang2014automatic}.
-The work of forensic experts is not only time consuming and expensive, but there is no guarantee about the objectivity of the final outcome\cite{gueham2008automatic}.
-Furthermore, the stages of the human matching process are not necessarily reproducible considering the opinions of multiple experts \cite{damary2018dependence}.
+Even though at one third of the crime scenes usable shoeprint images are secured \cite{alexandre1996computerized}, human input is required to identify and analyze the shoeprint images found \cite{wang2014automatic}.
+The work of forensic experts is not only time consuming and expensive, but there is no guarantee of the objectivity of the final outcome\cite{gueham2008automatic}.
+Furthermore, the stages of the human matching process are not necessarily reproducible considering thepossibly diverse opinions of multiple experts \cite{damary2018dependence}.
 \par
-There is an excessive amount of research already done in order to help or replace the work of forensic experts \cite{rida2019forensic}.
-However this task is challenging because of the versatility of conditions: the features and properties of the shoe outsole, such as age, material, etc., the characteristics of the ground where the shoeprint is left and environmental conditions, for example weather, highly influence the overall appearance of the acquired sample \cite{kortylewski2014unsupervised}.
-Figure \ref{fig:int:varying} shows images of the same shoe outsole captured under different conditions from the FID-300 \cite{kortylewski2014unsupervised} dataset.
-The factors, mentioned above, result in changing appearance causing high intra-class variance while searching for common features of the same shoe outsole pattern.
+There is an excessive amount of research already done in order to help or replace the work of forensic experts \cite{rida2019forensic}. 
+However, this task is challenging because of the versatility of conditions: the features and properties of the shoe outsole, such as age, material, etc., the characteristics of the ground where the shoeprint is left and environmental conditions, for example weather, highly influence the overall appearance of the acquired sample \cite{kortylewski2014unsupervised}.
+Figure \ref{fig:int:varying} shows images of the same shoe outsole captured under different conditions \cite{kortylewski2014unsupervised}. 
+The factors mentioned above result in changing appearance, causing high intra-class variance while searching for common features of the same shoe outsole pattern.
 To make the features robust and to lower the influence of the discussed factors shoeprint enhancement is proposed.
 \par
 In 2014 a dataset called FID-300 \cite{kortylewski2014unsupervised} was released that consists of shoeprint samples collected by the police. 
@@ -251,17 +248,12 @@ Moreover, the database introduces 300 new real-life shoeprint samples providing 
 
 \section{Problem Definition}
 \par
-This work focuses on ways to increase the sample quality in terms of the amount of noise in the image and the intensity difference between the fore- and the background.
-The foreground of a shoeprint image is considered as shoeprint region, those areas where the impressions of the shoe outsole pattern are visible.
-The goal is to enhance the shoeprint in the image which consists of parts of or the entire shoe outsole pattern of the original shoe.   
-\par
-Since the state-of-the-art methods, presented further in the following chapter, are evaluated on different datasets, a comparison between them is a challenging task.
-Furthermore, as seen in Table \ref{tab:ref:alg}, the discussed publications focus on the definition of a robust descriptor and a powerful matching algorithm to overcome the problem of versatile appearance of the shoeprints.
+This work focuses on ways to increase the shoeprint image quality in terms of the amount of noise in the image and in terms of the intensity difference between the fore- and the background.
+The foreground of a shoeprint image is the shoeprint, those areas where the impressions of the shoe outsole pattern are visible.
 In this thesis three prototypical preprocessing techniques are developed and tested to enhance the shoeprint images and to make the extracted features accurate. 
 \par
 For evaluation and testing the FID-300 database is used, because the dataset contains both reference prints as well as real shoeprints secured by the police at crime scenes.
-Additionally, the Ground Truth connecting each crime scene sample to a matching reference print is available.
-The goal of this work is to define an image processing pipeline which correctly enhances the shoeprint impression and eliminates or suppresses the noise in the shoeprint images.
+The aim of this work is to define an image processing pipeline which correctly enhances the shoeprint impression and eliminates or suppresses the noise in the shoeprint images.
 A secondary objective is to gain an overview of the performance of the algorithms, and make an estimation which methods are applicable in real-life scenarios based on their performance on the FID-300 database. 
 
 %\afterpage{
@@ -287,39 +279,20 @@ A secondary objective is to gain an overview of the performance of the algorithm
 \section{Challenges}
 \par
 An obstacle in the topic of shoeprint enhancement and in automatic shoeprint matching in general is the versatile appearance of the shoeprint \cite{kong2017cross}.
-%There are approaches available which build models for given structures of the shoeprint \cite{tang2010footwear}, \cite{alizadeh2017automatic}, but they are limited to given parts of the shoe sole pattern and are tested on a restricted database.
-Moreover, there is versatile noise of sources listed in the following.
-Firstly, the produced shoeprint and its background depend on the properties of the ground where the impression was made, such as the roughness and unevenness of a given type of surface \cite{shor2018inherent}.
-%Additionally, the possible unevenness of the ground appears as noise on the final sample.
-The shoeprint impressions of Figure \ref{fig:int:varying:3} and \ref{fig:int:varying:20} were made on an even surface whereas on Figure \ref{fig:int:varying:17} and \ref{fig:int:varying:25} cluttered background is visible caused by the surface properties.
+Moreover, there is versatile noise of  four main sources  listed in the following.
+Firstly, the produced shoeprint and its background depend on the properties of the surface where the impression was made, such as the roughness and unevenness of a given texture \cite{shor2018inherent}.
+%Additionally, the possible unevenness of the ground appears as noise on the final sample. % ezt sztem tedd bele
+The shoeprint impressions of Figure \ref{fig:int:varying:3} and \ref{fig:int:varying:20} were made on an even surface whereas on Figure \ref{fig:int:varying:17} and \ref{fig:int:varying:25} cluttered background is visible caused by the surface properties. %which properties?
 Furthermore, objects on the surface, above or behind the shoeprint potentially cover or distort the original pattern, or prevent a clear impression of the complete area of the original shoe sole.
 On Figures \ref{fig:int:varying:9} and \ref{fig:int:varying:66} only partial shoeprints were secured, on the left side of Figure \ref{fig:int:varying:66} the structures of the shoe sole pattern are hardly visible because of the additional noise.
-Due to the noise, it is possibly ambiguous, which parts of the image are part of the shoeprint, which region is a depiction of the original outsole pattern, thus the fore- and the background of the shoeprint image is not necessarily clearly distinguishable.
-Since the original shoeprint image without noise is not available, it is possible that with  suppressing noise the shoeprint is also damaged.
+Due to the noise, it is possibly ambiguous which parts of the image are part of the shoeprint, which region is a depiction of the original outsole pattern, making the distiction between the fore- and the background unclear.
+Since the original shoeprint image without noise is not available, it is possible that by suppressing the noise the shoeprint is also damaged.
 Other than that, illumination changes occur as well \ref{fig:int:varying:20}.
 %Besides that, the pattern on the original shoe can also be altered over time due to wear.
-%These alterations possibly contain valuable information about the owner, however, they make it more difficult to match the shoeprint image with its reference.
+%These alterations possibly contain valuable information about the owner, however, they make it more difficult to match the shoeprint image with its reference. 
 Additionally, there are three common shoeprint securing methods, listed by Katireddy et al. \cite{katireddy2017novel}, producing different results for the same shoeprint impression, these are adhesive lifter, gelatine lifter and electrostatic dust-print lifting device. 
 The shoeprint securing technique used depends on the properties of the ground  \cite{katireddy2017novel}. 
 The securing method and the additional properties of the floor, for example if it was clean or dusty when making an impression, determine if the positive \ref{fig:int:cap:pos} or the negative \ref{fig:int:cap:neg} image, the shoe outsole pattern or the space between its edges, is captured.
-Furthermore, the publications discussed in the following chapter focus on the development of robust feature sets and matching algorithms and not on the preprocessing of the shoeprint samples, as seen in Table \ref{tab:ref:alg} five out of six algorithms introduced for FID-300 do not suggest preprocessing.
-Therefore there  is limited research available of the specific domain of shoeprint enhnacement for real life shoeprint images of the FID-300 dataset.
-\par
-As mentioned previously the state-of-the-art methods were tested and evaluated on different datasets, thus a comparison between them is difficult \cite{rida2019forensic}.
-Moreover, the datasets used are not necessarily public \cite{katireddy2017novel}, \cite{dardi2009texture} making it impossible to reproduce the result in such cases.
-Additionally, the handcrafted databases allow such restrictions and modifications that do not correlate with real-life scenarios \cite{rida2019forensic}, for instance \cite{dardi2009texture}, \cite{tang2010footwear}.
-The samples used can either be synthetically generated, they are secured in a laboratory for the purpose of evaluating forensic image processing algorithms, and computationally distorted \cite{de2005automated}, \cite{gueham2008automatic} or exclude images by a given criteria, for example quality and noise \cite{dardi2009texture}, \cite{tang2010footwear}.
-The time consuming approach of re-implementation of the available algorithms and testing them on the FID-300 is also impossible in these cases, since the original dataset of the publication is not accessible and thus any reimplementation can not be verified.
-Thus it is challenging to plan a new algorithm based on the published results because the lack of a uniform baseline.
-
-\section{Contribution}
-\par
-In this thesis an overview of shoeprint enhancement methods is given.
-Three approaches are implemented, discussed and evaluated.
-Two ways to increase the quality, defined as the contrast between the fore- and the background, of a given shoeprint image are to enhance the pattern regardless of the noise and to suppress the noise.
-Since no annotation of the shoeprint images of FID-300 is available, due to the noise, the definition of foreground, as the shoeprint in the shoeprint image, is however possibly ambiguous.
-Along fully-automated methods semi-automated algorithms are also considered.
-Three different approaches are introduced and examined in respect to their performance on real-life image samples.
 
 \begin{figure}[H]
   \centering
@@ -339,31 +312,52 @@ Three different approaches are introduced and examined in respect to their perfo
   \label{fig:int:cap}
 \end{figure}
 
+
 \par
+Since the state-of-the-art methods of shoeprint identification, discussed later in the following chapter, are evaluated on different datasets, a comparison between them is a challenging task.
+Furthermore, as seen in Table \ref{tab:ref:alg}, the discussed publications focus on the definition of a robust descriptor and a powerful matching algorithm to overcome the problem of the versatile appearance of the shoeprints.
+As seen in Table \ref{tab:ref:alg} five out of six algorithms introduced for FID-300 do not suggest preprocessing.
+Therefore, there  is limited research available on the specific domain of shoeprint enhnacement for real life shoeprint images of the FID-300 dataset. 
+\par
+Moreover, the datasets used are often not public \cite{katireddy2017novel}, \cite{dardi2009texture} making it impossible to reproduce the result of the discussed method.
+Additionally, the handcrafted databases allow restrictions and modifications that do not correlate with real-life scenarios \cite{rida2019forensic}, for instance \cite{dardi2009texture}, \cite{tang2010footwear}.
+The samples used can either be synthetically generated, they are secured in a laboratory for the purpose of evaluating forensic image processing algorithms, and computationally distorted \cite{de2005automated}, \cite{gueham2008automatic} or exclude images by a given criteria, for example quality and noise \cite{dardi2009texture}, \cite{tang2010footwear}.
+The time consuming approach of re-implementation of the available algorithms and testing them on the FID-300 is also impossible in these cases, since the original dataset of the publication is not accessible and thus any reimplementation can not be verified.
+Therefore, the lack of uniform baseline raises a challenge when planning a new algorithm for processing forensic images.
+
+\section{Contribution}
+\par
+Two ways to increase the quality, defined as the contrast between the fore- and the background, of a given shoeprint image are to enhance the pattern regardless of the noise and to suppress the noise.
+Since no annotation of the shoeprint images of FID-300 is available, due to the noise, the definition of foreground, as the shoeprint in the shoeprint image, remains ambiguous.
+
+\par
+In this thesis an overview of shoeprint enhancement methods is given.
+Three approaches are implemented, discussed and evaluated examined in respect to their performance on real-life image samples.
 Finally, a semi-automated framework is presented which is evaluated on the FID-300 database.
-In the first step user input specifying the noise is required.
+In the first step, user input specifying the noise is required.
 The input is separated into tiles, and the subparts are compared based on the Fourier-Mellin features of the given region and of the neighborhood selected by the user.
-In that way, the background is separated from the foreground and a noise model based on the background is determined.
+This way, the background is separated from the foreground and a noise model based on the background is determined.
 Since noise appears on the separated foreground as well, those parts are corrected according to the calculated noise model.
 After that, the pixels are classified based on their gradients and the non-local means algorithm is applied.
-According to the cardinality of each class shoeprint and noise classes are determined.
+According to the cardinality of each class, shoeprint and noise classes are determined.
 Finally, candidates of the latter are eliminated.
-The final image is thresholded to create a binary image, where the shoeprint is better recognizable than in the original shoeprint image because the noise is suppressed on the foreground, where the shoeprint is assumed to be located, and eliminated on the detected background area.
+The final image is thresholded to create a binary image, where the shoeprint is better recognizable than in the original shoeprint image, because the noise is suppressed on the foreground, where the shoeprint is assumed to be located, and eliminated on the detected background area.
 Throughout the whole processing pipeline morphological operations and small structure elimination are applied multiple times. 
-First when a mask for background is built, and also in the end of the pipeline to eliminate small inconsistencies on the determined foreground and detected lines. 
+First, when a mask for the background is built, and also in the end of the pipeline to eliminate inconsistencies in the determined foreground and among the detected edges.
 The noise elimination is based on two assumptions.
-First, the area selected by the user is representative for the entire image and there is a significant contrast between background and shoeprint areas.
-Second, the edges of the shoeprint share similar properties, such as gradient information, frequency as well as overall area and length, and these features are different from those deriving from cluster of the image.
+First, the area selected by the user is representative for the entire image and there is a significant contrast between the background and the shoeprint areas.
+Second, the edges of the shoeprint share similar properties, such as gradient information, frequency, as well as overall area and length, and these features are different from those deriving from the clutter of the image.
 Figure \ref{fig:example} shows an example from the FID-300 database, see \ref{fig:intro:orig}, and the enhanced image, see \ref{fig:intro:enhanced}, using the above algorithm.
+
 \par
 The background of the shoeprint image is masked successfully and the contrast between the shoeprint and the background is increased.
-However, in the bottom right corner of the image the weakness of the enhancement method is also shown.
-Small line structures of the shoe sole pattern resemble the short and fine edges of the noise in the image and are wrongly eliminated.
+However, in the bottom right corner of the image the weakness of the enhancement method is also appearent.
+Small line structures of the shoe sole pattern resemble the short and fine edges of the noise in the image and therefore are wrongly eliminated.
 The detailed evaluation of the proposed algorithm is presented in Chapter 4.
-Experimental results show that the enhanced images are clearer, the background is successfully separated and the shoeprint is less noisy than on the original images.
+The qualitative evaluation shows that the enhanced images are clearer, the background is successfully separated and the shoeprint is less noisy than on the original images.
 Moreover, the improved images have a better matching rate than their original version according to the experiments conducted on the enhanced images, on the original samples and on the reference images using three common image features such as Fourier-Mellin, SIFT and SURF.
 \par
-In this thesis three algorithms are presented for enhancement of shoeprint images.
+In summary, in this thesis three algorithms are presented for enhancement of shoeprint images.
 Two of them are fully-automated, whereas in the case of the third one user input is required.
 Based the evaluation of their performance on shoeprint images from the FID-300 dataset, an overview of the applicability of the enhancing methods for real-life shoeprint images is given.
 Their advantages and limitations are examined.
@@ -371,31 +365,30 @@ Finally, possible ways for improvement are discussed as well.
 
 \section{Structure of the Work}
 \par
-To gain an overview of the published research the following section, Chapter 2, gives a review of the literature. 
+To gain an overview of the published research the following section, Chapter 2 gives a review of the literature. 
 Along papers published on the topics of shoeprint identification, matching and enhancement, research on similar domains is presented as well.
 Consequently, the field of fingerprint processing is also overviewed for possibilities of utilizing their solutions in the given problem space.
 Furthermore, natural image enhancement and denoising techniques are revised as well.
 \par
 In Chapter 3 the approaches for enhancement are described.
-The first section presents and reviews an algorithm for detecting shoeprints on shoeprint images under varying conditions.
-The second one describes an automated noise suppression pipeline.
-In the last section an algorithm for enhancing real-life crime scene shoeprint images from FID-300 is proposed.
+The first section presents and reviews a Feature Learning algorithm for detecting shoeprints on shoeprint images under varying conditions.
+The second one describes an automated Noise Removal method.
+In the last section a Shoeprint Enhancement Algorithm with Non-Local Means is introduced for real-life crime scene shoeprint images from FID-300.
 Details on the implementation are given as well.
 \par
-In Chapter 4 experimental results are shown and the proposed algorithms are evaluated whether they are applicable for real-life forensic images.
-In Chapters 5 prospective future work is discussed and the final conclusion is given. 
+In Chapter 4, experimental results are shown and the proposed algorithms are evaluated based on whether they are applicable for real-life forensic images.
+In Chapters 5, prospective future work is discussed and a final conclusion is given. 
 
 \chapter{Related Work}
 \par
 In order to find and develop an effective algorithm for shoeprint image enhancement, an overview about relevant research is made first.
 Along the literature of image enhancement and noise removal, image descriptors are also reviewed.
-Discriminative image descriptors are considered as well to gain better insight and to define an approach which is optimized for the rest of the shoeprint identification pipeline.
+Discriminative image descriptors are considered as well, to gain better insight and to define an approach which is optimized for the rest of the shoeprint identification pipeline.
 In this chapter the research in the domain of shoeprint identification is reviewed.
 Other than that, publications from similar domains such as fingerprint and palmprint detection are discussed as well.
 Research for fingerprint identification has been chosen for review because of their similar goal of edge pattern recognition.
 Moreover, an overview of techniques from the field of natural image enhancement and description along with general image denoising is also given.
 This chapter is separated into three parts, first, image enhancement techniques are described, after that algorithms developed for noise removal specifically are discussed, and lastly, proposed image descriptors are reviewed.
-
 
 \section{Image Enhancement}
 \label{sec:rw:ImageENhancement}
@@ -409,8 +402,8 @@ The problem definition and the use-case of the different publications in the top
 Because of the absence of a common database, the algorithms discussed are separated into two groups, techniques tested on synthetic samples, i.e. on shoeprint impressions generated for the purpose of evaluation of shoeprint identification algorithms, and on real-life shoeprint images.
 Furthermore, a group of algorithms developed for real crime-scene shoeprint images makes restrictions about the input image and exclude images by a predefined criteria, for example noise and quality.
 Figure \ref{fig:rw:database} shows example images from a synthetic \ref{fig:rw:synthetic}, from a restricted \ref{fig:rw:restricted} and high \ref{fig:rw:highFID} and low quality samples \ref{fig:rw:lowFID} from the FID-300 dataset.
-Tables \ref{tab:ref} and \ref{tab:ref:alg} provide an overview of the datasets used of the algorithms discussed.
-The former contains further information about the accuracy of the algorithms, the latter gives keywords about the proposed methods of the publications.
+Tables \ref{tab:ref} and \ref{tab:ref:alg} provide an overview of the datasets used of the algorithms discussed. 
+The former contains further information about the accuracy of the algorithms, the latter provides keywords about the proposed methods of the publications.
 The algorithms presented in the "real" section of the tables were tested on the FID-300 dataset, used in this thesis as well.
 Table \ref{tab:ref} also gives information about the matching accuracy of the algorithms discussed.
 The accuracy is given in the format of X\%@Y(\%), where X is the probability of the corresponding reference image being among the top Y matches. 
@@ -448,12 +441,11 @@ If no Y is given, the accuracy stands for the probability of providing the corre
   \label{fig:rw:database}
 \end{figure}
 
-
 \par
-Morphological Operations, namely Opening and Closing, are popular techniques for improving the quality of both kind, realistic and synthetic, of shoeprint images, they are  used in many cases \cite{wang2014automatic}, \cite{kong2014novel}, \cite{li2014retrieval}.
+Morphological Operations, namely Opening and Closing, are popular techniques for improving the quality of both kind (realistic and synthetic) shoeprint images, they are frequently used such as in \cite{wang2014automatic} and  \cite{kong2014novel}, \cite{li2014retrieval}.
 Wang et al. \cite{wang2014automatic}, Kong et al.  \cite{kong2014novel}, Li et al. \cite{li2014retrieval} and  Wu et al. \cite{wu2019crime}use the Morphological Operations to correct inconsistencies after thresholding.
 In case of the algorithm proposed by Tang et al. \cite{tang2010footwear}, the input is binarized with Canny edge detection, the inconsistencies are eliminated afterwards again with Opening and Closing.
-However, as seen on Table \ref{tab:ref:alg}, Morphological Operations are mainly used on high quality data.
+However, as seen on Table \ref{tab:ref:alg}, Morphological Operations are mainly used on a high quality data.
 They are applied on binarized data, but, except of Wu et al. \cite{wu2019crime}, the other discussed algorithms tested on FID-300 use no enhancement methods and focus on the definition of robust descriptor instead.
 Furthermore, Morphological Operations are only used for small corrections in the presented publications, see Figure \ref{fig:rw:restricted}, but on FID-300 samples noise causes bigger distortions than Opening and Closing are able to handle, see Figure \ref{fig:rw:lowFID}.
 
@@ -535,13 +527,13 @@ Nevertheless, the neglect of thresholding methods for real datasets indicates th
 Another way to eliminate noise is image filtering.
 Alizadeh et al. \cite{alizadeh2017automatic} use a simple Median filter.
 Zhang et al. \cite{zhang2005automatic} take advantage of the Partial Differential Equations approach.
-In this way the edges are preserved while the background is smoothed according to a controlled curvature motion criteria. 
+This way, the edges are preserved while the background is smoothed according to a controlled curvature motion criteria. 
 Katireddy et al. \cite{katireddy2017novel} use Successive Mean Quantization Transform (SMQT) \cite{nilsson2013smqt} as one step to enhance the real-life database.
 Figure \ref{fig:rw:SMQT} shows the output of the SMQT algorithm on an example image.
-There are, thus two proposed ways for filtering, the first one is general smoothing, the second one is edge preserving filtering.
-Comparing the databases the proposed algorithms were tested on, the latter is more suitable for forensic images of FID-300 for two reasons.
-Smoothing is sufficient for images such as Figure \ref{fig:rw:synthetic} where the sample is clear and the shoeprint pattern consists of strong edges \cite{alizadeh2017automatic}, but it potentially damages the pattern information on lower quality samples such as in Figure \ref{fig:rw:lowFID}.
-Furthermore, Katireddy et al. \cite{katireddy2017novel} tested their algorithm on restricted real samples, which is more similar to FID-300 than synthetic images. 
+Thus, there are two proposed ways for filtering in the disussed literature, the first one is general smoothing, the second one is edge preserving filtering.
+Comparing the databases the proposed algorithms were tested on, the latter is more suitable for forensic images of FID-300 for two reasons. 
+Smoothing is sufficient for images such as Figure \ref{fig:rw:synthetic}, where the sample is clear and the shoeprint pattern consists of high-contrast edges \cite{alizadeh2017automatic}, but it potentially damages the pattern information on lower quality samples such as in Figure \ref{fig:rw:lowFID}.
+Furthermore, Katireddy et al. \cite{katireddy2017novel} tested their algorithm on restricted real samples, which, since both databases consist of real images, are more similar to FID-300 than synthetic images. 
 
 \begin{figure}[h]
   \centering
@@ -564,10 +556,10 @@ Furthermore, Katireddy et al. \cite{katireddy2017novel} tested their algorithm o
 
 \par
 Bandpass operators are also used for noise suppression.
-The images are converted to the frequency domain where high and low frequencies are eliminated, as proposed by Gueham et al. \cite{gueham2007automatic},  Richetelli et al. \cite{richetelli2017classification}.
-In the algorithm of Li et al. \cite{li2014retrieval} only the lower frequencies are eliminated.
+The images are converted to the frequency domain where high and low frequencies are eliminated, as proposed by Gueham et al. \cite{gueham2007automatic}, Richetelli et al. \cite{richetelli2017classification}.
+In the algorithm of Li et al. \cite{li2014retrieval}, only the lower frequencies are eliminated.
 Another frequency based approach was proposed by Katireddy et al. \cite{katireddy2017novel} for real dataset based on Daubechies wavelets.
-After SMQT enhancement the Daubechies wavelets are used to separate the fore- and background and to remove the noise in the latter.
+After SMQT enhancement, the Daubechies wavelets are used to separate the fore- and background and to remove the noise in the latter.
 In case of FID-300, it is challenging to define a heuristic for noise as well as for the shoeprint because of its versatile appearance and no previous knowledge about their properties.
 Therefore, Bandpass filtering potentially damages the pattern information.
 However, separating the fore- and the background where the background does not contain shoeprint areas, as Katireddy et al. \cite{katireddy2017novel} propose, makes it possible to process the noise and the shoeprint independently.
@@ -576,8 +568,8 @@ Furthermore, it also gives a sample about the appearance of noise on a given ima
 \par
 It is outstanding that the majority of reviewed publications working on the FID-300 dataset do not suggest to use enhancement techniques, as shown in Table \ref{tab:ref:alg}.
 As illustrated on Figure \ref{fig:int:varying}, the appearance of noise changes greatly, thus, it is challenging to define a universal algorithm which deals with the  varying noise accurately.
-Additionally, the presented algorithms in Table \ref{tab:ref}, do not use a-priori knowledge about the samples, as no information about the appearance of noise nor of the shoeprint is available.
-Because of that, they focus on the definition of robust descriptor and powerful matching technique which finds the corresponding shoeprints, despite the low shoeprint shoeprint-to-noise ratio and changing conditions.
+Additionally, the presented algorithms in Table \ref{tab:ref} do not use a-priori knowledge about the samples, as no information about the appearance of noise nor of the shoeprint is available.
+Because of that, they focus on the definition of a robust descriptor and a powerful matching technique, which finds the corresponding shoeprints,despite the low shoeprint shoeprint-to-noise ratio and the changing conditions.
 
 \subsection{Fingerprint Enhancement}
 \par
@@ -585,11 +577,11 @@ Bandpass \cite{zhou2011adaptive}, \cite{baig2015enhancement} and general image f
 Zhou et al. \cite{zhou2011adaptive} uses a low- and a highpass filter to eliminate striking frequencies. 
 Baig et al. \cite{baig2015enhancement} apply Directional Hilbert transform of Butterworth bandpass to collect the different phase shifts and eliminate the artifacts created by previously thresholding the input.
 Wang et al. \cite{wang2014enhanced} decompose the image into four subbands and process them separately, calculating the noise for every subband respectively.
-Jahan et al. \cite{jahan2017robust} apply Fuzzy filtering followed by thinning.
+Jahan et al. \cite{jahan2017robust} apply Fuzzy filtering, followed by thinning.
 Fuzzy filtering is a local method to preserve the edge information and fine line structures while suppressing the noisy background of the input.
-Similar to forensic shoeprint samples, fingerprint images also depict a 2 dimensional object where the information derives from the line pattern of the sample, see Figure \ref{fig:rw:fingerprint}.
-The use of bandpass filtering and signal transform for fingerprint images shows, that the edge content of the input does not influence their performance, assuming that the noise and the content of the given image have different frequencies.
-The proposed methods indicate that they are suitable also for fine-lined images, such as finger- or palmprint samples \ref{fig:rw:fp}, which is promising when using them on shoeprint images with detailed and fine-lined pattern as well \ref{fig:rw:ref}. 
+Similar to forensic shoeprint samples, fingerprint images also depict a 2 dimensional object, where the information derives from the line pattern of the sample, see Figure \ref{fig:rw:fingerprint}.
+The use of bandpass filtering and signal transform for fingerprint images shows that the edge content of the input does not influence their performance, assuming that the noise and the content of the given image have different frequencies.
+The proposed methods indicate that they are also suitable for fine-lined images, such as finger- or palmprint samples \ref{fig:rw:fp}, which is promising when using them on shoeprint images with detailed and fine-lined pattern as well. \ref{fig:rw:ref}. 
 
 \begin{figure}[h]
   \centering
@@ -624,11 +616,11 @@ First, publications utilizing techniques from the former group are discussed, fo
 Xu et al. \cite{xu2016image} combine Bandpass filtering with adaptive thresholding.
 Similar to Wang et al. \cite{wang2014enhanced} the image is separated into four subbands, and the threshold is calculated for every image separately.
 Sugamya et al. \cite{sugamya2016image} apply Subband Decomposition with two staged Histogram Equalization.
-The histogram of the input is equalized globally first, after that it is decomposed into subbands to equalize the values locally for every of the four generated subimages.
+The histogram of the input is equalized globally first, after that it is decomposed into subbands to equalize the values locally for each of the four generated subimages.
 In these methods the subbands are enhanced separately and reconstructed into the final output in the end.
 With processing the shoeprint images on different subbands, a method specialized for noise on the given frequency is defined.
 Even though the appearance of noise varies across the samples, with decomposition it is separated into known subbands.
-This way a filtering method for general noise is built by breaking it down into known parts, into known subbands.  
+With other words, a filtering method for general noise is built by breaking it down into known subbands.  
 \par
 Median Filters are used not only in the domain of shoeprint enhancement \cite{alizadeh2017automatic}, but also for natural image noise suppression.
 Apart from Median Filter, Li et al. \cite{li2014rapid} utilize Average and Wiener Filter to suppress the occurring noise and to prepare the input for neighborhood based feature extraction.
@@ -636,14 +628,14 @@ Feng et al. \cite{feng2011bag} propose a Bag-of-Words algorithm based on the Gab
 For preprocessing, the Watershed Transform is used.
 With Wiener Filter and Bag-of-Words method a representation of the estimated noiseless image is built, and with filtering this model is approximated.
 Along edge preserving filter this approach is favorable, when enhancing shoeprint images with varying noise.
-In this way, regardless of the appearance of the clutter and non-content elements, the original image is estimated, thus the non-content, in case of this thesis the non-shoeprint, parts are suppressed.
+Because regardless of the appearance of the clutter and non-content elements, the original image is estimated, thus the non-content sections, in case of this thesis, the non-shoeprint parts of the image, are suppressed.
 The performance of these methods, however, depends on the underlying estimation of the original image \cite{li2014rapid}.
 \par
-Histogram Operations are combined apart from Bandpass filtering, like Sugamya et al. \cite{sugamya2016image} propose, also with Thresholding as suggested by Yao et al. \cite{yao2016image}. 
+Histogram Operations are combined apart from Bandpass filtering, like Sugamya et al. \cite{sugamya2016image} propose, also with Thresholding, as suggested by Yao et al. \cite{yao2016image}. 
 Their approach first separates the histogram of the input into two parts using the Otsu's method, then equalizes the histogram of the generated subimages. 
 Figure \ref{fig:rw:BHNMT} shows the results of the above algorithm on an example image.
 As Figure \ref{fig:rw:BHNMT} illustrates, this method is more suitable for dehazing tasks. 
-Even though, there are low-contrast images in FID-300 available, such as Figure \ref{fig:int:cap:neg}, the artifact is not derived from haze.
+Even though there are low-contrast images in FID-300 available, such as Figure \ref{fig:int:cap:neg}, the artifact is not derived from haze. 
 
 \begin{figure}[h]
   \centering
@@ -674,26 +666,27 @@ An example of a shoeprint impression dataset with colored samples can be found a
 \section{Noise Removal}
 
 Noise Removal methods reviewed in this section are based on estimating the original image and eliminating the deviating features of the data.
-One way is denoising through gradient histogram preservation \cite{zuo2013texture}.
+One way of denoising is through gradient histogram preservation \cite{zuo2013texture}.
 The distribution of gradients  of the original image is estimated first, and the noisy image is adjusted to the calculated values.
 An alternative way is to decompose a single image and based on the clear parts, approximate the noisy regions.
 Huang et al. \cite{huang2013self} propose a self-learning algorithm that only considers the high frequency parts of the decomposed image.
-In \cite{xu2015patch}, \cite{talebi2013global}, \cite{chatterjee2011patch} and \cite{guo2015efficient} images  are separated spatially instead of in the frequency domain, the techniques are based on the idea of non-local means, where the pixels are clustered according to a given criteria and they are set to the mean of the members belonging to the same cluster.
+In \cite{xu2015patch}, \cite{talebi2013global}, \cite{chatterjee2011patch} and \cite{guo2015efficient}, images  are separated spatially instead of in the frequency domain.
+These techniques are based on the idea of non-local means, where the pixels are clustered according to a given criteria and they are set to the mean of the members belonging to the same cluster.
 The difference between the previous algorithms is how they cluster the pixels or regions into different classes.
 Taleby et al. \cite{talebi2013global} uses an iterative shrinkage strategy. 
 Chatterjee et al.  \cite{chatterjee2011patch} group the geometrically similar regions and estimate the noise for every class separately with the Wiener filter, whereas Guo et al. \cite{guo2015efficient} utilize Block Matching to determine cluster memberships. 
-Additionally, the spatial location is considered as well while calculating the mean value in a given class.
-The members are weighted according to their distance to the current region.
-Offering adjustable classification criteria, the non-local means method is promising for the enhancement of forensic shoeprint impressions.
-If a feature is defined which is different between noise and shoeprint elements but similar within those, with non-local means the two components are processed separately.
-In the next section proposed feature descriptors are reviewed, such as an overview of possible classification criteria can be made.
+Additionally, at the calculation of the mean value in a given class information about the spatial location of the pixels is taken into account.
+Namely, the members are weighted according to their distance to the current region.
+Offering an adjustable classification criteria, the non-local means method is promising for the enhancement of forensic shoeprint impressions.
+If a feature is defined which is different between noise and shoeprint elements but similar within noise and shoeprint regions, with non-local means the two components are processed separately.
+The next section elaborates on feature descriptors, offering an overview of possible classification criteria for non-local means in the current literature.
 
 \section{Image Descriptors}
 
 This part is subdivided into three domains offering solutions for image description in different areas.
-Similar topics are reviewed to gain insight about the powerful descriptors and to consider whether they can be used in the domain of shoeprint enhancement.
-Shoeprint descriptors are described first, followed by the fingerprint features.
-Finally, at the end of the section natural texture descriptors are also reviewed. 
+Similar topics are reviewed to gain an insight about the powerful descriptors and to consider whether they can be used in the domain of shoeprint enhancement.
+Shoeprint descriptors are described first, followed by fingerprint features.
+Finally, at the end of the section, natural texture descriptors are also reviewed. 
 
 \subsection{Shoeprint Descriptors}
 \par
@@ -703,20 +696,21 @@ A feature map is built by convolving the input image with the Gabor filter.
 Kong et al.  \cite{kong2014novel} combine the Gabor features of the shoeprint image with Zernike features to describe the shapes in the shoeprint.
 Li et al. \cite{li2014retrieval} suggest to use the histogram extracted in the Gabor transformed domain as descriptors.
 In the approach published by Wu et al.  \cite{wu2019crime}, Gabor Filters are combined with Haar Wavelets and Fourier-Mellin Transform to get an integrated, multi-level descriptor. 
-In other publications Fourier-Mellin Transform is proposed as well, e.g. Gueham et al. \cite{gueham2008automatic} where after transforming the input into the Fourier domain and mapping it into Log-Polar coordinates a correspondence scheme between images is suggested.
-Wang et al. \cite{wang2014automatic} apply multiresolution matching based on  Fourier-Mellin Transform.
+Fourier-Mellin Transform is proposed in other publications as well, such as in Gueham et al. \cite{gueham2008automatic}, where after transforming the input into the Fourier domain and mapping it into Log-Polar coordinates, a correspondence scheme between images is suggested.
+Wang et al. \cite{wang2014automatic} apply multiresolution matching based on the Fourier-Mellin Transform.
 The correlation coefficient is calculated by comparing the Fourier-Mellin features of multiple resolutions.
 Richetelli et al. \cite{richetelli2017classification} classify shoeprint images by applying Fourier-Mellin Transform following the calculation of Phase Only Correlation (POC) to determine the translative difference between two images in the frequency domain.
-Gueham et al. \cite{gueham2007automatic} suggest to use the basic Fourier Transform before calculating the POC in another paper.
-Kortylewsky et al. \cite{kortylewski2014unsupervised} also propose a Fourier Transformation based method.
-It is an unsupervised learning approach, where the periodic structures of a shoeprint are compared in the Fourier domain.
-Richetelli et al. \cite{richetelli2017quantitative} compares Randomly Acquired Characteristics of shoeprints, e.g. small damages, modifications and stuck objects on or in the shoesole pattern, examining their Fourier descriptor.
-Other than Fourier-like transformations, the use of Power Spectral Density was proposed in \cite{dardi2009texture}.
+To the contrary, Gueham et al. \cite{gueham2007automatic} suggest to use the basic Fourier Transform before calculating the POC.
+Finally, Kortylewsky et al. \cite{kortylewski2014unsupervised} also propose a Fourier Transformation based method.
+In this case, it is an unsupervised learning approach, where the periodic structures of a shoeprint are compared in the Fourier domain.
+Richetelli et al. \cite{richetelli2017quantitative} compares the Randomly Acquired Characteristics of the shoeprints, e.g. small damages, modifications and stuck object into the shoesole, examining their Fourier descriptor.
+Unlike in the above discussed literature, the use of Power Spectral Density was proposed in \cite{dardi2009texture}.
 It is a descriptor for random, broadbrand signals based on the the frequency and power.
 In Table \ref{tab:ref} the matching accuracy of the descriptors above is also listed.
-Comparing that value, the Fourier-Mellin features outperform the Gabor and the Fourier Transform, having a high accuracy of	 99\% and 100\%.
-However, the  evaluation was done on different datasets, the above 95\% accuracy was reached on synthetic images.
-Two algorithms \cite{kortylewski2014unsupervised} and \cite{wu2019crime} were tested on FID-300 and the latter achieved 93\% accuracy by the combination of Gabor and Fourier-Mellin transform.
+Comparing the Fourier-Mellin features with the Gabor and the Fourier Transform, the formaer outperform the latters, having a high accuracy of 99\% and 100\%.
+However, at the interpretation of such a high accuracy it must be considered that the above 95\% was reached on synthatic images, and not in the real dataset.
+Considering the dataset used in this dissertation, the FID-300, \cite{kortylewski2014unsupervised} and \cite{wu2019crime} reached 86\% and 93\% respectively.
+The latter achieved 93\% accuracy by the combination of Gabor and Fourier-Mellin transform.
 This shows, that Fourier domain based features are powerful descriptors for synthetic images, and they are also applicable for lower quality data, such as the shoeprint images of FID-300.
 \par
 %In high quality, so synthetic or restricted datasets shape descriptors are a popular choice for feature extraction.
@@ -724,24 +718,24 @@ Algarni et al. \cite{algarni2008novel} suggest to use Hu moments because of thei
 It is also proposed to combine the feature descriptors, as Kong et al. \cite{kong2014novel} incorporate Zernike and Gabor features.
 Tang et al. \cite{tang2010footwear} define their own fundamental shapes based on common basic structures on the shoe outsole pattern through Hough Line Transform. 
 The extracted features are then stored in an Attributed Relational Graph to represent the entire shoeprint.
-Comparing the datasets the algorithms were introduced for, see Table \ref{tab:ref}, it is noticeable that shape descriptors were only introduced for high-quality data and not for samples from FID-300.
+Comparing the datasets the algorithms were tested on, see Table \ref{tab:ref}, it is apparent that shape descriptors were only introduced for high-quality data and not for lower quality samples such as shoeprint images from the FID-300.
 In FID-300 images, there is a high amount of noise which distorts the original shoeprint pattern.
 In this case, shape descriptors are less suitable, because the original outlines of the elements are modified or covered by noise.
 \par
 Point descriptors were also proposed for shoeprint impression matching.
-Nibouce et al. \cite{nibouche2009rotation} propose to use a four-level Harris Detector and combine it with SIFT.
-Almaadeed et al. \cite{almaadeed2015partial} use the same combination and uses the Hessian Detector additionally for the same purpose in case of restricted real-life datasets.
+Nibouce et al. \cite{nibouche2009rotation} propose to use a four-level Harris Detector and to combine it with SIFT.
+Almaadeed et al. \cite{almaadeed2015partial} use the same combination and applies the Hessian Detector for the same purpose in case of restricted real-life datasets.
 Another publication \cite{richetelli2017classification} extracts the SIFT features from the frequency domain after applying Fourier-Mellin Transformation and POC on the input image.
 Similar to the shape descriptors, point descriptors were tested only on high quality data, see Table \ref{tab:ref:alg}.
-Even though SIFT is a robust descriptor  \cite{lowe1999object}, its neglect by algorithms introduced for FID-300 indicates, that it does not overcome the issue of low signal-to-noise, where the signal is the shoeprint, ratio on the shoeprint images.
+Even though SIFT is a robust descriptor  \cite{lowe1999object}, its neglect by algorithms introduced for FID-300 indicates that it does not overcome the issue of low signal-to-noise ratio that is common in shoeprint images, where the 'signal' (the shoeprint) is often distracted because of additional noise \cite{kortylewski2014unsupervised}. 
 \par
 Kong et al. \cite{kong2017cross}, \cite{kong2019cross} define a descriptor for real crime scene shoeprint images extracting the mid-level features from a Convolutional Neural Network.
 Similarly, Wu et al .\cite{wu2019losgsr} also use machine learning to calculate opinion scores for given matching pairs of real shoeprint images.
-In the learning process manifold ranking is used where the opinions of human experts as well as feature similarities are both incorporated.
+In the learning process manifold ranking is used, where the opinions of human experts as well as feature similarities are both incorporated.
 Kortylewsky et al. \cite{kortylewski2016probabilistic} developed a hierarchical composition of Active Basis Models, and also extended this for natural image environments \cite{kortylewski2019greedy}.
 The algorithms presented in this section were all tested on FID-300.
 Comparing to other descriptors previously discussed in this section, it is notable that the majority of publications utilize machine learning.
-That implies that for a robust descriptor training is indispensable, and to deal with the varying and high amount of noise the descriptor needs to be adjustable and adapted to the given shoeprint images.
+That implies that for a robust descriptor training is indispensable, and to deal with the varying and high amount of noise the descriptor needs to be adjustable and adapted to the given shoeprint images. 
 
 \subsection{Fingerprint Descriptors}
 \par
@@ -750,7 +744,7 @@ Multi-resolution representation through Gabor expansion was proposed by Bolle et
 Van et al. \cite{van2016fingerprint} use Adaptively Adjusted Modified Finite Radon Transform after Gabor filtering to connect edges and eliminate inconsistencies.
 Rida et al. \cite{rida2018palmprint} propose an ensemble descriptor consisting of Gabor filter, Local Binary Pattern, Histogram of Oriented Gradient and Line Detector to represent a palmprint impression.
 Other than that, Li et al. \cite{li2012texture} suggest to use Directional Filter Banks, where the image is separated into eight subimages, which then are further decomposed into two frequencies via Wavelet Transform.
-In case of shoeprint images, frequency domain features, such as Fourier-Mellin features were dominating, they were proposed in several publications  \cite{gueham2007automatic}, \cite{wu2019crime} and achieved a high accuracy of 100\% and 93\% respectively, see Table \ref{tab:ref}.
+In case of shoeprint images, frequency domain features, such as Fourier-Mellin features, were dominating, they were proposed in several publications  \cite{gueham2007automatic}, \cite{wu2019crime} and achieved a high accuracy of 100\% and 93\% respectively, see Table \ref{tab:ref}.
 But for fingerprint descriptors Gabor Transform and Radon Transform are preferred.
 This indicates that the latter is more suitable for fine-lined, detailed patterns, illustrated on Figure \ref{fig:rw:fp}, and the former is more applicable on bigger geometrical structures, Figure \ref{fig:int:varying}.
 This observation also foresights the performance of Fourier-Mellin features on detailed shoe outsole patterns such as shown on Figure \ref{fig:rw:ref}. 
@@ -758,11 +752,11 @@ This observation also foresights the performance of Fourier-Mellin features on d
 For fingerprint images several point feature descriptors were proposed.
 In \cite{zhou2011adaptive} SIFT \cite{lowe1999object} features were fused with Hough Transform and Minutiae Information of the fingerprint.
 Chen et al. \cite{chen2013hierarchical} also use the Hough Transform and extend it with a hierarchical voting score to improve the matching information. 
-Along  \cite{rida2018palmprint} Ghandehari et al. \cite{ghandehari2012palmprint} recommend to use HOG in a 3-level Gaussian pyramid to estimate the local strength of different types of edges on the image.
+Along  \cite{rida2018palmprint}, Ghandehari et al. \cite{ghandehari2012palmprint} recommend to use HOG in a 3-level Gaussian pyramid to estimate the local strength of different types of edges in the image.
 Jahan et al. \cite{jahan2017robust} suggest to combine the Minutiae Information with Speeded Up Robust Features (SURF) and compare them with a Neural Network to find the matching pairs.
 Local descriptors are suitable for fingerprint images because of the compactness of information.
 That is, however, not guaranteed on forensic shoeprint samples.
-Depending on the original shoesole pattern, the elements of the shoeprint are possibly bigger and widespread on the input image, see Figure  \ref{fig:int:varying}, compared to  fingerprint sample, see Figure \ref{fig:rw:fp}.
+Depending on the original shoesole pattern, the elements of the shoeprint are possibly bigger and more widespread on the input image, see Figure  \ref{fig:int:varying}, compared to  fingerprint sample, see Figure \ref{fig:rw:fp}.
 Unlike on fingerprints, where mainly minutiae information is considered for identification, the more complex geometrical structures on shoe outsole pattern are relevant when matching shoeprint images.
 %\par
 %According to the following publications, Local Binary Patterns (LBP) are also suitable for fingerprint description.
@@ -788,7 +782,7 @@ Unlike on fingerprints, where mainly minutiae information is considered for iden
 \subsection{Natural Texture Descriptors}
 \par
 For natural texture description signal and frequency domain features are reviewed.
-Mistry et al. \cite{mistry2017content}  mix multiple features, mainly color and texture descriptors.
+Mistry et al. \cite{mistry2017content} mix multiple features, mainly color and texture descriptors.
 For texture description, Gabor Wavelet and Binarized Statistical Images  \cite{kannala2012bsif} are used simultaneously.
 Hatipoglu et al. \cite{hatipoglu2000image} suggest taking advantage of Dual Tree Complex Wavelet transform instead of Gabor Wavelet.
 Quevedo et al. \cite{quevedo2002description} and Xu et al. \cite{xu2009viewpoint} suggest Fractal features, because they are invariant to intensity and scale changes.
@@ -796,19 +790,19 @@ Xu et al. \cite{xu2009viewpoint} propose using a multifractal spectrum to achiev
 Hayati et al. \cite{hayati2018wirif} and Ahonen et al. \cite{ahonen2009rotation} incorporate LBP-like features with the frequency domain representation.
 Ahonen et al. \cite{ahonen2009rotation} calculate the LBP of the Fourier features of the image, whereas Hayati et al. \cite{hayati2018wirif} use Wave Inference, where the information of multiple different-sized asymmetric neighborhoods is added respectively.
 Fourier Transformation and Gabor wavelets were introduced for all reviewed topics so far \cite{kortylewski2014unsupervised}, \cite{wu2019crime}, \cite{bolle2012fingerprint}.
-It implies high versatility and robustness of the descriptors, since it is possible to configure them for shoeprint, fingerprint as well as for natural texture description.  
+It implies high versatility and robustness of the descriptors, since it is possible to configure them for shoeprint, fingerprint as well as for natural texture descriptions.  
 These descriptors are thus powerful tools, and based on the reviewed literature it is advisable to take advantage of them.
 \par
 There are several publications available which use LBPs for texture description, e.g. \cite{guo2012discriminative}, \cite{hong2014combining}, \cite{ahonen2009rotation}, or for texture classification, e.g. \cite{khellah2011texture}, \cite{guo2010rotation}, \cite{zhang2017learning}.
-Wang et al. \cite{wang2013pixel} modify the usual LBP pipeline with Pixel to Patch sampling to increase the quality of the descriptor without slowing down the calculation.
+Wang et al. \cite{wang2013pixel} modify the usual LBP pipeline with Pixel to Patch sampling to increase the quality of the descriptor without negatively impacting the speed of the calculation.
 At Pixel to Patch sampling, the weighted average of the neighboring pixels in a given radius is calculated instead of interpolation.
 Additionally, the Local Neighboring Intensity Relationships subtracted from their grey-scale information are also considered.
 %LBP is frequently used in combination with other techniques as well, examples for that are discussed in the followings. 
-In \cite{hong2014combining} based on the covariance matrix additional discriminative features are calculated. 
-In \cite{guo2010completed} LBPs are calculated twice, after that the input is separated into two components, into phase and magnitude, to make the basic LBP rotation invariant as well.
+In \cite{hong2014combining}, based on the covariance matrix, additional discriminative features are calculated. 
+In \cite{guo2010completed} LBPs are calculated twice, after that the input is separated into two components, phase and magnitude, to make the basic LBP rotation invariant as well.
 Zhang et al.  \cite{zhang2017learning} propose a learning strategy for adaptively weighting the sign and magnitude LBPs to estimate their contribution in the given area. 
 Along the sign and magnitude LBPs, a third modified LBP is also defined, where the local difference vector is determined.
-In this way, robustness against illumination changes is achieved.
+This way a robustness against illumination changes is achieved.
 In \cite{khellah2011texture}, LBP are calculated on multiple levels.
 Another solution for rotation invariance is proposed by Davarzany et al. \cite{davarzani2015scale}. 
 In their approach a circular neighboring radius and a dominant orientation is stored so that rotation invariance is also achieved.
@@ -820,7 +814,7 @@ In \cite{bala2016local}, it is proposed to calculate Local Texton Patterns, wher
 Fadaei et al. \cite{fadaei2017local} published a similar approach called Local Derivative Radial Patterns.
 Instead of binary coding, a multi-level coding is used in multiple directions, and the differences between neighbors are weighted additionally. 
 Chahi et al. \cite{chahi2018local} define Local Ternary Patterns which store the directional patterns explicitly.
-Even though, LBPs are extensively researched for natural textures, their applicability for forensic shoeprint images is questionable.
+Even though LBPs are extensively researched in the field of natural textures, their applicability for forensic shoeprint images is questionable.
 LBPs were not suggested for shoeprint identification by the publications reviewed in the previous sections.
 Furthermore, the presented algorithms of this section focus on invariance against rotation, e. g. \cite{khellah2011texture}, scale, e.g. \cite{davarzani2015scale}  and illumination, e.g. \cite{zhang2017learning}.
 This is a possible issue on natural texture images, but the samples of the FID-300 dataset are rotation corrected and, as discussed in the following chapter, distortions and additional noise are the main challenges.
@@ -828,11 +822,11 @@ For that reason the benefits of LBP are limited in the field of shoeprint matchi
 
 \section{Summary}
 \par
-In this chapter state-of-the-arts method of the field of shoeprint image, fingerprint and natural image enhancement and description were reviewed as well as noise removal algorithms were discussed.
+In this chapter the state-of-the-arts methods of the field of shoeprint image, fingerprint and natural image enhancement and description were reviewed, as well as noise removal algorithms were discussed.
 Since there is no common forensic shoeprint image database, an overview of the techniques proposed for shoeprint images and their performance according to the testing datasets is given.
 To propose an effective enhancement algorithm for shoeprint images from FID-300, the applicability of the algorithms for real-life shoeprint images were also discussed. 
 \par
-Thresholding and bandpass filtering as well as image processing techniques in the frequency domain are used in every discussed field to enhance the input.
+Thresholding and bandpass filtering as well as image processing techniques in the frequency domain are used in each of the discussed fields to enhance the input.
 Furthermore, along local filtering for shoeprint and fingerprint images, non-local filtering have promising results on natural images.
 In the following, three shoeprint enhancement methods are introduced based on the publications discussed above.
 
@@ -1632,7 +1626,7 @@ Despite its enhancing effect in the background, SMQT also increases the contrast
     \subcaption{}
     \label{fig:fans:241:denoise}
   \end{subfigure}
-  \caption{}
+  \caption{Example results of the denoising stage. See description below.}
 }
 
 \subfloat{
@@ -1661,7 +1655,7 @@ Despite its enhancing effect in the background, SMQT also increases the contrast
     \subcaption{}
     \label{fig:fans:235:denoise}
   \end{subfigure}
-  \caption{}
+  \caption{Example results of the denoising stage. See description below.}
 }
 
 \subfloat{
@@ -1690,10 +1684,10 @@ Despite its enhancing effect in the background, SMQT also increases the contrast
     \subcaption{}
     \label{fig:fans:21:denoise}
   \end{subfigure}
-  \caption{}
+  \caption{Example results of the denoising stage. See description below.}
 }
 
-\caption{Example for the results of the denoising stage
+\caption{Example results of the denoising stage
 				\subref{fig:fans:241:orig} Example image; \subref{fig:fans:241:wiener} Wiener filtered image; \subref{fig:fans:241:bi} Bilateral filtered image; \subref{fig:fans:241:denoise} Denoised image}
 \label{fig:fans:denoise}
 
@@ -1729,7 +1723,7 @@ Despite its enhancing effect in the background, SMQT also increases the contrast
     \subcaption{}
     \label{fig:fans:241:out}
   \end{subfigure}
-  \caption{}
+  \caption{Results of the enhancement and postprocessing stage. See description below.}
 }
 
 \subfloat{
@@ -1758,7 +1752,7 @@ Despite its enhancing effect in the background, SMQT also increases the contrast
     \subcaption{}
     \label{fig:fans:235:out}
   \end{subfigure}
-  \caption{}
+  \caption{Results of the enhancement and postprocessing stage. See description below.}
 }
 
 \subfloat{
@@ -1787,10 +1781,10 @@ Despite its enhancing effect in the background, SMQT also increases the contrast
     \subcaption{}
     \label{fig:fans:21:out}
   \end{subfigure}
-  \caption{}
+  \caption{Results of the enhancement and postprocessing stage. See description below.}
 }
 
-\caption{Example for the results of the enhancement and postprocessing stage
+\caption{Example results of the enhancement and postprocessing stage
 				\subref{fig:fans:241:o} Example image; \subref{fig:fans:241:enhance} Enhanced image; \subref{fig:fans:241:bin} Binarized image ; \subref{fig:fans:241:out} Output image}
 \label{fig:fans:enhance}
 
@@ -1866,7 +1860,7 @@ To expand the usability of this algorithm for other shoeprint images of FID-300 
     \subcaption{}
     \label{fig:sans:21:25_cent}
   \end{subfigure}
-  \caption{}
+  \caption{Example results of the Shoeprint Enhancement algorithm. See description below.}
 }
 
 \subfloat{
@@ -1901,7 +1895,7 @@ To expand the usability of this algorithm for other shoeprint images of FID-300 
     \subcaption{}
     \label{fig:sans:25:25_cent}
   \end{subfigure}
-  \caption{}
+  \caption{Example results of the Shoeprint Enhancement algorithm. See description below.}
 }
 
 \caption{Example results of the Shoeprint Enhancement algorithm
@@ -1968,7 +1962,7 @@ Taking the average of the descriptors of every noise pixel results in a general 
     \subcaption{}
     \label{fig:sans:174:25_cent}
   \end{subfigure}
-  \caption{}
+  \caption{Example results of the Shoeprint Enhancement algorithm. See description below.}
 }
 
 
@@ -2004,7 +1998,7 @@ Taking the average of the descriptors of every noise pixel results in a general 
     \subcaption{}
     \label{fig:sans:204:25_cent}
   \end{subfigure}
-  \caption{}
+  \caption{Example results of the Shoeprint Enhancement algorithm. See description below.}
 }
 
 \caption{Example results of the Shoeprint Enhancement algorithm
@@ -2095,7 +2089,7 @@ The postprocessing step assumes that the shoeprint consists of big, bigger than 
     \subcaption{}
     \label{fig:sans:pip:21:res}
   \end{subfigure}
-  \caption{}
+  \caption{The whole pipeline of the Shoeprint Enhancement algorithm. See description below.}
 }
 
 \subfloat{
@@ -2136,7 +2130,7 @@ The postprocessing step assumes that the shoeprint consists of big, bigger than 
     \subcaption{}
     \label{fig:sans:pip:204:res}
   \end{subfigure}
-  \caption{}
+  \caption{The whole pipeline of the Shoeprint Enhancement algorithm. See description below.}
 }
 
 \subfloat{
@@ -2177,7 +2171,7 @@ The postprocessing step assumes that the shoeprint consists of big, bigger than 
     \subcaption{}
     \label{fig:sans:pip:239:res}
   \end{subfigure}
-\caption{}
+\caption{The whole pipeline of the Shoeprint Enhancement algorithm. See description below.}
 }
 
 \caption{The whole pipeline of the Shoeprint Enhancement algorithm using 25 classes and centroids for noise elimination on pattern
